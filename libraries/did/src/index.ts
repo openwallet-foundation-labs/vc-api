@@ -1,2 +1,2 @@
-export * from './ethr/EthrDID';
-export * from './ethr/EthrDIDFactory';
+export * from './ethr/ethrDID';
+export * from './ethr/ethrDIDFactory';

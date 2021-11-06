@@ -10,7 +10,7 @@
   "bugs": {
     "url": "https://github.com/energywebfoundation/ssi/issues"
   },
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && tsc",
     "test": "jest"

@@ -459,6 +459,10 @@
     {
       "packageName": "@energyweb/ssi-did",
       "projectFolder": "libraries/did"
+    },
+    {
+      "packageName": "@energyweb/ssi-wallet-api",
+      "projectFolder": "apps/ssi-wallet-api"
     }
   ]
 }
