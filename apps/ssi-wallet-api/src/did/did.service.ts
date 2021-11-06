@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { KeyService } from '../key/key.service';
 
 @Injectable()
-export class DidService {
+export class DIDService {
   constructor(private keyService: KeyService) {}
 
   public async generateEthrDID() {

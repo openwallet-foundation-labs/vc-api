@@ -1,16 +1,16 @@
 import { Methods } from '@ew-did-registry/did';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DidController } from './did.controller';
+import { DIDController } from './did.controller';
 
 describe('DidController', () => {
-  let controller: DidController;
+  let controller: DIDController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [DidController]
+      controllers: [DIDController]
     }).compile();
 
-    controller = module.get<DidController>(DidController);
+    controller = module.get<DIDController>(DIDController);
   });
 
   it('should be defined', () => {
