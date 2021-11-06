@@ -14,6 +14,9 @@ export class EthrDIDFactory {
 
   public async create(): Promise<EthrDID> {
     const controllingKey: JWK = await this._keyGen.generateSecp256k1();
+
+    // Converting from JWK to hex as this is what computeAddress function accepts
+    // Use of keyto inspired by https://github.com/decentralized-identity/EcdsaSecp256k1RecoverySignature2020/blob/3b6dc297f92abc912049121c38c1098d819855d2/src/ES256K-R.js#L48
     const uncompressedPublicKey = keyto
       .from(
         {
@@ -24,6 +27,7 @@ export class EthrDIDFactory {
       )
       .toString('blk', 'public');
     const address = computeAddress(`0x${uncompressedPublicKey}`);
+
     const ethrDID = new EthrDID();
     ethrDID.did = `did:ethr:volta:${address}`;
     ethrDID.controllingKeyThumbprint = await calculateJwkThumbprint(controllingKey, "sha256");
