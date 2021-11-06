@@ -452,10 +452,9 @@
     //   "reviewCategory": "production"
     // },
     // 
-    // {
-    //   "packageName": "my-toolchain",
-    //   "projectFolder": "tools/my-toolchain",
-    //   "reviewCategory": "tools"
-    // }
+    {
+      "packageName": "@energyweb/ssi-kms-interface",
+      "projectFolder": "libraries/kms-interface"
+    }
   ]
 }
