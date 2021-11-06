@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { KeyModule } from 'src/key/key.module';
+import { KeyModule } from '../key/key.module';
 
 @Module({
   imports: [KeyModule]
