@@ -7,10 +7,9 @@ export class DIDController {
   constructor(private didService: DIDService) {}
 
   @Post()
-  create(method: Methods, options: Record<string, unknown>) {
+  async create(method: Methods, options: Record<string, unknown>) {
     if (method === Methods.Erc1056) {
-      this.didService.generateEthrDID();
     }
-    return undefined;
+    return await this.didService.generateEthrDID();
   }
 }
