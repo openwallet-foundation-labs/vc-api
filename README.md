@@ -6,7 +6,7 @@
 # EWF Self-Sovereign-Identity (SSI) Wallet Apps
 
 ## Description
-This repository provides sample Self-Sovereign-Identity (SSI) wallet applications.
+This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications.
 
 //Purpose of package, sdk, etc. 
 
@@ -17,7 +17,16 @@ For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https:/
 
 ![Image](ssi-wallet-architecture.drawio.svg)
 
-### NestJS DID Example
+### NestJS DID Module Architecture Example
+
+The DID Module in the [nestjs-wallet](./apps/nestjs-wallet) offers the generation of DIDs.
+However, the DID generation logic is encapsulated in a [did](./libraries/did) library.
+This allows the logic to shared between wallets of various form-factors (e.g. nodejs wallet and web wallet).
+
+Often DID generation requires the generation of a new public-private keypair.
+This is the case for an `ethr` DID, which requires the generation of a new `secp256k1` key. This key is the initial controlling key of the new `ethr` DID.
+In order to rename agnostic to the key-generation and storage preferences of a particular wallet implementation, the [did](./libraries/did) library relies on key-operation interfaces.
+These interfaces are available in the [kms-interface](./libraries/kms-interface) library.
 
 [Link to Mermaid editor](https://mermaid-js.github.io/mermaid-live-editor/edit/#eyJjb2RlIjoiY2xhc3NEaWFncmFtXG4gICAgTmVzdEpTX0tleVNlcnZpY2UgPHwtLSBLTVNJbnRlcmZhY2VfSVNlY3AyNTZrMUtleUdlblxuICAgIE5lc3RKU19ESURTZXJ2aWNlICotLSBESURMaWJfRXRockRJREZhY3RvcnlcbiAgICBESURMaWJfRXRockRJREZhY3RvcnkgKi0tIEtNU0ludGVyZmFjZV9JU2VjcDI1NmsxS2V5R2VuXG4gICAgY2xhc3MgS01TSW50ZXJmYWNlX0lTZWNwMjU2azFLZXlHZW4ge1xuICAgICAgPDxpbnRlcmZhY2U-PlxuICAgICAgZ2VuZXJhdGVTZWNwMjU2azEoKVxuICAgIH1cbiAgICBjbGFzcyBOZXN0SlNfS2V5U2VydmljZSB7XG4gICAgICBnZW5lcmF0ZVNlY3AyNTZrMSgpXG4gICAgfVxuICAgIGNsYXNzIE5lc3RKU19ESURTZXJ2aWNle1xuICAgICAgZ2VuZXJhdGVFdGhyRElEKClcbiAgICB9XG4gICAgY2xhc3MgRElETGliX0V0aHJESURGYWN0b3J5e1xuICAgICAgZ2VuZXJhdGUoKVxuICAgIH1cbiAgICAgICAgICAgICIsIm1lcm1haWQiOiJ7XG4gIFwidGhlbWVcIjogXCJkZWZhdWx0XCJcbn0iLCJ1cGRhdGVFZGl0b3IiOmZhbHNlLCJhdXRvU3luYyI6dHJ1ZSwidXBkYXRlRGlhZ3JhbSI6ZmFsc2V9)
 
