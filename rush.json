@@ -461,8 +461,8 @@
       "projectFolder": "libraries/did"
     },
     {
-      "packageName": "@energyweb/ssi-wallet-api",
-      "projectFolder": "apps/ssi-wallet-api"
+      "packageName": "@energyweb/ssi-nestjs-wallet",
+      "projectFolder": "apps/nestjs-wallet"
     }
   ]
 }
