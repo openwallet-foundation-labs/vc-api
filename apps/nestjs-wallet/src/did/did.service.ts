@@ -6,16 +6,18 @@ import { KeyService } from '../key/key.service';
 
 @Injectable()
 export class DIDService {
+  private readonly ethrDIDFactory: EthrDIDFactory;
+
   constructor(
     private keyService: KeyService,
     @InjectRepository(EthrDID)
     private didRepository: Repository<EthrDID>
-  ) {}
+  ) {
+    this.ethrDIDFactory = new EthrDIDFactory(this.keyService);
+  }
 
   public async generateEthrDID(): Promise<EthrDID> {
-    // TODO: make EthrDidFactory shared between calls
-    const factory = new EthrDIDFactory(this.keyService);
-    const did = await factory.create();
+    const did = await this.ethrDIDFactory.create();
     this.didRepository.save(did);
     return did;
   }
