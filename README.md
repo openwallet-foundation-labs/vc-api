@@ -6,12 +6,19 @@
 # EWF Self-Sovereign-Identity (SSI) Wallet Apps
 
 ## Description
-This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications.
-
-//Purpose of package, sdk, etc. 
+This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications and libraries to enable these apps.
+These are currently provided for demonstration purposes.
 
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
+
+## Relationship to other EWF components
+
+### iam-client-lib
+[iam-client-lib](https://github.com/energywebfoundation/iam-client-lib/) provides SSI related functions such as interaction with EWF's Switchboard role credential definitions, credential request and issuance and connection to the iam-cache-server. However, it does not provide any functionality for key or DID management. Therefore, iam-client-lib can be used with the keys and DIDs managed by the wallet applications.
+
+### iam-cache-server
+[iam-cache-server](https://github.com/energywebfoundation/iam-cache-server)
 
 ## Architecture
 
