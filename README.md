@@ -3,60 +3,78 @@
 </p>
 
 
-# PACKAGE NAME
+# EWF Self-Sovereign-Identity (SSI) Wallet Apps
 
 ## Description
-Overview of package. 
-{Package} is a module-based library built with xxx. 
+This repository provides sample Self-Sovereign-Identity (SSI) wallet applications.
 
 //Purpose of package, sdk, etc. 
 
-{Package} is a component of the [Energy Web Decentralized Operating System](#ew-dos)
-
-See {PACKAGE} deployed [here](link to Switchboard, Zero if applicable)
+These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
+For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
 
 ## Installation
-This is a Node.js module available through the npm registry.
+This repository is a monorepo that uses [Rush](https://rushjs.io/) with the PNPM package manager.
+
+PNPM is used for its speed and solution to NPM doppelgangers (as well as being the default option for rush).
+See comparison of [NPM vs PNPM vs Yarn for Rush](https://rushjs.io/pages/maintainer/package_managers/).
 
 ### Requirements
 
-Before installing, download and install Node.js. Node.js xxx or higher is required.
+PNPM is required. See installation instructions here: https://pnpm.js.org/installation/
 
-Installation is done using the following commands:
+Rush is required. See installation instructions here: https://rushjs.io/pages/intro/get_started/
 
-``` sh
-$ npm install
+Use rush to install dependencies (not the package manager directly).
+In other words, do not run `npm install` or `pnpm install`.
+This is because [Rush optimizes](https://rushjs.io/pages/developer/new_developer/) by installing all of the dependency packages in a central folder, and then uses symlinks to create the “node_modules” folder for each of the projects.
+
+```sh
+$ rush install
 ```
 
-## Build
-``` sh
-$ npm run build
+### Compile & Build
+Use rush to build.
+
+```sh
+$ rush build
 ```
 
 ## Run
+To run the `nestjs-wallet` app
 ``` sh
-$ npm run start
+$ cd apps/nestjs-wallet
+$ pnpm run start
 ```
-## Testing (delete if not needed)
-Testing Strategy
-
-### Integration Tests (delete if not needed)
+## Testing
+To run all tests in one command, a rush script has been added to `./common/config/rush/command-line.json` 
 ``` sh
-$ npm run test
-```
-
-### Unit Tests (delete if not needed)
-``` sh
-$ npm run test
+$ rush test
 ```
 
-For more details, visit the [installation guide](//LINK TO READ THE DOCS INSTALL PAGE)
+### NestJS Wallet Tests
+The NestJS wallet app has separate unit and e2e tests.
+See NestJS [testing documentation](https://docs.nestjs.com/fundamentals/testing#testing) for more information.
+These can be run with separate commands if desired.
+
+First navigate to the app
+``` sh
+$ cd apps/nestjs-wallet
+```
+
+Then, to run **unit** tests
+``` sh
+$ pnpm test:unit
+```
+
+Or, to run **e2e** tests
+``` sh
+$ pnpm test:e2e
+```
 
 ## Documentation
-- [ReadTheDocs](https://origins.readthedocs.io/en/latest/)
 
-## Who is Using {Package}?
-//For origin, 24/7, Zero might be good to have a few examples of implementations to give context of how its used
+## Who is Using This Repo?
 
 ## Contributing Guidelines 
 See [contributing.md](./contributing.md)
@@ -71,7 +89,6 @@ Or reach out to our contributing team members
 
 
 # EW-DOS
-//This should be the same in every repo. 
 The Energy Web Decentralized Operating System is a blockchain-based, multi-layer digital infrastructure. 
 
 The purpose of EW-DOS is to develop and deploy an open and decentralized digital operating system for the energy sector in support of a low-carbon, customer-centric energy future. 
