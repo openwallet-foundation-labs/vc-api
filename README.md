@@ -15,10 +15,16 @@ For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https:/
 ## Relationship to other EWF components
 
 ### iam-client-lib
-[iam-client-lib](https://github.com/energywebfoundation/iam-client-lib/) provides SSI related functions such as interaction with EWF's Switchboard role credential definitions, credential request and issuance and connection to the iam-cache-server. However, it does not provide any functionality for key or DID management. Therefore, iam-client-lib can be used with the keys and DIDs managed by the wallet applications.
+[iam-client-lib](https://github.com/energywebfoundation/iam-client-lib/) provides SSI related functions such as interaction with EWF's Switchboard role credential definitions, credential request and issuance and connection to the iam-cache-server.
+However, it does not provide any functionality for key or DID management.
+Therefore, iam-client-lib can be used with the keys and DIDs managed by the wallet applications.
 
 ### iam-cache-server
-[iam-cache-server](https://github.com/energywebfoundation/iam-cache-server)
+[iam-cache-server](https://github.com/energywebfoundation/iam-cache-server)'s persistence of issued credentials, requested credentials and DID relationships can used as a shared trusted third-party between wallets.
+
+### ew-did-registry
+[ew-did-registry](https://github.com/energywebfoundation/ew-did-registry) Though some code should be integrated between ew-did-registry and this repository,
+it is currently useful to have the sample wallets in a separate application to avoid a circular dependency where `iam-client-lib` depends on `ssi/ew-did-registry` which depends on `iam-client-lib`.
 
 ## Architecture
 
