@@ -12,11 +12,15 @@ export class DIDService {
     private didRepository: Repository<EthrDID>
   ) {}
 
-  public async generateEthrDID() {
+  public async generateEthrDID(): Promise<EthrDID> {
     // TODO: make EthrDidFactory shared between calls
     const factory = new EthrDIDFactory(this.keyService);
     const did = await factory.create();
     this.didRepository.save(did);
     return did;
+  }
+
+  public async getDID(did: string): Promise<EthrDID> {
+    return await this.didRepository.findOne(did);
   }
 }
