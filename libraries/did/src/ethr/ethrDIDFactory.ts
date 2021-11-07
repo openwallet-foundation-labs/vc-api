@@ -12,7 +12,7 @@ export class EthrDIDFactory {
     this._keyGen = keyGen;
   }
 
-  public async create(): Promise<EthrDID> {
+  public async generate(): Promise<EthrDID> {
     const controllingKey: JWK = await this._keyGen.generateSecp256k1();
 
     // Converting from JWK to hex as this is what computeAddress function accepts

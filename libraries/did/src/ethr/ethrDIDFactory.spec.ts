@@ -15,7 +15,7 @@ describe.only('EthrDIDFactory', () => {
       generateSecp256k1: () => Promise.resolve(publicKeyJwk)
     }
     const factory = new EthrDIDFactory(mockKeyGen);
-    const did = await factory.create()
+    const did = await factory.generate()
     expect(did.did).toEqual('did:ethr:volta:0x346E9a6197A01dF272b873975ECbc5e190043E73');
     expect(did.controllingKeyThumbprint).toEqual('JUvpllMEYUZ2joO59UNui_XYDqxVqiFLLAJ8klWuPBw');
   });

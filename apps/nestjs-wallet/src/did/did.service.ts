@@ -17,7 +17,7 @@ export class DIDService {
   }
 
   public async generateEthrDID(): Promise<EthrDID> {
-    const did = await this.ethrDIDFactory.create();
+    const did = await this.ethrDIDFactory.generate();
     this.didRepository.save(did);
     return did;
   }
