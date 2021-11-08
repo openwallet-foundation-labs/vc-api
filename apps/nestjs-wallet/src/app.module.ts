@@ -5,6 +5,7 @@ import { DidModule } from './did/did.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EthrDID } from '@energyweb/ssi-did';
 import { DIDPurposeModule } from './did-purpose/did-purpose.module';
+import { CredentialsModule } from './credentials/credentials.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { DIDPurposeModule } from './did-purpose/did-purpose.module';
     ConfigModule.forRoot(),
     KeyModule, 
     DidModule,
-    DIDPurposeModule
+    DIDPurposeModule,
+    CredentialsModule
   ],
 })
 export class AppModule {}
