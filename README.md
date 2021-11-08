@@ -35,7 +35,7 @@ it is currently useful to have the sample wallets in a separate application to a
 
 The DID Module in the [nestjs-wallet](./apps/nestjs-wallet) offers the generation of DIDs.
 However, the DID generation logic is encapsulated in a [did](./libraries/did) library.
-This allows the logic to shared between wallets of various form-factors (e.g. nodejs wallet and web wallet).
+This allows the logic to shared between wallets of various form-factors (e.g. nodejs wallet, a web wallet, another nodejs framework, etc in the future).
 
 Often DID generation requires the generation of a new public-private keypair.
 This is the case for an `ethr` DID, which requires the generation of a new `secp256k1` key. This key is the initial controlling key of the new `ethr` DID.
