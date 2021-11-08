@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DIDController } from './did/did.controller';
-import { DIDService } from './did/did.service';
-import { KeyService } from './key/key.service';
 import { KeyModule } from './key/key.module';
 import { DidModule } from './did/did.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EthrDID } from '@energyweb/ssi-did';
+import { DIDPurposeModule } from './did-purpose/did-purpose.module';
 
 @Module({
   imports: [
@@ -19,7 +17,8 @@ import { EthrDID } from '@energyweb/ssi-did';
     }),
     ConfigModule.forRoot(),
     KeyModule, 
-    DidModule
-  ]
+    DidModule,
+    DIDPurposeModule
+  ],
 })
 export class AppModule {}
