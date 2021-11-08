@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EthrDID } from '@energyweb/ssi-did';
 import { DIDPurposeModule } from './did-purpose/did-purpose.module';
 import { CredentialsModule } from './credentials/credentials.module';
+import { DIDContactModule } from './did-contact/did-contact.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { CredentialsModule } from './credentials/credentials.module';
     KeyModule, 
     DidModule,
     DIDPurposeModule,
-    CredentialsModule
+    CredentialsModule,
+    DIDContactModule
   ],
 })
 export class AppModule {}
