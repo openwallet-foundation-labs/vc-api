@@ -4,7 +4,7 @@
 </p>
 
 
-# EWF Self-Sovereign-Identity (SSI) Wallet Apps
+# EWF and Elia Group Self-Sovereign-Identity (SSI) Wallet Apps
 
 ## Description
 This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications and libraries to enable these apps.
