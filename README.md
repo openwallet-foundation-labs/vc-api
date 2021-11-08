@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.energyweb.org" target="blank"><img src="./EW.png" width="120" alt="Energy Web Foundation Logo" /></a>
-  <a href="https://www.eliagroup.com/" target="blank"><img src="./EG.jpg" width="120" alt="Elia Group Logo" /></a>
+  <a href="https://www.eliagroup.com/" target="blank"><img src="./EG.jpg" height="120" alt="Elia Group Logo" /></a>
 </p>
 
 
