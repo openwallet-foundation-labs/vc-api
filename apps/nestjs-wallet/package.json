@@ -35,7 +35,8 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "typeorm": "^0.2.38",
-    "better-sqlite3": "~7.4.4"
+    "better-sqlite3": "~7.4.4",
+    "@spruceid/didkit-wasm-node": "~0.1.6"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

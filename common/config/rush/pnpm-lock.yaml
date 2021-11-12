@@ -14,6 +14,7 @@ specifiers:
   '@rush-temp/ssi-kms-interface': file:./projects/ssi-kms-interface.tgz
   '@rush-temp/ssi-nestjs-wallet': file:./projects/ssi-nestjs-wallet.tgz
   '@rushstack/eslint-config': ~2.3.2
+  '@spruceid/didkit-wasm-node': ~0.1.6
   '@trust/keyto': ^1.0.1
   '@types/express': ^4.17.13
   '@types/jest': ^26.0.24
@@ -55,6 +56,7 @@ dependencies:
   '@rush-temp/ssi-kms-interface': file:projects/ssi-kms-interface.tgz
   '@rush-temp/ssi-nestjs-wallet': file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3
   '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
+  '@spruceid/didkit-wasm-node': 0.1.6
   '@trust/keyto': 1.0.1
   '@types/express': 4.17.13
   '@types/jest': 26.0.24
@@ -1486,6 +1488,14 @@ packages:
     resolution: {integrity: sha512-OAPJUAtgeINhh/TAlUID4QTs53Njm7xzddaVlEs/SXwgtiD1tW22zAB/W1wdqfrpmikgaWQ9Fw6Ws+hsiRm5Vg==}
     dependencies:
       '@sinonjs/commons': 1.8.3
+    dev: false
+
+  /@spruceid/didkit-wasm-node/0.1.6:
+    resolution: {integrity: sha512-8+NDgNCDLvNf142Up7DKZLqG04G6soiFoMw8ZX3U4pVyu2r3GPWP2Dc3sPGMF+8Aegoe6GbVT3gZjCFoKMt4bw==}
+    dev: false
+
+  /@spruceid/didkit-wasm/0.1.9:
+    resolution: {integrity: sha512-VUP7bm7uWrAjSKzqAvgsAmueFLQ6MhaCN2INGxUmWhcZe9x87DeUneaeqJV2QuLsdPrwowmNcKnyZtJeNeWqIQ==}
     dev: false
 
   /@sqltools/formatter/1.2.3:
@@ -7959,7 +7969,7 @@ packages:
     dev: false
 
   file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-dEESWQPjZJHd6KXJCyUwbFEs9btMUhcwUhrDS+RTJ6N9PGX+71oG8yXUYt8c4DcoBzjLdI5IipR7WZhLNtc3Ag==, tarball: file:projects/ssi-nestjs-wallet.tgz}
+    resolution: {integrity: sha512-PYe8Mgi6ZB3G0yXTJddPaMwBYrmETywVHriWn4MMK0PtBgpKBzf0MO2KTpSX/+TrWReTk8s9Kr5kpszdRwp3iQ==, tarball: file:projects/ssi-nestjs-wallet.tgz}
     id: file:projects/ssi-nestjs-wallet.tgz
     name: '@rush-temp/ssi-nestjs-wallet'
     version: 0.0.0
@@ -7973,6 +7983,8 @@ packages:
       '@nestjs/schematics': 8.0.4_typescript@4.4.4
       '@nestjs/testing': 8.1.2_830699a7a1bc4b367722dd63c0377123
       '@nestjs/typeorm': 8.0.2_12346420c5d0822584d78b786936ea28
+      '@spruceid/didkit-wasm': 0.1.9
+      '@spruceid/didkit-wasm-node': 0.1.6
       '@types/express': 4.17.13
       '@types/jest': 26.0.24
       '@types/node': 16.11.6

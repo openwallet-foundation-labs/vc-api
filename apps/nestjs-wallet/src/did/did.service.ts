@@ -22,6 +22,12 @@ export class DIDService {
     return did;
   }
 
+  public async generateKeyDID(): Promise<EthrDID> {
+    const did = await this.ethrDIDFactory.generate();
+    this.didRepository.save(did);
+    return did;
+  }
+
   public async getDID(did: string): Promise<EthrDID> {
     return await this.didRepository.findOne(did);
   }

@@ -15,4 +15,9 @@ describe('KeyService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('should generate an Ed25519Key', async () => {
+    const key = await service.generateEd25119();
+    expect(key).toBeDefined();
+  });
 });
