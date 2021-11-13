@@ -22,6 +22,7 @@ describe('CredentialsService', () => {
     const key = generateEd25519Key();
     const did = keyToDID('key', key);
     const verificationMethod = await keyToVerificationMethod('key', key);
+    // "did:key:z6MktsT5A2ZpyM21x4GPHiejjrFLejZeLnNeFxCq3cuQdiK3#z6MktsT5A2ZpyM21x4GPHiejjrFLejZeLnNeFxCq3cuQdiK3"
     const credential = {
       '@context': ['https://www.w3.org/2018/credentials/v1'],
       id: 'http://example.org/credentials/3731',

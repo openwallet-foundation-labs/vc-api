@@ -1,5 +1,5 @@
 import { ISecp256k1KeyGen } from '@energyweb/ssi-kms-interface';
-import { DIDEthrFactory } from '.';
+import { DIDEthrFactory } from './did-ethr-factory';
 
 describe.only('DIDEthrFactory', () => {
   it('should create did', async () => {

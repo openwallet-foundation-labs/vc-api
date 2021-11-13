@@ -1,4 +1,4 @@
-import { EthrDIDFactory } from '@energyweb/ssi-did';
+import { DIDEthrFactory } from '@energyweb/ssi-did';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
@@ -9,7 +9,7 @@ import { VerificationMethodEntity } from './entities/verification-method.entity'
 
 @Injectable()
 export class DIDService {
-  private readonly ethrDIDFactory: EthrDIDFactory;
+  private readonly DIDEthrFactory: DIDEthrFactory;
 
   constructor(
     private keyService: KeyService,
@@ -18,11 +18,11 @@ export class DIDService {
     @InjectRepository(VerificationMethodEntity)
     private verificationMethodRepository: Repository<VerificationMethodEntity>
   ) {
-    this.ethrDIDFactory = new EthrDIDFactory(this.keyService);
+    this.DIDEthrFactory = new DIDEthrFactory(this.keyService);
   }
 
   public async generateEthrDID(): Promise<DIDDocument> {
-    const didDoc = await this.ethrDIDFactory.generate();
+    const didDoc = await this.DIDEthrFactory.generate();
     const didDocEntity = this.didRepository.create(didDoc);
     didDocEntity.verificationMethod = didDoc.verificationMethod
       ? didDoc.verificationMethod.map((verificationMethod: VerificationMethod) => {
@@ -33,7 +33,7 @@ export class DIDService {
   }
 
   public async generateKeyDID(): Promise<DIDDocument> {
-    const did = await this.ethrDIDFactory.generate();
+    const did = await this.DIDEthrFactory.generate();
     this.didRepository.save(did);
     return did;
   }
