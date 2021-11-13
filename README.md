@@ -6,12 +6,20 @@
 
 # EWF and Elia Group Self-Sovereign-Identity (SSI) Wallet Apps
 
-## Description
+## Introduction
 This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications and libraries to enable these apps.
 These are currently provided for demonstration purposes.
 
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
+
+## Component Descriptions
+
+### NestJS Wallet API
+#### Notes
+- Uses **in-memory DB** for now for app execution and tests.
+The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.
+The rationale for this for tests (rather than mocking the db) is that it speeds test writing time, elimates mocking boilerplate and possibly buggy DB mocks.
 
 ## Relationship to other EWF components
 
