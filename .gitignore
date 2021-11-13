@@ -67,5 +67,6 @@ common/autoinstallers/*/.npmrc
 # Heft
 .heft
 
+# Custom from default rush file
 dist
 .vscode/
