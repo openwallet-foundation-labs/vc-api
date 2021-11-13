@@ -1,5 +1,4 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
-import { Methods } from '@ew-did-registry/did';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DIDService } from './did.service';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
 
@@ -8,10 +7,14 @@ export class DIDController {
   constructor(private didService: DIDService) {}
 
   @Post()
-  async create(method: Methods, options: Record<string, unknown>): Promise<DIDDocument> {
-    if (method === Methods.Erc1056) {
+  async create(@Body() body: any): Promise<DIDDocument> {
+    if (body.method === 'ethr') {
+      return await this.didService.generateEthrDID();
     }
-    return await this.didService.generateEthrDID();
+    if (body.method === 'key') {
+      return await this.didService.generateKeyDID();
+    }
+    throw new Error('Requested DID method not supported');
   }
 
   @Get('/:did')

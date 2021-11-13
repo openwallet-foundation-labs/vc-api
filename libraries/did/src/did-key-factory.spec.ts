@@ -1,4 +1,3 @@
-import { IEd25519KeyGen } from '@energyweb/ssi-kms-interface';
 import { DIDKeyFactory } from './did-key-factory';
 
 describe.only('DIDKeyFactory', () => {
@@ -9,11 +8,7 @@ describe.only('DIDKeyFactory', () => {
       x: 'l5weWO83oqUve6Q5SJncYvRqnONyJWaRi3eKUMhUU38',
       kid: 'n3mdJC_7o3016F8StU_oR9R-AePnpKZFJ8gRaZTSoZU'
     };
-    const mockKeyGen: IEd25519KeyGen = {
-      generateEd25119: () => Promise.resolve(publicKeyJWK)
-    };
-    const factory = new DIDKeyFactory(mockKeyGen);
-    const didDocument = await factory.generate();
+    const didDocument = await DIDKeyFactory.generate(publicKeyJWK);
     expect(didDocument.id).toEqual('did:key:z6Mkpf5gPMANfqmgCfzDye4kCnLRwC7mtqrtjZ3J87AjKddx');
     expect(didDocument.verificationMethod?.length).toEqual(1);
     const verificationMethod = didDocument.verificationMethod![0];

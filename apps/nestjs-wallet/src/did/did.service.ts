@@ -1,4 +1,4 @@
-import { DIDEthrFactory } from '@energyweb/ssi-did';
+import { DIDEthrFactory, DIDKeyFactory } from '@energyweb/ssi-did';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
@@ -9,33 +9,28 @@ import { VerificationMethodEntity } from './entities/verification-method.entity'
 
 @Injectable()
 export class DIDService {
-  private readonly DIDEthrFactory: DIDEthrFactory;
-
   constructor(
     private keyService: KeyService,
     @InjectRepository(DIDDocumentEntity)
     private didRepository: Repository<DIDDocumentEntity>,
     @InjectRepository(VerificationMethodEntity)
     private verificationMethodRepository: Repository<VerificationMethodEntity>
-  ) {
-    this.DIDEthrFactory = new DIDEthrFactory(this.keyService);
-  }
+  ) {}
 
   public async generateEthrDID(): Promise<DIDDocument> {
-    const didDoc = await this.DIDEthrFactory.generate();
-    const didDocEntity = this.didRepository.create(didDoc);
-    didDocEntity.verificationMethod = didDoc.verificationMethod
-      ? didDoc.verificationMethod.map((verificationMethod: VerificationMethod) => {
-          return this.verificationMethodRepository.create(verificationMethod);
-        })
-      : [];
-    return await this.didRepository.save(didDocEntity);
+    const key = await this.keyService.generateSecp256k1();
+    // Need to set kty because it is possibly undefined in 'jose' JWK type
+    const difKey = { ...key, kty: 'EC' };
+    const didDoc = await DIDEthrFactory.generate(difKey);
+    return await this.saveNewDIDDoc(didDoc);
   }
 
   public async generateKeyDID(): Promise<DIDDocument> {
-    const did = await this.DIDEthrFactory.generate();
-    this.didRepository.save(did);
-    return did;
+    const key = await this.keyService.generateEd25119();
+    // Need to set kty because it is possibly undefined in 'jose' JWK type
+    const difKey = { ...key, kty: 'OKP' };
+    const didDoc = await DIDKeyFactory.generate(difKey);
+    return await this.saveNewDIDDoc(didDoc);
   }
 
   public async getDID(did: string): Promise<DIDDocument> {
@@ -44,5 +39,24 @@ export class DIDService {
 
   public async getVerificationMethod(id: string): Promise<VerificationMethod> {
     return await this.verificationMethodRepository.findOne(id);
+  }
+
+  /**
+   * Assumes a single verification method associated with the new DID Doc.
+   * As this is the case for did:ethr and did:key
+   */
+  private async saveNewDIDDoc(didDoc: DIDDocument): Promise<DIDDocument> {
+    const didDocEntity = this.didRepository.create(didDoc);
+    if (didDoc.verificationMethod?.length !== 1) {
+      throw new Error(`Default DID document for ethr method should contain one verificaiton method. 
+                       Found ${didDoc.verificationMethod?.length} methods instead.`);
+    }
+    const verificationMethod = didDoc.verificationMethod[0];
+    if (!verificationMethod.publicKeyJwk) {
+      throw new Error(`publickKeyJwk should be set so that we can refer key material`);
+    }
+    const verificationMethodEntity = this.verificationMethodRepository.create(verificationMethod);
+    didDocEntity.verificationMethod = [verificationMethodEntity];
+    return await this.didRepository.save(didDocEntity);
   }
 }

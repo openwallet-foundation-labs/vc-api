@@ -1,3 +1,4 @@
+import { DifJsonWebKey } from '@energyweb/ssi-did';
 import { VerificationMethod } from 'did-resolver';
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { DIDDocumentEntity } from './did-document.entity';
@@ -29,10 +30,13 @@ export class VerificationMethodEntity implements VerificationMethod {
   @Column('text')
   controller: string;
 
+  @Column('simple-json')
+  publicKeyJwk: DifJsonWebKey;
+
   /**
    * The DID Documents that reference this verification method
    * In principle, a verification method could be used by many DIDs? (to be confirmed)
    */
   @ManyToOne((type) => DIDDocumentEntity, (didDoc) => didDoc.verificationMethod)
-  public didDoc: DIDDocumentEntity;
+  didDoc: DIDDocumentEntity;
 }
