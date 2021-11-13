@@ -11,17 +11,13 @@ describe.only('EthrDIDFactory', () => {
       x: 'dWCvM4fTdeM0KmloF57zxtBPXTOythHPMm1HCLrdd3A',
       y: '36uMVGM7hnw-N6GnjFcihWE3SkrhMLzzLCdPMXPEXlA'
     };
-    const publicKeyThumbprint = 'JUvpllMEYUZ2joO59UNui_XYDqxVqiFLLAJ8klWuPBw';
     const mockKeyGen: ISecp256k1KeyGen = {
-      generateSecp256k1: () =>
-        Promise.resolve({
-          publicKeyJWK,
-          publicKeyThumbprint
-        })
+      generateSecp256k1: () => Promise.resolve(publicKeyJWK)
     };
     const factory = new EthrDIDFactory(mockKeyGen);
-    const did = await factory.generate();
-    expect(did.did).toEqual('did:ethr:volta:0x346E9a6197A01dF272b873975ECbc5e190043E73');
-    expect(did.controllingKeyThumbprint).toEqual(publicKeyThumbprint);
+    const didDocument = await factory.generate();
+    expect(didDocument.id).toEqual('did:ethr:volta:0x346E9a6197A01dF272b873975ECbc5e190043E73');
+    expect(didDocument.verificationMethod?.length).toEqual(1);
+    expect(didDocument.verificationMethod![0].publicKeyJwk).toMatchObject(publicKeyJWK);
   });
 });

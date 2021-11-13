@@ -10,7 +10,7 @@ import { TypeOrmSQLiteModule } from './in-memory-db';
 
 @Module({
   imports: [
-    ...TypeOrmSQLiteModule(),
+    TypeOrmSQLiteModule(),
     ConfigModule.forRoot(),
     KeyModule,
     DidModule,

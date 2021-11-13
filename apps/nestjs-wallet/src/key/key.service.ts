@@ -1,11 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import {
-  ISecp256k1KeyGen,
-  IEd25519KeyGen,
-  IKeyGenResult,
-  IPrivateKeyFromThumbprint
-} from '@energyweb/ssi-kms-interface';
-import { generateKeyPair, exportJWK, calculateJwkThumbprint, GenerateKeyPairResult, JWK } from 'jose';
+import { ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKeyFromThumbprint } from '@energyweb/ssi-kms-interface';
+import { generateKeyPair, exportJWK, GenerateKeyPairResult, JWK, calculateJwkThumbprint } from 'jose';
 import { InjectRepository } from '@nestjs/typeorm';
 import { KeyPair } from './key-pair.entity';
 import { Repository } from 'typeorm';
@@ -20,12 +15,12 @@ export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKey
     private keyRepository: Repository<KeyPair>
   ) {}
 
-  async generateSecp256k1(): Promise<IKeyGenResult> {
+  async generateSecp256k1(): Promise<JWK> {
     const keyGenResult = await generateKeyPair('ES256K');
     return await this.saveNewKey(keyGenResult);
   }
 
-  async generateEd25119(): Promise<IKeyGenResult> {
+  async generateEd25119(): Promise<JWK> {
     // picked 'EdDSA' as 'alg' based on:
     // - https://stackoverflow.com/a/66894047
     // - https://github.com/panva/jose/issues/210
@@ -38,19 +33,16 @@ export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKey
     return keyPair?.privateKeyJWK;
   }
 
-  private async saveNewKey(keyGenResult: GenerateKeyPairResult): Promise<IKeyGenResult> {
+  private async saveNewKey(keyGenResult: GenerateKeyPairResult): Promise<JWK> {
     const publicKeyJWK = await exportJWK(keyGenResult.publicKey);
+    publicKeyJWK.kid = await calculateJwkThumbprint(publicKeyJWK, 'sha256');
     const privateKeyJWK = await exportJWK(keyGenResult.privateKey);
-    const publicKeyThumbprint = await calculateJwkThumbprint(publicKeyJWK, 'sha256');
     const keyEntity = this.keyRepository.create({
       publicKeyJWK,
       privateKeyJWK,
-      publicKeyThumbprint
+      publicKeyThumbprint: publicKeyJWK.kid
     });
     await this.keyRepository.save(keyEntity);
-    return {
-      publicKeyThumbprint,
-      publicKeyJWK
-    };
+    return publicKeyJWK;
   }
 }

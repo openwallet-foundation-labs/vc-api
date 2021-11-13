@@ -24,10 +24,12 @@ specifiers:
   '@typescript-eslint/parser': ^4.28.2
   babel-jest: 26.6.3
   better-sqlite3: ~7.4.4
+  did-resolver: ~3.1.3
   eslint: ^7.30.0
   eslint-config-prettier: ^8.3.0
   eslint-plugin-prettier: ^3.4.0
   ethers: 5.5.1
+  ethr-did-resolver: ~5.0.2
   jest: 27.0.6
   jose: ^4.1.5
   prettier: ^2.3.2
@@ -52,7 +54,7 @@ dependencies:
   '@nestjs/schematics': 8.0.4_typescript@4.4.4
   '@nestjs/testing': 8.1.2_830699a7a1bc4b367722dd63c0377123
   '@nestjs/typeorm': 8.0.2_12346420c5d0822584d78b786936ea28
-  '@rush-temp/ssi-did': file:projects/ssi-did.tgz_12e6d6060673403f6cbf66e87d9a2656
+  '@rush-temp/ssi-did': file:projects/ssi-did.tgz_ts-node@10.4.0
   '@rush-temp/ssi-kms-interface': file:projects/ssi-kms-interface.tgz
   '@rush-temp/ssi-nestjs-wallet': file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3
   '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
@@ -66,10 +68,12 @@ dependencies:
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.4
   babel-jest: 26.6.3
   better-sqlite3: 7.4.4
+  did-resolver: 3.1.3
   eslint: 7.32.0
   eslint-config-prettier: 8.3.0_eslint@7.32.0
   eslint-plugin-prettier: 3.4.1_6e975bd57c7acf028c1a9ddbbf60c898
   ethers: 5.5.1
+  ethr-did-resolver: 5.0.2
   jest: 27.0.6_ts-node@10.4.0
   jose: 4.1.5
   prettier: 2.4.1
@@ -3198,6 +3202,10 @@ packages:
       streamsearch: 0.1.2
     dev: false
 
+  /did-resolver/3.1.3:
+    resolution: {integrity: sha512-ab8y90tSiDkTdfddXRC9Qcb1QSd568aC6+OgFTrcE4rs1vQAZOil+VqXHDu+Ff/UvhxlckPO8oJtp86iICZG0w==}
+    dev: false
+
   /diff-sequences/26.6.2:
     resolution: {integrity: sha512-Mv/TDa3nZ9sbc5soK+OoA74BsS3mL37yixCvUAQkiuA4Wz6YtwP/K47n2rv2ovzHZvoiQeA5FTQOschKkEwB0Q==}
     engines: {node: '>= 10.14.2'}
@@ -3616,6 +3624,29 @@ packages:
       '@ethersproject/wallet': 5.5.0
       '@ethersproject/web': 5.5.0
       '@ethersproject/wordlists': 5.5.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /ethr-did-registry/0.0.3:
+    resolution: {integrity: sha512-4BPvMGkxAK9vTduCq6D5b8ZqjteD2cvDIPPriXP6nnmPhWKFSxypo+AFvyQ0omJGa0cGTR+dkdI/8jiF7U/qaw==}
+    dev: false
+
+  /ethr-did-resolver/5.0.2:
+    resolution: {integrity: sha512-Mtlcu/5JLdJ+eQv4SX61iWfBgL474yW2qnHu15A9Yz9y7iVH411VkMpljvkGEwtDCTQM3WXmpPDXBxeZwcPqPg==}
+    dependencies:
+      '@ethersproject/abi': 5.5.0
+      '@ethersproject/abstract-signer': 5.5.0
+      '@ethersproject/address': 5.5.0
+      '@ethersproject/basex': 5.5.0
+      '@ethersproject/bignumber': 5.5.0
+      '@ethersproject/contracts': 5.5.0
+      '@ethersproject/providers': 5.5.0
+      '@ethersproject/transactions': 5.5.0
+      did-resolver: 3.1.3
+      ethr-did-registry: 0.0.3
+      querystring: 0.2.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -6312,6 +6343,12 @@ packages:
     engines: {node: '>=0.6'}
     dev: false
 
+  /querystring/0.2.1:
+    resolution: {integrity: sha512-wkvS7mL/JMugcup3/rMitHmd9ecIGd2lhFhK9N3UUQ450h66d1r3Y9nvXzQAW1Lq+wyx61k/1pfKS5KuKiyEbg==}
+    engines: {node: '>=0.4.x'}
+    deprecated: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+    dev: false
+
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: false
@@ -7909,8 +7946,8 @@ packages:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
     dev: false
 
-  file:projects/ssi-did.tgz_12e6d6060673403f6cbf66e87d9a2656:
-    resolution: {integrity: sha512-TJMqbs09np8aMi/c50t9d2E8Pqya20vHVcdh06FPlrRJ7SASR6efgQmc8ssyXmTZDxG87B/DE6l7ppzdSxkHzw==, tarball: file:projects/ssi-did.tgz}
+  file:projects/ssi-did.tgz_ts-node@10.4.0:
+    resolution: {integrity: sha512-QbAo6tCXnZo4BrK9+nl5FIptnhf4ViG0NAQMONiGUcEYDf5SlR1lpEssGPz2+elBwYz3KMY+oow75fQskjCZLw==, tarball: file:projects/ssi-did.tgz}
     id: file:projects/ssi-did.tgz
     name: '@rush-temp/ssi-did'
     version: 0.0.0
@@ -7919,45 +7956,32 @@ packages:
       '@trust/keyto': 1.0.1
       '@types/jest': 26.0.24
       babel-jest: 26.6.3
+      did-resolver: 3.1.3
       eslint: 7.32.0
       ethers: 5.5.1
+      ethr-did-resolver: 5.0.2
       jest: 27.0.6_ts-node@10.4.0
       jose: 4.1.5
       rimraf: 3.0.2
       ts-jest: 27.0.7_ec3222e78695a6b5e6d9aa95aceec9d7
-      typeorm: 0.2.38_better-sqlite3@7.4.4
       typescript: 4.4.4
     transitivePeerDependencies:
       - '@babel/core'
-      - '@sap/hana-client'
-      - better-sqlite3
       - bufferutil
       - canvas
-      - hdb-pool
-      - ioredis
-      - mongodb
-      - mssql
-      - mysql2
       - node-notifier
-      - oracledb
-      - pg
-      - pg-native
-      - pg-query-stream
-      - redis
-      - sql.js
-      - sqlite3
       - supports-color
       - ts-node
-      - typeorm-aurora-data-api-driver
       - utf-8-validate
     dev: false
 
   file:projects/ssi-kms-interface.tgz:
-    resolution: {integrity: sha512-Pdbs+GVrJ7fT0fkFo5qsusfgiRxhpWMAyb/BGLjpo/J02+ox+CBDbu+JebZZibBHOQNlnnY4MiQyRf3BCR9ayQ==, tarball: file:projects/ssi-kms-interface.tgz}
+    resolution: {integrity: sha512-xhf1Zk0IqDE5pmHTWoMrwM+K1vlMDkzln3WOsxq0MyAnkSxZteXiuAFWrfbJvNK/viJJKsnX9k+lAdb+xngTDg==, tarball: file:projects/ssi-kms-interface.tgz}
     name: '@rush-temp/ssi-kms-interface'
     version: 0.0.0
     dependencies:
       '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
+      did-resolver: 3.1.3
       eslint: 7.32.0
       ethers: 5.5.1
       jose: 4.1.5
@@ -7969,7 +7993,7 @@ packages:
     dev: false
 
   file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-PYe8Mgi6ZB3G0yXTJddPaMwBYrmETywVHriWn4MMK0PtBgpKBzf0MO2KTpSX/+TrWReTk8s9Kr5kpszdRwp3iQ==, tarball: file:projects/ssi-nestjs-wallet.tgz}
+    resolution: {integrity: sha512-jj3mmHxESw5WUzYpdqzeej59BPO6SaWMjqXaAsnhmIvQf5HADdcLBdUdfD0mAqDnd+FzJEIieq+0cJQ3ce1JIg==, tarball: file:projects/ssi-nestjs-wallet.tgz}
     id: file:projects/ssi-nestjs-wallet.tgz
     name: '@rush-temp/ssi-nestjs-wallet'
     version: 0.0.0
@@ -7992,6 +8016,7 @@ packages:
       '@typescript-eslint/eslint-plugin': 4.33.0_cc617358c89d3f38c52462f6d809db4c
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.4
       better-sqlite3: 7.4.4
+      did-resolver: 3.1.3
       eslint: 7.32.0
       eslint-config-prettier: 8.3.0_eslint@7.32.0
       eslint-plugin-prettier: 3.4.1_6e975bd57c7acf028c1a9ddbbf60c898

@@ -1,22 +1,27 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
 import { Methods } from '@ew-did-registry/did';
 import { DIDService } from './did.service';
-import { EthrDID } from '@energyweb/ssi-did';
+import { DIDDocument, VerificationMethod } from 'did-resolver';
 
 @Controller('did')
 export class DIDController {
   constructor(private didService: DIDService) {}
 
   @Post()
-  async create(method: Methods, options: Record<string, unknown>): Promise<EthrDID> {
+  async create(method: Methods, options: Record<string, unknown>): Promise<DIDDocument> {
     if (method === Methods.Erc1056) {
     }
     return await this.didService.generateEthrDID();
   }
 
   @Get('/:did')
-  async getByDID(@Param('did') did: string): Promise<EthrDID> {
+  async getByDID(@Param('did') did: string): Promise<DIDDocument> {
     return await this.didService.getDID(did);
+  }
+
+  @Get('/verification-methods/:did')
+  async getVerificationMethods(@Param('did') did: string): Promise<VerificationMethod> {
+    throw new Error('Not implemented');
   }
 
   /**

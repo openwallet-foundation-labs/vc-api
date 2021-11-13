@@ -21,7 +21,9 @@
     "@energyweb/ssi-kms-interface": "0.0.1",
     "@trust/keyto": "^1.0.1",
     "ethers": "5.5.1",
-    "typeorm": "^0.2.38"
+    "jose": "^4.1.5",
+    "did-resolver": "~3.1.3",
+    "ethr-did-resolver": "~5.0.2"
   },
   "devDependencies": {
     "@rushstack/eslint-config": "~2.3.2",
