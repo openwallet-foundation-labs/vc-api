@@ -1,1 +1,1 @@
-export * from './ethr/ethrDIDFactory';
+export * from './did-ethr-factory';

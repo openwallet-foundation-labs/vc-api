@@ -7,7 +7,7 @@ import { JWK } from 'jose';
 
 const { computeAddress } = utils;
 
-export class EthrDIDFactory {
+export class DIDEthrFactory {
   private readonly _keyGen: ISecp256k1KeyGen;
   public constructor(keyGen: ISecp256k1KeyGen) {
     this._keyGen = keyGen;

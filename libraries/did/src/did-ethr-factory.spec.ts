@@ -1,7 +1,7 @@
 import { ISecp256k1KeyGen } from '@energyweb/ssi-kms-interface';
-import { EthrDIDFactory } from '..';
+import { DIDEthrFactory } from '.';
 
-describe.only('EthrDIDFactory', () => {
+describe.only('DIDEthrFactory', () => {
   it('should create did', async () => {
     // copied from https://w3c-ccg.github.io/lds-ecdsa-secp256k1-2019/#example-1
     const publicKeyJWK = {
@@ -14,7 +14,7 @@ describe.only('EthrDIDFactory', () => {
     const mockKeyGen: ISecp256k1KeyGen = {
       generateSecp256k1: () => Promise.resolve(publicKeyJWK)
     };
-    const factory = new EthrDIDFactory(mockKeyGen);
+    const factory = new DIDEthrFactory(mockKeyGen);
     const didDocument = await factory.generate();
     expect(didDocument.id).toEqual('did:ethr:volta:0x346E9a6197A01dF272b873975ECbc5e190043E73');
     expect(didDocument.verificationMethod?.length).toEqual(1);
