@@ -24,6 +24,7 @@ specifiers:
   '@typescript-eslint/parser': ^4.28.2
   babel-jest: 26.6.3
   better-sqlite3: ~7.4.4
+  class-validator: ~0.13.1
   did-resolver: ~3.1.3
   eslint: ^7.30.0
   eslint-config-prettier: ^8.3.0
@@ -47,7 +48,7 @@ specifiers:
 dependencies:
   '@ew-did-registry/did': 0.6.0
   '@nestjs/cli': 8.1.4_eslint@7.32.0
-  '@nestjs/common': 8.1.2_ad16f1f28877c5242670873e13562245
+  '@nestjs/common': 8.1.2_c2a93ef24da43be16d0c9c84e67396db
   '@nestjs/config': 1.1.0_b3e6921aee41404e2866237bfdfd83a3
   '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
   '@nestjs/platform-express': 8.1.2_bbf59b1cbf49bba2b2f47e404ee3cb27
@@ -68,6 +69,7 @@ dependencies:
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.4
   babel-jest: 26.6.3
   better-sqlite3: 7.4.4
+  class-validator: 0.13.1
   did-resolver: 3.1.3
   eslint: 7.32.0
   eslint-config-prettier: 8.3.0_eslint@7.32.0
@@ -1228,7 +1230,7 @@ packages:
       - webpack-cli
     dev: false
 
-  /@nestjs/common/8.1.2_ad16f1f28877c5242670873e13562245:
+  /@nestjs/common/8.1.2_43f93dd897e68fe834a23ddd32fb54cc:
     resolution: {integrity: sha512-5k9iFRj0HkAe1gn6Ozx5UWzbRyT8xCgZ663FWsVc5Cf6BJ+OYhQC8Y5cuVx8gsbSnzc0AUpcknPP5rYh2TkLOQ==}
     peerDependencies:
       cache-manager: '*'
@@ -1245,6 +1247,35 @@ packages:
         optional: true
     dependencies:
       axios: 0.23.0
+      class-transformer: 0.4.0
+      class-validator: 0.13.1
+      iterare: 1.2.1
+      reflect-metadata: 0.1.13
+      rxjs: 7.4.0
+      tslib: 2.3.1
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /@nestjs/common/8.1.2_c2a93ef24da43be16d0c9c84e67396db:
+    resolution: {integrity: sha512-5k9iFRj0HkAe1gn6Ozx5UWzbRyT8xCgZ663FWsVc5Cf6BJ+OYhQC8Y5cuVx8gsbSnzc0AUpcknPP5rYh2TkLOQ==}
+    peerDependencies:
+      cache-manager: '*'
+      class-transformer: '*'
+      class-validator: '*'
+      reflect-metadata: ^0.1.12
+      rxjs: ^7.1.0
+    peerDependenciesMeta:
+      cache-manager:
+        optional: true
+      class-transformer:
+        optional: true
+      class-validator:
+        optional: true
+    dependencies:
+      axios: 0.23.0
+      class-validator: 0.13.1
       iterare: 1.2.1
       reflect-metadata: 0.1.13
       rxjs: 7.4.0
@@ -1261,7 +1292,7 @@ packages:
       reflect-metadata: ^0.1.13
       rxjs: ^6.0.0 || ^7.2.0
     dependencies:
-      '@nestjs/common': 8.1.2_ad16f1f28877c5242670873e13562245
+      '@nestjs/common': 8.1.2_c2a93ef24da43be16d0c9c84e67396db
       dotenv: 10.0.0
       dotenv-expand: 5.1.0
       lodash.get: 4.4.2
@@ -1290,7 +1321,7 @@ packages:
       '@nestjs/websockets':
         optional: true
     dependencies:
-      '@nestjs/common': 8.1.2_ad16f1f28877c5242670873e13562245
+      '@nestjs/common': 8.1.2_c2a93ef24da43be16d0c9c84e67396db
       '@nestjs/platform-express': 8.1.2_bbf59b1cbf49bba2b2f47e404ee3cb27
       '@nuxtjs/opencollective': 0.3.2
       fast-safe-stringify: 2.1.1
@@ -1309,7 +1340,7 @@ packages:
       '@nestjs/common': ^8.0.0
       '@nestjs/core': ^8.0.0
     dependencies:
-      '@nestjs/common': 8.1.2_ad16f1f28877c5242670873e13562245
+      '@nestjs/common': 8.1.2_c2a93ef24da43be16d0c9c84e67396db
       '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
       body-parser: 1.19.0
       cors: 2.8.5
@@ -1358,7 +1389,7 @@ packages:
         optional: true
     dependencies:
       optional: 0.1.4
-      '@nestjs/common': 8.1.2_ad16f1f28877c5242670873e13562245
+      '@nestjs/common': 8.1.2_c2a93ef24da43be16d0c9c84e67396db
       '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
       '@nestjs/platform-express': 8.1.2_bbf59b1cbf49bba2b2f47e404ee3cb27
       tslib: 2.3.1
@@ -1373,7 +1404,7 @@ packages:
       rxjs: ^7.2.0
       typeorm: ^0.2.34
     dependencies:
-      '@nestjs/common': 8.1.2_ad16f1f28877c5242670873e13562245
+      '@nestjs/common': 8.1.2_c2a93ef24da43be16d0c9c84e67396db
       '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
       reflect-metadata: 0.1.13
       rxjs: 7.4.0
@@ -1703,6 +1734,10 @@ packages:
     resolution: {integrity: sha512-uci4Esokrw9qGb9bvhhSVEjd6rkny/dk5PK/Qz4yxKiyppEI+dOPlNrZBahE3i+PoKFYyDxChVXZ/ysS/nrm1Q==}
     dependencies:
       '@types/superagent': 4.1.13
+    dev: false
+
+  /@types/validator/13.6.6:
+    resolution: {integrity: sha512-+qogUELb4gMhrMjSh/seKmGVvN+uQLfyqJAqYRWqVHsvBsUO2xDBCL8CJ/ZSukbd8vXaoYbpIssAmfLEzzBHEw==}
     dev: false
 
   /@types/yargs-parser/20.2.1:
@@ -2817,6 +2852,10 @@ packages:
     resolution: {integrity: sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==}
     dev: false
 
+  /class-transformer/0.4.0:
+    resolution: {integrity: sha512-ETWD/H2TbWbKEi7m9N4Km5+cw1hNcqJSxlSYhsLsNjQzWWiZIYA1zafxpK9PwVfaZ6AqR5rrjPVUBGESm5tQUA==}
+    dev: false
+
   /class-utils/0.3.6:
     resolution: {integrity: sha512-qOhPa/Fj7s6TY8H8esGu5QNpMMQxz79h+urzrNYN6mn+9BnxlDGf5QZ+XeCDsxSjPqsSR56XOZOJmpeurnLMeg==}
     engines: {node: '>=0.10.0'}
@@ -2825,6 +2864,14 @@ packages:
       define-property: 0.2.5
       isobject: 3.0.1
       static-extend: 0.1.2
+    dev: false
+
+  /class-validator/0.13.1:
+    resolution: {integrity: sha512-zWIeYFhUitvAHBwNhDdCRK09hWx+P0HUwFE8US8/CxFpMVzkUK8RJl7yOIE+BVu2lxyPNgeOaFv78tLE47jBIg==}
+    dependencies:
+      '@types/validator': 13.6.6
+      libphonenumber-js: 1.9.42
+      validator: 13.7.0
     dev: false
 
   /cli-cursor/3.1.0:
@@ -5510,6 +5557,10 @@ packages:
       type-check: 0.4.0
     dev: false
 
+  /libphonenumber-js/1.9.42:
+    resolution: {integrity: sha512-UBtU0ylpZPKPT8NLIyQJWj/DToMFxmo3Fm5m6qDc0LATvf0SY0qUhaurCEvukAB9Fo+Ia2Anjzqwoupaa64fXg==}
+    dev: false
+
   /lines-and-columns/1.1.6:
     resolution: {integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=}
     dev: false
@@ -7640,6 +7691,11 @@ packages:
       source-map: 0.7.3
     dev: false
 
+  /validator/13.7.0:
+    resolution: {integrity: sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==}
+    engines: {node: '>= 0.10'}
+    dev: false
+
   /vary/1.1.2:
     resolution: {integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=}
     engines: {node: '>= 0.8'}
@@ -7976,7 +8032,7 @@ packages:
     dev: false
 
   file:projects/ssi-kms-interface.tgz:
-    resolution: {integrity: sha512-xhf1Zk0IqDE5pmHTWoMrwM+K1vlMDkzln3WOsxq0MyAnkSxZteXiuAFWrfbJvNK/viJJKsnX9k+lAdb+xngTDg==, tarball: file:projects/ssi-kms-interface.tgz}
+    resolution: {integrity: sha512-Pdbs+GVrJ7fT0fkFo5qsusfgiRxhpWMAyb/BGLjpo/J02+ox+CBDbu+JebZZibBHOQNlnnY4MiQyRf3BCR9ayQ==, tarball: file:projects/ssi-kms-interface.tgz}
     name: '@rush-temp/ssi-kms-interface'
     version: 0.0.0
     dependencies:
@@ -7993,14 +8049,14 @@ packages:
     dev: false
 
   file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-jj3mmHxESw5WUzYpdqzeej59BPO6SaWMjqXaAsnhmIvQf5HADdcLBdUdfD0mAqDnd+FzJEIieq+0cJQ3ce1JIg==, tarball: file:projects/ssi-nestjs-wallet.tgz}
+    resolution: {integrity: sha512-GLPeiZMoZsrg18pN7AfpkNIqsoHowBNdvdMpmWytDfEk6A81cfzJCGSYV0LabS9LdYx12q3suW9QtLUbJ5wv5Q==, tarball: file:projects/ssi-nestjs-wallet.tgz}
     id: file:projects/ssi-nestjs-wallet.tgz
     name: '@rush-temp/ssi-nestjs-wallet'
     version: 0.0.0
     dependencies:
       '@ew-did-registry/did': 0.6.0
       '@nestjs/cli': 8.1.4_eslint@7.32.0
-      '@nestjs/common': 8.1.2_ad16f1f28877c5242670873e13562245
+      '@nestjs/common': 8.1.2_43f93dd897e68fe834a23ddd32fb54cc
       '@nestjs/config': 1.1.0_b3e6921aee41404e2866237bfdfd83a3
       '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
       '@nestjs/platform-express': 8.1.2_bbf59b1cbf49bba2b2f47e404ee3cb27
@@ -8016,6 +8072,8 @@ packages:
       '@typescript-eslint/eslint-plugin': 4.33.0_cc617358c89d3f38c52462f6d809db4c
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.4
       better-sqlite3: 7.4.4
+      class-transformer: 0.4.0
+      class-validator: 0.13.1
       did-resolver: 3.1.3
       eslint: 7.32.0
       eslint-config-prettier: 8.3.0_eslint@7.32.0
@@ -8044,8 +8102,6 @@ packages:
       - bufferutil
       - cache-manager
       - canvas
-      - class-transformer
-      - class-validator
       - debug
       - esbuild
       - hdb-pool
