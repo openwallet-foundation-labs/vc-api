@@ -1,10 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  generateEd25519Key,
-  issueCredential,
-  keyToDID,
-  keyToVerificationMethod
-} from '@spruceid/didkit-wasm-node';
+import { generateEd25519Key, keyToDID, keyToVerificationMethod } from '@spruceid/didkit-wasm-node';
+import { JWK } from 'jose';
 import { CredentialsService } from './credentials.service';
 
 describe('CredentialsService', () => {
@@ -26,8 +22,8 @@ describe('CredentialsService', () => {
     const key = generateEd25519Key();
     const did = keyToDID('key', key);
     const verificationMethod = await keyToVerificationMethod('key', key);
-    const credential = JSON.stringify({
-      '@context': 'https://www.w3.org/2018/credentials/v1',
+    const credential = {
+      '@context': ['https://www.w3.org/2018/credentials/v1'],
       id: 'http://example.org/credentials/3731',
       type: ['VerifiableCredential'],
       issuer: did,
@@ -35,12 +31,13 @@ describe('CredentialsService', () => {
       credentialSubject: {
         id: 'did:example:d23dd687a7dc6787646f2eb98d0'
       }
-    });
-    const proofOptions = JSON.stringify({
+    };
+    const proofOptions = {
       proofPurpose: 'assertionMethod',
       verificationMethod: verificationMethod
-    });
-    const vc = await issueCredential(credential, proofOptions, key);
+    };
+    const jsonWebKey: JWK = JSON.parse(key);
+    const vc = await service.issueCredential(credential, proofOptions, jsonWebKey);
     expect(vc).toBeDefined();
   });
 });

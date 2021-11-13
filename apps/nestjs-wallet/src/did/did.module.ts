@@ -9,6 +9,7 @@ import { VerificationMethodEntity } from './entities/verification-method.entity'
 @Module({
   imports: [KeyModule, TypeOrmModule.forFeature([DIDDocumentEntity, VerificationMethodEntity])],
   controllers: [DIDController],
-  providers: [DIDService]
+  providers: [DIDService],
+  exports: [DIDService]
 })
 export class DidModule {}

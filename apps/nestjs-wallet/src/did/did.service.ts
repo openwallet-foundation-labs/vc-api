@@ -16,7 +16,7 @@ export class DIDService {
     @InjectRepository(DIDDocumentEntity)
     private didRepository: Repository<DIDDocumentEntity>,
     @InjectRepository(VerificationMethodEntity)
-    private verificationRepository: Repository<VerificationMethodEntity>
+    private verificationMethodRepository: Repository<VerificationMethodEntity>
   ) {
     this.ethrDIDFactory = new EthrDIDFactory(this.keyService);
   }
@@ -26,7 +26,7 @@ export class DIDService {
     const didDocEntity = this.didRepository.create(didDoc);
     didDocEntity.verificationMethod = didDoc.verificationMethod
       ? didDoc.verificationMethod.map((verificationMethod: VerificationMethod) => {
-          return this.verificationRepository.create(verificationMethod);
+          return this.verificationMethodRepository.create(verificationMethod);
         })
       : [];
     return await this.didRepository.save(didDocEntity);
@@ -40,5 +40,9 @@ export class DIDService {
 
   public async getDID(did: string): Promise<DIDDocument> {
     return await this.didRepository.findOne(did, { relations: ['verificationMethod'] });
+  }
+
+  public async getVerificationMethod(id: string): Promise<VerificationMethod> {
+    return await this.verificationMethodRepository.findOne(id);
   }
 }
