@@ -21,7 +21,6 @@
     "@energyweb/ssi-kms-interface": "0.0.1",
     "@trust/keyto": "^1.0.1",
     "ethers": "5.5.1",
-    "jose": "^4.1.5",
     "typeorm": "^0.2.38"
   },
   "devDependencies": {
