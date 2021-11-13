@@ -12,6 +12,7 @@
 common/changes/
 common/scripts/
 common/config/
+common/temp/
 CHANGELOG.*
 
 # Package manager files

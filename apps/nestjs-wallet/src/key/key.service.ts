@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ISecp256k1KeyGen, IEd25519KeyGen, IKeyGenResult, IPrivateKeyFromThumbprint } from '@energyweb/ssi-kms-interface';
+import {
+  ISecp256k1KeyGen,
+  IEd25519KeyGen,
+  IKeyGenResult,
+  IPrivateKeyFromThumbprint
+} from '@energyweb/ssi-kms-interface';
 import { generateKeyPair, exportJWK, calculateJwkThumbprint, GenerateKeyPairResult, JWK } from 'jose';
 import { InjectRepository } from '@nestjs/typeorm';
 import { KeyPair } from './key-pair.entity';
@@ -10,11 +15,10 @@ import { Repository } from 'typeorm';
  */
 @Injectable()
 export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKeyFromThumbprint {
-  
   constructor(
     @InjectRepository(KeyPair)
     private keyRepository: Repository<KeyPair>
-  ) { }
+  ) {}
 
   async generateSecp256k1(): Promise<IKeyGenResult> {
     const keyGenResult = await generateKeyPair('ES256K');
@@ -37,7 +41,7 @@ export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKey
   private async saveNewKey(keyGenResult: GenerateKeyPairResult): Promise<IKeyGenResult> {
     const publicKeyJWK = await exportJWK(keyGenResult.publicKey);
     const privateKeyJWK = await exportJWK(keyGenResult.privateKey);
-    const publicKeyThumbprint = await calculateJwkThumbprint(publicKeyJWK, "sha256");
+    const publicKeyThumbprint = await calculateJwkThumbprint(publicKeyJWK, 'sha256');
     const keyEntity = this.keyRepository.create({
       publicKeyJWK,
       privateKeyJWK,

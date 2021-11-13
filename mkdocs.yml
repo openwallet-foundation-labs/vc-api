@@ -1,19 +1,19 @@
 site_name: EW-Origin
 
 nav:
-    - Introduction: index.md
-    - Installation: installation.md
-    - Architecture: architecture.md
-    - Packages: packages.md
-    - User guides:
-    - API:
+  - Introduction: index.md
+  - Installation: installation.md
+  - Architecture: architecture.md
+  - Packages: packages.md
+  - User guides:
+  - API:
 
 theme: material
 
 plugins:
-    - mermaid2
-    - search
-    - autolinks
+  - mermaid2
+  - search
+  - autolinks
 
 extra_javascript:
-    - https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js
+  - https://unpkg.com/mermaid@8.8.4/dist/mermaid.min.js

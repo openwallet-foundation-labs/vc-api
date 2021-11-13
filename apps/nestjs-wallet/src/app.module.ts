@@ -12,11 +12,11 @@ import { TypeOrmSQLiteModule } from './in-memory-db';
   imports: [
     ...TypeOrmSQLiteModule(),
     ConfigModule.forRoot(),
-    KeyModule, 
+    KeyModule,
     DidModule,
     DIDPurposeModule,
     CredentialsModule,
     DIDContactModule
-  ],
+  ]
 })
 export class AppModule {}

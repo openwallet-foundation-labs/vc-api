@@ -12,9 +12,7 @@ describe('DidController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [KeyModule, ...TypeOrmSQLiteModule()],
       controllers: [DIDController],
-      providers: [
-        DIDService
-      ]
+      providers: [DIDService]
     }).compile();
 
     controller = module.get<DIDController>(DIDController);

@@ -6,10 +6,7 @@ import { Controller } from '@nestjs/common';
  */
 @Controller('credentials')
 export class CredentialsController {
-
-    // ISSUER https://w3c-ccg.github.io/vc-api/issuer.html
-
-    // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
-
-    // HOLDER https://w3c-ccg.github.io/vc-api/holder.html
+  // ISSUER https://w3c-ccg.github.io/vc-api/issuer.html
+  // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
+  // HOLDER https://w3c-ccg.github.io/vc-api/holder.html
 }

@@ -6,7 +6,7 @@ import { EthrDID } from './ethrDID';
 const { computeAddress } = utils;
 
 export class EthrDIDFactory {
-  private readonly _keyGen: ISecp256k1KeyGen
+  private readonly _keyGen: ISecp256k1KeyGen;
   public constructor(keyGen: ISecp256k1KeyGen) {
     this._keyGen = keyGen;
   }

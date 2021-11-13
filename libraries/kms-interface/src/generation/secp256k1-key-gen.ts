@@ -7,7 +7,7 @@ import { IKeyGenResult } from '..';
 export interface ISecp256k1KeyGen {
   /**
    * Generate AND store an secp256k1 key pair
-   * @returns Secp256k1 key generation result 
+   * @returns Secp256k1 key generation result
    */
   generateSecp256k1: () => Promise<IKeyGenResult>;
 }

@@ -6,7 +6,7 @@ describe('DidPurposeController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [DIDPurposeController],
+      controllers: [DIDPurposeController]
     }).compile();
 
     controller = module.get<DIDPurposeController>(DIDPurposeController);

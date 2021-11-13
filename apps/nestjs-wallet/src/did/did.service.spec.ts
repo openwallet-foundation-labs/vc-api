@@ -9,9 +9,7 @@ describe('DIDService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [KeyModule, ...TypeOrmSQLiteModule()],
-      providers: [
-        DIDService,
-      ]
+      providers: [DIDService]
     }).compile();
 
     service = module.get<DIDService>(DIDService);

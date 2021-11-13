@@ -29,5 +29,5 @@ describe('App (e2e)', () => {
       expect(getResponse.body).toHaveProperty('controllingKeyThumbprint');
       expect(postResponse.body.controllingKeyThumbprint).toEqual(getResponse.body.controllingKeyThumbprint);
     });
-  })
+  });
 });

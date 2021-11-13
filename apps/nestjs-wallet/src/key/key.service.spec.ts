@@ -27,7 +27,7 @@ describe('KeyService', () => {
   });
 
   it('should return undefined if asked for privateKey that it does not have', async () => {
-    const result = await service.retrievePrivateKey("thumbprint-of-not-available-key");
+    const result = await service.retrievePrivateKey('thumbprint-of-not-available-key');
     expect(result).toBeUndefined();
   });
 });
