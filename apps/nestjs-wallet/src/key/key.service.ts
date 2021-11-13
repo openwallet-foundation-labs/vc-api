@@ -31,7 +31,7 @@ export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKey
 
   async retrievePrivateKey(publicKeyThumbprint: string): Promise<JWK> {
     const keyPair = await this.keyRepository.findOne(publicKeyThumbprint);
-    return keyPair.privateKeyJWK;
+    return keyPair?.privateKeyJWK;
   }
 
   private async saveNewKey(keyGenResult: GenerateKeyPairResult): Promise<IKeyGenResult> {

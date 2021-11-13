@@ -1,25 +1,16 @@
-import { EthrDID } from '@energyweb/ssi-did';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { TypeOrmSQLiteModule } from '../in-memory-db';
 import { KeyModule } from '../key/key.module';
 import { DIDService } from './did.service';
-
-const repositoryMockFactory = jest.fn(() => ({
-  save: jest.fn(entity => entity),
-}));
 
 describe('DIDService', () => {
   let service: DIDService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KeyModule],
+      imports: [KeyModule, ...TypeOrmSQLiteModule()],
       providers: [
         DIDService,
-        {
-          provide: getRepositoryToken(EthrDID),
-          useFactory: repositoryMockFactory,
-        },
       ]
     }).compile();
 
