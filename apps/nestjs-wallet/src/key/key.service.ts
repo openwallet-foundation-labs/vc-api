@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ISecp256k1KeyGen, IEd25519KeyGen, IKeyGenResult } from '@energyweb/ssi-kms-interface';
-import { generateKeyPair, exportJWK, calculateJwkThumbprint, GenerateKeyPairResult } from 'jose';
+import { ISecp256k1KeyGen, IEd25519KeyGen, IKeyGenResult, IPrivateKeyFromThumbprint } from '@energyweb/ssi-kms-interface';
+import { generateKeyPair, exportJWK, calculateJwkThumbprint, GenerateKeyPairResult, JWK } from 'jose';
 import { InjectRepository } from '@nestjs/typeorm';
 import { KeyPair } from './key-pair.entity';
 import { Repository } from 'typeorm';
@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
  * "jose" package is recommended by OpenID developer: https://openid.net/developers/jwt/
  */
 @Injectable()
-export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen {
+export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKeyFromThumbprint {
   
   constructor(
     @InjectRepository(KeyPair)
@@ -27,6 +27,11 @@ export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen {
     // - https://github.com/panva/jose/issues/210
     const keyGenResult = await generateKeyPair('EdDSA');
     return await this.saveNewKey(keyGenResult);
+  }
+
+  async retrievePrivateKey(publicKeyThumbprint: string): Promise<JWK> {
+    const keyPair = await this.keyRepository.findOne(publicKeyThumbprint);
+    return keyPair.privateKeyJWK;
   }
 
   private async saveNewKey(keyGenResult: GenerateKeyPairResult): Promise<IKeyGenResult> {
