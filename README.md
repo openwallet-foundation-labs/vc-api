@@ -12,48 +12,36 @@ These are currently provided for demonstration purposes.
 
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
-
-## Component Descriptions
-
-### NestJS Wallet API
-#### Notes
-- Uses **in-memory DB** for now for app execution and tests.
-The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.
-The rationale for this for tests (rather than mocking the db) is that it speeds test writing time, elimates mocking boilerplate and possibly buggy DB mocks.
-- Keep the key module separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point
-
-## Relationship to other EWF components
-
-### iam-client-lib
-[iam-client-lib](https://github.com/energywebfoundation/iam-client-lib/) provides SSI related functions such as interaction with EWF's Switchboard role credential definitions, credential request and issuance and connection to the iam-cache-server.
-However, it does not provide any functionality for key or DID management.
-Therefore, iam-client-lib can be used with the keys and DIDs managed by the wallet applications.
-
-### iam-cache-server
-[iam-cache-server](https://github.com/energywebfoundation/iam-cache-server)'s persistence of issued credentials, requested credentials and DID relationships can used as a shared trusted third-party between wallets.
-
-### ew-did-registry
-[ew-did-registry](https://github.com/energywebfoundation/ew-did-registry) Though some code should be integrated between ew-did-registry and this repository,
-it is currently useful to have the sample wallets in a separate application to avoid a circular dependency where `iam-client-lib` depends on `ssi/ew-did-registry` which depends on `iam-client-lib`.
-
 ## Architecture
 
 ![Image](ssi-wallet-architecture.drawio.svg)
 
-### NestJS DID Module Architecture Example
+## NestJS Wallet API Modules
+### DID Module
 
-The DID Module in the [nestjs-wallet](./apps/nestjs-wallet) offers the generation of DIDs.
+The DID Module in the [nestjs-wallet](./apps/nestjs-wallet) offers the generation of DIDs and tracking the data resolvable in their DID documents.
 However, the DID generation logic is encapsulated in a [did](./libraries/did) library.
 This allows the logic to shared between wallets of various form-factors (e.g. nodejs wallet, a web wallet, another nodejs framework, etc in the future).
 
 Often DID generation requires the generation of a new public-private keypair.
 This is the case for an `ethr` DID, which requires the generation of a new `secp256k1` key. This key is the initial controlling key of the new `ethr` DID.
-In order to rename agnostic to the key-generation and storage preferences of a particular wallet implementation, the [did](./libraries/did) library relies on key-operation interfaces.
-These interfaces are available in the [kms-interface](./libraries/kms-interface) library.
+In order to rename agnostic to the key-generation and storage preferences of a particular wallet implementation, the [did](./libraries/did) DID factories accept public keys in the standard format of JWK.
 
-[Link to Mermaid editor](https://mermaid-js.github.io/mermaid-live-editor/edit/#eyJjb2RlIjoiY2xhc3NEaWFncmFtXG4gICAgTmVzdEpTX0tleVNlcnZpY2UgPHwtLSBLTVNJbnRlcmZhY2VfSVNlY3AyNTZrMUtleUdlblxuICAgIE5lc3RKU19ESURTZXJ2aWNlICotLSBESURMaWJfRXRockRJREZhY3RvcnlcbiAgICBESURMaWJfRXRockRJREZhY3RvcnkgKi0tIEtNU0ludGVyZmFjZV9JU2VjcDI1NmsxS2V5R2VuXG4gICAgY2xhc3MgS01TSW50ZXJmYWNlX0lTZWNwMjU2azFLZXlHZW4ge1xuICAgICAgPDxpbnRlcmZhY2U-PlxuICAgICAgZ2VuZXJhdGVTZWNwMjU2azEoKVxuICAgIH1cbiAgICBjbGFzcyBOZXN0SlNfS2V5U2VydmljZSB7XG4gICAgICBnZW5lcmF0ZVNlY3AyNTZrMSgpXG4gICAgfVxuICAgIGNsYXNzIE5lc3RKU19ESURTZXJ2aWNle1xuICAgICAgZ2VuZXJhdGVFdGhyRElEKClcbiAgICB9XG4gICAgY2xhc3MgRElETGliX0V0aHJESURGYWN0b3J5e1xuICAgICAgZ2VuZXJhdGUoKVxuICAgIH1cbiAgICAgICAgICAgICIsIm1lcm1haWQiOiJ7XG4gIFwidGhlbWVcIjogXCJkZWZhdWx0XCJcbn0iLCJ1cGRhdGVFZGl0b3IiOmZhbHNlLCJhdXRvU3luYyI6dHJ1ZSwidXBkYXRlRGlhZ3JhbSI6ZmFsc2V9)
+An abstracted process of creating a DID controlled by a asymmetric key-pair is therefore:
+```javascript
+const key = generateKey(); // Generate a key pair and return the public key necessary to create the DID
+const did = generateDID(key); // Code from ssi-did lib. Returns initial DID Document of DID, including Verification Methods
+```
 
-[![](https://mermaid.ink/img/eyJjb2RlIjoiY2xhc3NEaWFncmFtXG4gICAgTmVzdEpTX0tleVNlcnZpY2UgPHwtLSBLTVNJbnRlcmZhY2VfSVNlY3AyNTZrMUtleUdlblxuICAgIE5lc3RKU19ESURTZXJ2aWNlICotLSBESURMaWJfRXRockRJREZhY3RvcnlcbiAgICBESURMaWJfRXRockRJREZhY3RvcnkgKi0tIEtNU0ludGVyZmFjZV9JU2VjcDI1NmsxS2V5R2VuXG4gICAgY2xhc3MgS01TSW50ZXJmYWNlX0lTZWNwMjU2azFLZXlHZW4ge1xuICAgICAgPDxpbnRlcmZhY2U-PlxuICAgICAgZ2VuZXJhdGVTZWNwMjU2azEoKVxuICAgIH1cbiAgICBjbGFzcyBOZXN0SlNfS2V5U2VydmljZSB7XG4gICAgICBnZW5lcmF0ZVNlY3AyNTZrMSgpXG4gICAgfVxuICAgIGNsYXNzIE5lc3RKU19ESURTZXJ2aWNle1xuICAgICAgZ2VuZXJhdGVFdGhyRElEKClcbiAgICB9XG4gICAgY2xhc3MgRElETGliX0V0aHJESURGYWN0b3J5e1xuICAgICAgZ2VuZXJhdGUoKVxuICAgIH1cbiAgICAgICAgICAgICIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2UsImF1dG9TeW5jIjp0cnVlLCJ1cGRhdGVEaWFncmFtIjpmYWxzZX0)](https://mermaid-js.github.io/mermaid-live-editor/edit/#eyJjb2RlIjoiY2xhc3NEaWFncmFtXG4gICAgTmVzdEpTX0tleVNlcnZpY2UgPHwtLSBLTVNJbnRlcmZhY2VfSVNlY3AyNTZrMUtleUdlblxuICAgIE5lc3RKU19ESURTZXJ2aWNlICotLSBESURMaWJfRXRockRJREZhY3RvcnlcbiAgICBESURMaWJfRXRockRJREZhY3RvcnkgKi0tIEtNU0ludGVyZmFjZV9JU2VjcDI1NmsxS2V5R2VuXG4gICAgY2xhc3MgS01TSW50ZXJmYWNlX0lTZWNwMjU2azFLZXlHZW4ge1xuICAgICAgPDxpbnRlcmZhY2U-PlxuICAgICAgZ2VuZXJhdGVTZWNwMjU2azEoKVxuICAgIH1cbiAgICBjbGFzcyBOZXN0SlNfS2V5U2VydmljZSB7XG4gICAgICBnZW5lcmF0ZVNlY3AyNTZrMSgpXG4gICAgfVxuICAgIGNsYXNzIE5lc3RKU19ESURTZXJ2aWNle1xuICAgICAgZ2VuZXJhdGVFdGhyRElEKClcbiAgICB9XG4gICAgY2xhc3MgRElETGliX0V0aHJESURGYWN0b3J5e1xuICAgICAgZ2VuZXJhdGUoKVxuICAgIH1cbiAgICAgICAgICAgICIsIm1lcm1haWQiOiJ7XG4gIFwidGhlbWVcIjogXCJkZWZhdWx0XCJcbn0iLCJ1cGRhdGVFZGl0b3IiOmZhbHNlLCJhdXRvU3luYyI6dHJ1ZSwidXBkYXRlRGlhZ3JhbSI6ZmFsc2V9)
+### Key Module
+The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
+
+### Credential Module
+
+## NestJS Wallet Implementation Notes
+- Uses **in-memory DB** for now for app execution and tests.
+The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.
+The rationale for this for tests (rather than mocking the db) is that it speeds test writing time, elimates mocking boilerplate and possibly buggy DB mocks.
 
 ## Installation
 This repository is a monorepo that uses [Rush](https://rushjs.io/) with the PNPM package manager.
@@ -145,6 +133,20 @@ For a deep-dive into the motivation and methodology behind our technical solutio
 
 - [Energy Web White Paper on Vision and Purpose](https://www.energyweb.org/reports/EWDOS-Vision-Purpose/)
 - [Energy Web  White Paper on Technology Detail](https://www.energyweb.org/wp-content/uploads/2020/06/EnergyWeb-EWDOS-PART2-TechnologyDetail-202006-vFinal.pdf)
+
+## Relationship to other EWF components
+
+### iam-client-lib
+[iam-client-lib](https://github.com/energywebfoundation/iam-client-lib/) provides SSI related functions such as interaction with EWF's Switchboard role credential definitions, credential request and issuance and connection to the iam-cache-server.
+However, it does not provide any functionality for key or DID management.
+Therefore, iam-client-lib can be used with the keys and DIDs managed by the wallet applications.
+
+### iam-cache-server
+[iam-cache-server](https://github.com/energywebfoundation/iam-cache-server)'s persistence of issued credentials, requested credentials and DID relationships can used as a shared trusted third-party between wallets.
+
+### ew-did-registry
+[ew-did-registry](https://github.com/energywebfoundation/ew-did-registry) Though some code should be integrated between ew-did-registry and this repository,
+it is currently useful to have the sample wallets in a separate application to avoid a circular dependency where `iam-client-lib` depends on `ssi/ew-did-registry` which depends on `iam-client-lib`.
 
 
 ## Connect with Energy Web
