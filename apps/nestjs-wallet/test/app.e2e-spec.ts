@@ -17,7 +17,10 @@ describe('App (e2e)', () => {
 
   describe('DID', () => {
     it('should create and retrieve an ethr DID', async () => {
-      const postResponse = await request(app.getHttpServer()).post('/did').expect(201);
+      const postResponse = await request(app.getHttpServer())
+        .post('/did')
+        .send({ method: 'ethr' })
+        .expect(201);
       expect(postResponse.body).toHaveProperty('id');
       expect(postResponse.body).toHaveProperty('verificationMethod');
       expect(postResponse.body['verificationMethod']).toHaveLength(1);
@@ -30,7 +33,7 @@ describe('App (e2e)', () => {
       expect(postResponse.body['verificationMethod']).toMatchObject(getResponse.body['verificationMethod']);
     });
 
-    it.only('should create and retrieve an key DID', async () => {
+    it('should create and retrieve an key DID', async () => {
       const postResponse = await request(app.getHttpServer())
         .post('/did')
         .send({ method: 'key' })

@@ -7,6 +7,7 @@ import { KeyService } from './key.service';
 
 describe('KeyService', () => {
   let service: KeyService;
+  let newPublicKey: JWK;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,26 +28,30 @@ describe('KeyService', () => {
   });
 
   describe('Ed25519', () => {
-    keyGenerationTest(service.generateEd25119);
+    beforeEach(async () => {
+      newPublicKey = await service.generateEd25119();
+    });
+    keyGenerationTest();
   });
 
   describe('Secp256k1', () => {
-    keyGenerationTest(service.generateSecp256k1);
+    beforeEach(async () => {
+      newPublicKey = await service.generateSecp256k1();
+    });
+    keyGenerationTest();
   });
 
-  function keyGenerationTest(generateKey: () => Promise<JWK>) {
+  function keyGenerationTest() {
     /**
      * From https://www.w3.org/TR/did-core/#verification-material :
      * "It is RECOMMENDED that JWK kid values are set to the public key fingerprint [RFC7638]."
      */
     it('kid of generated key should be thumbprint', async () => {
-      const newPublicKey = await generateKey();
       const thumbprint = await calculateJwkThumbprint(newPublicKey, 'sha256');
       expect(newPublicKey.kid).toEqual(thumbprint);
     });
 
     it('should generate and retrieve a key', async () => {
-      const newPublicKey = await generateKey();
       const storedPrivateKey = await service.retrievePrivateKey(newPublicKey.kid);
       expect(storedPrivateKey).toBeDefined();
       // TODO: check that returned key actually matches generated key

@@ -1,4 +1,3 @@
-import { Methods } from '@ew-did-registry/did';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmSQLiteModule } from '../in-memory-db';
@@ -31,7 +30,7 @@ describe('DidController', () => {
 
   describe('create', () => {
     it('should create an ethr DID', async () => {
-      const did = await controller.create(Methods.Erc1056, {});
+      const did = await controller.create({ method: 'ethr' });
     });
   });
 });
