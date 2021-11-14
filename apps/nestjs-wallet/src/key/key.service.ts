@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKeyFromThumbprint } from '@energyweb/ssi-kms-interface';
 import { generateKeyPair, exportJWK, GenerateKeyPairResult, JWK, calculateJwkThumbprint } from 'jose';
 import { InjectRepository } from '@nestjs/typeorm';
 import { KeyPair } from './key-pair.entity';
@@ -9,7 +8,7 @@ import { Repository } from 'typeorm';
  * "jose" package is recommended by OpenID developer: https://openid.net/developers/jwt/
  */
 @Injectable()
-export class KeyService implements ISecp256k1KeyGen, IEd25519KeyGen, IPrivateKeyFromThumbprint {
+export class KeyService {
   constructor(
     @InjectRepository(KeyPair)
     private keyRepository: Repository<KeyPair>

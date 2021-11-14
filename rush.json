@@ -444,10 +444,6 @@
     // },
     //
     {
-      "packageName": "@energyweb/ssi-kms-interface",
-      "projectFolder": "libraries/kms-interface"
-    },
-    {
       "packageName": "@energyweb/ssi-did",
       "projectFolder": "libraries/did"
     },
