@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@ew-did-registry/did': ~0.6.0
   '@nestjs/cli': ^8.0.0
   '@nestjs/common': ^8.0.0
   '@nestjs/config': ~1.1.0
@@ -10,6 +11,7 @@ specifiers:
   '@nestjs/testing': ^8.0.0
   '@nestjs/typeorm': ^8.0.2
   '@rush-temp/ssi-did': file:./projects/ssi-did.tgz
+  '@rush-temp/w3c-ccg-webkms': file:./projects/w3c-ccg-webkms.tgz
   '@rush-temp/ssi-nestjs-wallet': file:./projects/ssi-nestjs-wallet.tgz
   '@rushstack/eslint-config': ~2.3.2
   '@spruceid/didkit-wasm-node': ~0.1.6
@@ -45,6 +47,7 @@ specifiers:
   typescript: ^4.3.5
 
 dependencies:
+  '@ew-did-registry/did': 0.6.0
   '@nestjs/cli': 8.1.4_eslint@7.32.0
   '@nestjs/common': 8.1.2_43f93dd897e68fe834a23ddd32fb54cc
   '@nestjs/config': 1.1.0_b3e6921aee41404e2866237bfdfd83a3
@@ -54,6 +57,7 @@ dependencies:
   '@nestjs/testing': 8.1.2_830699a7a1bc4b367722dd63c0377123
   '@nestjs/typeorm': 8.0.2_12346420c5d0822584d78b786936ea28
   '@rush-temp/ssi-did': file:projects/ssi-did.tgz_ts-node@10.4.0
+  '@rush-temp/w3c-ccg-webkms': file:projects/w3c-ccg-webkms.tgz
   '@rush-temp/ssi-nestjs-wallet': file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3
   '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
   '@spruceid/didkit-wasm-node': 0.1.6
@@ -8072,7 +8076,7 @@ packages:
     dev: false
 
   file:projects/ssi-did.tgz_ts-node@10.4.0:
-    resolution: {integrity: sha512-cFwrpzL7cFv+tOyUnQcr4SpV4mkGP30mAsiLqN6/va6QSYGdj9mm4o31Hivmdv7azS0JC6Ofms/kpjO+nyS3qg==, tarball: file:projects/ssi-did.tgz}
+    resolution: {integrity: sha512-i18w2FBCaNuLpwQGEjVqd94bP+owcWLqs6xBOLitF3WuEMeqIFaiaORiHnU2dC4R/20Q0xYlJWW1ZvkXbuMqJg==, tarball: file:projects/ssi-did.tgz}
     id: file:projects/ssi-did.tgz
     name: '@rush-temp/ssi-did'
     version: 0.0.0
@@ -8103,8 +8107,25 @@ packages:
       - utf-8-validate
     dev: false
 
+  file:projects/w3c-ccg-webkms.tgz:
+    resolution: {integrity: sha512-Pdbs+GVrJ7fT0fkFo5qsusfgiRxhpWMAyb/BGLjpo/J02+ox+CBDbu+JebZZibBHOQNlnnY4MiQyRf3BCR9ayQ==, tarball: file:projects/w3c-ccg-webkms.tgz}
+    name: '@rush-temp/w3c-ccg-webkms'
+    version: 0.0.0
+    dependencies:
+      '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
+      did-resolver: 3.1.3
+      eslint: 7.32.0
+      ethers: 5.5.1
+      jose: 4.1.5
+      typescript: 4.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
   file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-6smVq/U2G3tG26U1lJyh1cEJ83vVRF4eJhrUGb/truyzaJ2bl3d4o1uLUxoguCiiQs+XZ0FKvOmjXliSZHxAqQ==, tarball: file:projects/ssi-nestjs-wallet.tgz}
+    resolution: {integrity: sha512-GLPeiZMoZsrg18pN7AfpkNIqsoHowBNdvdMpmWytDfEk6A81cfzJCGSYV0LabS9LdYx12q3suW9QtLUbJ5wv5Q==, tarball: file:projects/ssi-nestjs-wallet.tgz}
     id: file:projects/ssi-nestjs-wallet.tgz
     name: '@rush-temp/ssi-nestjs-wallet'
     version: 0.0.0

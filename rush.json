@@ -444,6 +444,10 @@
     // },
     //
     {
+      "packageName": "@energyweb/w3c-ccg-webkms",
+      "projectFolder": "libraries/webkms"
+    },
+    {
       "packageName": "@energyweb/ssi-did",
       "projectFolder": "libraries/did"
     },

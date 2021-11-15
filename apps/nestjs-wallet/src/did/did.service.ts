@@ -2,6 +2,7 @@ import { DIDEthrFactory, DIDKeyFactory } from '@energyweb/ssi-did';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
+import { keyType } from '../key/key-types';
 import { Repository } from 'typeorm';
 import { KeyService } from '../key/key.service';
 import { DIDDocumentEntity } from './entities/did-document.entity';
@@ -18,7 +19,8 @@ export class DIDService {
   ) {}
 
   public async generateEthrDID(): Promise<DIDDocument> {
-    const key = await this.keyService.generateSecp256k1();
+    const keyDescription = await this.keyService.generateKey({ type: keyType.secp256k1 });
+    const key = await this.keyService.getPublicKeyFromKeyId(keyDescription.keyId);
     // Need to set kty because it is possibly undefined in 'jose' JWK type
     const difKey = { ...key, kty: 'EC' };
     const didDoc = await DIDEthrFactory.generate(difKey);
@@ -26,7 +28,8 @@ export class DIDService {
   }
 
   public async generateKeyDID(): Promise<DIDDocument> {
-    const key = await this.keyService.generateEd25119();
+    const keyDescription = await this.keyService.generateKey({ type: keyType.ed25519 });
+    const key = await this.keyService.getPublicKeyFromKeyId(keyDescription.keyId);
     // Need to set kty because it is possibly undefined in 'jose' JWK type
     const difKey = { ...key, kty: 'OKP' };
     const didDoc = await DIDKeyFactory.generate(difKey);

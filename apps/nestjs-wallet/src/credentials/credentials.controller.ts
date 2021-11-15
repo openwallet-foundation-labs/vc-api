@@ -30,7 +30,7 @@ export class CredentialsController {
         'There is not key ID (kid) associated with this verification method. Unable to retrieve private key'
       );
     }
-    const privateKey = await this.keyService.retrievePrivateKey(keyID);
+    const privateKey = await this.keyService.getPublicKeyFromKeyId(keyID);
     if (!privateKey) {
       throw new Error('Unable to retrieve private key for this verification method');
     }
