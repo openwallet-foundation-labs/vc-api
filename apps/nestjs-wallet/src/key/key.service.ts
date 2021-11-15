@@ -6,6 +6,9 @@ import { Repository } from 'typeorm';
 
 /**
  * "jose" package is recommended by OpenID developer: https://openid.net/developers/jwt/
+ * TODO: Interface should conform to WebKMS:
+ *  - https://w3c-ccg.github.io/webkms/
+ *  - https://w3c-ccg.github.io/ld-cryptosuite-registry/
  */
 @Injectable()
 export class KeyService {

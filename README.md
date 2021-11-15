@@ -12,19 +12,27 @@ These are currently provided for demonstration purposes.
 
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
+
+### Universal Wallet Interop Spec
+The [W3C Credentials Community Group](https://w3c-ccg.github.io/) [Universal Wallet Interop Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/) provides a model for how wallet data could be made interoperable between other wallet implementations.
+
 ## Architecture
 
 ![Image](ssi-wallet-architecture.drawio.svg)
 
-## NestJS Wallet API Modules
+## NestJS Wallet 
+
+The NestJS Wallet can be considered a [Cloud Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/#cloud-wallets).
+
 ### DID Module
 
 The DID Module in the [nestjs-wallet](./apps/nestjs-wallet) offers the generation of DIDs and tracking the data resolvable in their DID documents.
-However, the DID generation logic is encapsulated in a [did](./libraries/did) library.
-This allows the logic to shared between wallets of various form-factors (e.g. nodejs wallet, a web wallet, another nodejs framework, etc in the future).
+
+#### DID Generation
+The DID generation logic is encapsulated in a [did](./libraries/did) library.
+This potentially allows the logic to be shared between wallets of various form-factors (e.g. nodejs wallet, a web wallet, another nodejs framework, etc in the future).
 
 Often DID generation requires the generation of a new public-private keypair.
-This is the case for an `ethr` DID, which requires the generation of a new `secp256k1` key. This key is the initial controlling key of the new `ethr` DID.
 In order to rename agnostic to the key-generation and storage preferences of a particular wallet implementation, the [did](./libraries/did) DID factories accept public keys in the standard format of JWK.
 
 An abstracted process of creating a DID controlled by a asymmetric key-pair is therefore:
