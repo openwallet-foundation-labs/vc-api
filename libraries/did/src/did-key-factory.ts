@@ -1,4 +1,4 @@
-import { keyToDID } from '@spruceid/didkit-wasm-node';
+import { keyToDID, keyToVerificationMethod } from '@spruceid/didkit-wasm-node';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
 import { verificationMethodTypes } from 'ethr-did-resolver';
 import { DifJsonWebKey } from '.';
@@ -12,11 +12,7 @@ export class DIDKeyFactory {
   public static async generate(ed25119Key: DifJsonWebKey): Promise<DIDDocument> {
     const did = await keyToDID('key', JSON.stringify(ed25119Key));
 
-    /**
-     * Not using Spruce DIDKit keyToVerificationMethod because it doesn't seem to use RFC7638 for kid & verificationMethod id fragment
-     */
-    // const id = await keyToVerificationMethod('key', JSON.stringify(key));
-    const id = `${did}#${ed25119Key.kid}`;
+    const id = await keyToVerificationMethod('key', JSON.stringify(ed25119Key));
     const verificationMethod: VerificationMethod = {
       id,
       type: verificationMethodTypes.Ed25519VerificationKey2018,

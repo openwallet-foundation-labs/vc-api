@@ -4,6 +4,7 @@ import { KeyService } from '../key/key.service';
 import { CredentialsService } from './credentials.service';
 import { CredentialDto } from './dto/credential.dto';
 import { IssueCredentialOptionsDto } from './dto/issue-credential-options.dto';
+import { IssueCredentialResponseDto } from './dto/issue-credential-response.dto';
 
 /**
  * Credentials API conforms to W3C vc-api
@@ -19,7 +20,10 @@ export class CredentialsController {
 
   // ISSUER https://w3c-ccg.github.io/vc-api/issuer.html
   @Post('issue')
-  async issue(@Body() credential: CredentialDto, @Body() options: IssueCredentialOptionsDto): Promise<any> {
+  async issue(
+    @Body('credential') credential: CredentialDto,
+    @Body('options') options: IssueCredentialOptionsDto
+  ): Promise<IssueCredentialResponseDto> {
     const verificationMethod = await this.didService.getVerificationMethod(options.verificationMethod);
     if (!verificationMethod) {
       throw new Error('This verification method is not known to this wallet');
@@ -30,12 +34,13 @@ export class CredentialsController {
         'There is not key ID (kid) associated with this verification method. Unable to retrieve private key'
       );
     }
-    const privateKey = await this.keyService.getPublicKeyFromKeyId(keyID);
+    const privateKey = await this.keyService.getPrivateKeyFromKeyId(keyID);
     if (!privateKey) {
       throw new Error('Unable to retrieve private key for this verification method');
     }
     // TODO: Maybe we should check if the issuer of the credential has the associated verification method
-    return await this.credentialsService.issueCredential(credential, options, privateKey);
+    const vc = await this.credentialsService.issueCredential(credential, options, privateKey);
+    return JSON.parse(vc);
   }
 
   // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
