@@ -4,7 +4,7 @@ import { KeyService } from '../key/key.service';
 import { CredentialsService } from './credentials.service';
 import { CredentialDto } from './dto/credential.dto';
 import { IssueCredentialOptionsDto } from './dto/issue-credential-options.dto';
-import { IssueCredentialResponseDto } from './dto/issue-credential-response.dto';
+import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
 
 /**
  * Credentials API conforms to W3C vc-api
@@ -23,7 +23,7 @@ export class CredentialsController {
   async issue(
     @Body('credential') credential: CredentialDto,
     @Body('options') options: IssueCredentialOptionsDto
-  ): Promise<IssueCredentialResponseDto> {
+  ): Promise<VerifiableCredentialDto> {
     const verificationMethod = await this.didService.getVerificationMethod(options.verificationMethod);
     if (!verificationMethod) {
       throw new Error('This verification method is not known to this wallet');
@@ -44,5 +44,6 @@ export class CredentialsController {
   }
 
   // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
+
   // HOLDER https://w3c-ccg.github.io/vc-api/holder.html
 }
