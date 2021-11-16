@@ -9,7 +9,8 @@ export class VerifyCredentialOptionsDto {
    * The URI of the verificationMethod used for the proof. Default assertionMethod URI.
    */
   @IsString()
-  verificationMethod: string;
+  @IsOptional()
+  verificationMethod?: string;
 
   /**
    * The purpose of the proof. Default 'assertionMethod'.
