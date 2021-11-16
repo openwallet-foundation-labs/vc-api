@@ -16,6 +16,11 @@ For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https:/
 ### Universal Wallet Interop Spec
 The [W3C Credentials Community Group](https://w3c-ccg.github.io/) [Universal Wallet Interop Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/) provides a model for how wallet data could be made interoperable between other wallet implementations.
 
+### Rational for Choosing Spruce DIDKit
+- Written in Rust and so suitable for use in any mobile app development framework
+- Support for JSON-LD and JWT credential issuance and verification
+- Support for did:key, did:ethr, did:web
+
 ## Architecture
 
 ![Image](ssi-wallet-architecture.drawio.svg)
