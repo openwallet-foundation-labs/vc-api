@@ -11,7 +11,6 @@ export class DIDKeyFactory {
    */
   public static async generate(ed25119Key: DifJsonWebKey): Promise<DIDDocument> {
     const did = await keyToDID('key', JSON.stringify(ed25119Key));
-
     const id = await keyToVerificationMethod('key', JSON.stringify(ed25119Key));
     const verificationMethod: VerificationMethod = {
       id,

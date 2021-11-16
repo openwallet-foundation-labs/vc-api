@@ -11,8 +11,10 @@ describe.only('DIDEthrFactory', () => {
       y: '36uMVGM7hnw-N6GnjFcihWE3SkrhMLzzLCdPMXPEXlA'
     };
     const didDocument = await DIDEthrFactory.generate(publicKeyJWK);
-    expect(didDocument.id).toEqual('did:ethr:volta:0x346E9a6197A01dF272b873975ECbc5e190043E73');
+    const expectedDID = 'did:ethr:0x346e9a6197a01df272b873975ecbc5e190043e73';
+    expect(didDocument.id).toEqual(expectedDID);
     expect(didDocument.verificationMethod?.length).toEqual(1);
     expect(didDocument.verificationMethod![0].publicKeyJwk).toMatchObject(publicKeyJWK);
+    expect(didDocument.verificationMethod![0].id).toEqual(`${expectedDID}#controller`);
   });
 });
