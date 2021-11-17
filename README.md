@@ -9,17 +9,27 @@
 ## Introduction
 This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications and libraries to enable these apps.
 These are currently provided for demonstration purposes.
+Currently, only a NestJs wallet is provided but more may be added in the future.
 
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
 
-### Universal Wallet Interop Spec
+### W3C Credentials Community Group
+The [W3C Credentials Community Group](https://w3c-ccg.github.io/) provides drafting and incubating Internet specifications for further standardization and prototyping and testing reference implementations.
+Several of these specifications are used to guide the development of the wallets in this repository.
+Though these specifications are not on the W3C standards track, adherance to them is valuable because:
+- It leverages the design and experience of a collaboration of experts in the SSI credentials ecosystem
+- It increases interoperability and the likelihood that apps/components could be swapped for other implementations
+
+#### Universal Wallet Interop Spec
 The [W3C Credentials Community Group](https://w3c-ccg.github.io/) [Universal Wallet Interop Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/) provides a model for how wallet data could be made interoperable between other wallet implementations.
 
-### Rational for Choosing Spruce DIDKit
-- Written in Rust and so suitable for use in any mobile app development framework
-- Support for JSON-LD and JWT credential issuance and verification
-- Support for did:key, did:ethr, did:web
+### Rational for Spruce DIDKit
+Spruce's DIDKit is used for DID generation and credential issuance+verification.
+The rational for Spruce's use is that it:
+- Is written in Rust and so suitable for use in any mobile app development framework
+- Supports JSON-LD and JWT credential issuance and verification
+- Supports did:key, did:ethr, did:web
 
 ## Architecture
 
@@ -49,7 +59,8 @@ const did = generateDID(key); // Code from ssi-did lib. Returns initial DID Docu
 ### Key Module
 The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
 
-### Credential Module
+### Credentials Module
+The Credentials module is an implementation of the [vc-api specification](https://github.com/w3c-ccg/vc-api) from the [W3C Credentials Community Group](https://w3c-ccg.github.io/).
 
 ## NestJS Wallet Implementation Notes
 - Uses **in-memory DB** for now for app execution and tests.
