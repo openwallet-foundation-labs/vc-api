@@ -14,6 +14,7 @@ Currently, only a NestJs wallet is provided but more may be added in the future.
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
 
+## Relevant SSI Ecosystem Entities
 ### W3C Credentials Community Group
 The [W3C Credentials Community Group](https://w3c-ccg.github.io/) provides drafting and incubating Internet specifications for further standardization and prototyping and testing reference implementations.
 Several of these specifications are used to guide the development of the wallets in this repository.
@@ -24,12 +25,19 @@ Though these specifications are not on the W3C standards track, adherance to the
 #### Universal Wallet Interop Spec
 The [W3C Credentials Community Group](https://w3c-ccg.github.io/) [Universal Wallet Interop Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/) provides a model for how wallet data could be made interoperable between other wallet implementations.
 
-### Rational for Spruce DIDKit
+### DIF Wallet Security Group
+The [DIF Wallet Secruity Group](https://identity.foundation/working-groups/wallet-security.html) is helping defined SSI wallet best practices.
+
+## Technology Decisions
+### Rationale for Spruce DIDKit
 Spruce's DIDKit is used for DID generation and credential issuance+verification.
 The rational for Spruce's use is that it:
 - Is written in Rust and so suitable for use in any mobile app development framework
 - Supports JSON-LD and JWT credential issuance and verification
 - Supports did:key, did:ethr, did:web
+
+### Rationale for NestJS
+- Main JS server framework used at EWF
 
 ## Architecture
 
