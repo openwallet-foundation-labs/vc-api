@@ -35,6 +35,7 @@ The rational for Spruce's use is that it:
 - Is written in Rust and so suitable for use in any mobile app development framework
 - Supports JSON-LD and JWT credential issuance and verification
 - Supports did:key, did:ethr, did:web
+- DIDKit (and its libraries) are open-source
 
 ### Rationale for NestJS
 - Main JS server framework used at EWF
