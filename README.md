@@ -71,6 +71,9 @@ The key module is kept separate from the DID module because it's plausible that 
 ### Credentials Module
 The Credentials module is an implementation of the [vc-api specification](https://github.com/w3c-ccg/vc-api) from the [W3C Credentials Community Group](https://w3c-ccg.github.io/).
 
+### Presentation Module
+Candidate library: https://github.com/Sphereon-Opensource/pe-js
+
 ## NestJS Wallet Implementation Notes
 - Uses **in-memory DB** for now for app execution and tests.
 The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.
