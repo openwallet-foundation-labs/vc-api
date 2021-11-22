@@ -2,8 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { DIDService } from '../did/did.service';
 import { KeyService } from '../key/key.service';
 import { CredentialsService } from './credentials.service';
-import { CredentialDto } from './dto/credential.dto';
-import { IssueCredentialOptionsDto } from './dto/issue-credential-options.dto';
+import { IssueDto } from './dto/issue.dto';
 import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
 
 /**
@@ -20,11 +19,10 @@ export class CredentialsController {
 
   // ISSUER https://w3c-ccg.github.io/vc-api/issuer.html
   @Post('issue')
-  async issue(
-    @Body('credential') credential: CredentialDto,
-    @Body('options') options: IssueCredentialOptionsDto
-  ): Promise<VerifiableCredentialDto> {
-    const verificationMethod = await this.didService.getVerificationMethod(options.verificationMethod);
+  async issue(@Body() issueDto: IssueDto): Promise<VerifiableCredentialDto> {
+    const verificationMethod = await this.didService.getVerificationMethod(
+      issueDto.options.verificationMethod
+    );
     if (!verificationMethod) {
       throw new Error('This verification method is not known to this wallet');
     }
@@ -39,7 +37,11 @@ export class CredentialsController {
       throw new Error('Unable to retrieve private key for this verification method');
     }
     // TODO: Maybe we should check if the issuer of the credential has the associated verification method
-    const vc = await this.credentialsService.issueCredential(credential, options, privateKey);
+    const vc = await this.credentialsService.issueCredential(
+      issueDto.credential,
+      issueDto.options,
+      privateKey
+    );
     return JSON.parse(vc);
   }
 
