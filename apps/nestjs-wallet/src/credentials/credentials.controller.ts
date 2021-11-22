@@ -17,7 +17,11 @@ export class CredentialsController {
     private keyService: KeyService
   ) {}
 
-  // ISSUER https://w3c-ccg.github.io/vc-api/issuer.html
+  /**
+   * Issues a credential and returns it in the response body. Conforms to https://w3c-ccg.github.io/vc-api/issuer.html
+   * @param issueDto credential without a proof, and, proof options
+   * @returns a verifiable credential
+   */
   @Post('issue')
   async issue(@Body() issueDto: IssueDto): Promise<VerifiableCredentialDto> {
     const verificationMethod = await this.didService.getVerificationMethod(
