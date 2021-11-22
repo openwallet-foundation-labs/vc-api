@@ -1,5 +1,7 @@
 import { Controller, Post, Put } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('did-purpose')
 @Controller('did-purpose')
 export class DIDPurposeController {
   @Post()

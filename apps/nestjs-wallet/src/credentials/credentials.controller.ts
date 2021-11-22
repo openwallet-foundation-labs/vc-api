@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DIDService } from '../did/did.service';
 import { KeyService } from '../key/key.service';
 import { CredentialsService } from './credentials.service';
@@ -9,6 +10,7 @@ import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
  * Credentials API conforms to W3C vc-api
  * https://github.com/w3c-ccg/vc-api
  */
+@ApiTags('credentials')
 @Controller('credentials')
 export class CredentialsController {
   constructor(
