@@ -14,7 +14,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "pnpm run test:unit && pnpm run test:e2e",
+    "test": "jest && jest --config ./test/jest-e2e.json",
     "test:unit": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
