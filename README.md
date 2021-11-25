@@ -70,11 +70,8 @@ const did = generateDID(key); // Code from ssi-did lib. Returns initial DID Docu
 ### Key Module
 The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
 
-### Credentials Module
-The Credentials module is an implementation of the [vc-api specification](https://github.com/w3c-ccg/vc-api) from the [W3C Credentials Community Group](https://w3c-ccg.github.io/).
-
-### Presentation Module
-Candidate library: https://github.com/Sphereon-Opensource/pe-js
+### Issuer Module
+Implements the [vc-issuer specification](https://w3c-ccg.github.io/vc-api/issuer.html) from the [W3C Credentials Community Group](https://w3c-ccg.github.io/).
 
 ## NestJS Wallet Implementation Notes
 - Uses **in-memory DB** for now for app execution and tests.
