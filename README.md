@@ -112,6 +112,10 @@ To run the `nestjs-wallet` app
 $ cd apps/nestjs-wallet
 $ pnpm run start
 ```
+
+After starting the `nestjs-wallet` app, 
+the Swagger/OpenAPI test page can be see at `{appURL}/api` (`http://localhost:3000/api` if running locally)
+
 ## Testing
 To run all tests in one command, a rush script has been added to `./common/config/rush/command-line.json` 
 ``` sh

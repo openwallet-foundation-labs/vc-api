@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DIDService } from './did.service';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('did')
 @Controller('did')
 export class DIDController {
   constructor(private didService: DIDService) {}

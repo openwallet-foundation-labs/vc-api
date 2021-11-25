@@ -1,18 +1,18 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@ew-did-registry/did': ~0.6.0
   '@nestjs/cli': ^8.0.0
   '@nestjs/common': ^8.0.0
   '@nestjs/config': ~1.1.0
   '@nestjs/core': ^8.0.0
   '@nestjs/platform-express': ^8.0.0
   '@nestjs/schematics': ^8.0.0
+  '@nestjs/swagger': ~5.1.5
   '@nestjs/testing': ^8.0.0
   '@nestjs/typeorm': ^8.0.2
   '@rush-temp/ssi-did': file:./projects/ssi-did.tgz
-  '@rush-temp/w3c-ccg-webkms': file:./projects/w3c-ccg-webkms.tgz
   '@rush-temp/ssi-nestjs-wallet': file:./projects/ssi-nestjs-wallet.tgz
+  '@rush-temp/w3c-ccg-webkms': file:./projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': ~2.3.2
   '@spruceid/didkit-wasm-node': ~0.1.6
   '@trust/keyto': ^1.0.1
@@ -47,18 +47,18 @@ specifiers:
   typescript: ^4.3.5
 
 dependencies:
-  '@ew-did-registry/did': 0.6.0
   '@nestjs/cli': 8.1.4_eslint@7.32.0
   '@nestjs/common': 8.1.2_43f93dd897e68fe834a23ddd32fb54cc
   '@nestjs/config': 1.1.0_b3e6921aee41404e2866237bfdfd83a3
   '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
   '@nestjs/platform-express': 8.1.2_bbf59b1cbf49bba2b2f47e404ee3cb27
   '@nestjs/schematics': 8.0.4_typescript@4.4.4
+  '@nestjs/swagger': 5.1.5_1156cd618283bd6d5c2b1ccae251c2e0
   '@nestjs/testing': 8.1.2_830699a7a1bc4b367722dd63c0377123
   '@nestjs/typeorm': 8.0.2_12346420c5d0822584d78b786936ea28
   '@rush-temp/ssi-did': file:projects/ssi-did.tgz_ts-node@10.4.0
-  '@rush-temp/w3c-ccg-webkms': file:projects/w3c-ccg-webkms.tgz
   '@rush-temp/ssi-nestjs-wallet': file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3
+  '@rush-temp/w3c-ccg-webkms': file:projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
   '@spruceid/didkit-wasm-node': 0.1.6
   '@trust/keyto': 1.0.1
@@ -1309,6 +1309,20 @@ packages:
       uuid: 8.3.2
     dev: false
 
+  /@nestjs/mapped-types/1.0.0_6c744dbccfe97401616029b71ee405ff:
+    resolution: {integrity: sha512-26AW5jHadLXtvHs+M+Agd9KZ92dDlBrmD0rORlBlvn2KvsWs4JRaKl2mUsrW7YsdZeAu3Hc4ukqyYyDdyCmMWQ==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.8 || ^8.0.0
+      class-transformer: ^0.2.0 || ^0.3.0 || ^0.4.0
+      class-validator: ^0.11.1 || ^0.12.0 || ^0.13.0
+      reflect-metadata: ^0.1.12
+    dependencies:
+      '@nestjs/common': 8.1.2_43f93dd897e68fe834a23ddd32fb54cc
+      class-transformer: 0.4.0
+      class-validator: 0.13.1
+      reflect-metadata: 0.1.13
+    dev: false
+
   /@nestjs/platform-express/8.1.2_bbf59b1cbf49bba2b2f47e404ee3cb27:
     resolution: {integrity: sha512-YjfzDKhHbdBOy8SX/6+cYNPZuBeI8dLwWNsvQ98Jb3RLAa5EZ1v4zAM5QYa9sUwN4ZXxB8nMxHQi/iEEtuwyug==}
     peerDependencies:
@@ -1348,6 +1362,57 @@ packages:
       jsonc-parser: 3.0.0
       pluralize: 8.0.0
       typescript: 4.4.4
+    dev: false
+
+  /@nestjs/swagger/5.1.5_1156cd618283bd6d5c2b1ccae251c2e0:
+    resolution: {integrity: sha512-jvsgciVEFcYVVEuLdNAmgJDpFSQzIoukg+Ovz1vJ97OeCprx0sVhmocn13nCl/dEwIkwoM3eby9OiaccX0A+3A==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0
+      '@nestjs/core': ^8.0.0
+      fastify-swagger: '*'
+      reflect-metadata: ^0.1.12
+      swagger-ui-express: '*'
+    peerDependenciesMeta:
+      fastify-swagger:
+        optional: true
+      swagger-ui-express:
+        optional: true
+    dependencies:
+      '@nestjs/common': 8.1.2_43f93dd897e68fe834a23ddd32fb54cc
+      '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
+      '@nestjs/mapped-types': 1.0.0_6c744dbccfe97401616029b71ee405ff
+      lodash: 4.17.21
+      path-to-regexp: 3.2.0
+      reflect-metadata: 0.1.13
+    transitivePeerDependencies:
+      - class-transformer
+      - class-validator
+    dev: false
+
+  /@nestjs/swagger/5.1.5_ea14560b646b9e6de5a63f20f1277708:
+    resolution: {integrity: sha512-jvsgciVEFcYVVEuLdNAmgJDpFSQzIoukg+Ovz1vJ97OeCprx0sVhmocn13nCl/dEwIkwoM3eby9OiaccX0A+3A==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0
+      '@nestjs/core': ^8.0.0
+      fastify-swagger: '*'
+      reflect-metadata: ^0.1.12
+      swagger-ui-express: '*'
+    peerDependenciesMeta:
+      fastify-swagger:
+        optional: true
+      swagger-ui-express:
+        optional: true
+    dependencies:
+      '@nestjs/common': 8.1.2_43f93dd897e68fe834a23ddd32fb54cc
+      '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
+      '@nestjs/mapped-types': 1.0.0_6c744dbccfe97401616029b71ee405ff
+      lodash: 4.17.21
+      path-to-regexp: 3.2.0
+      reflect-metadata: 0.1.13
+      swagger-ui-express: 4.1.6
+    transitivePeerDependencies:
+      - class-transformer
+      - class-validator
     dev: false
 
   /@nestjs/testing/8.1.2_830699a7a1bc4b367722dd63c0377123:
@@ -7191,6 +7256,19 @@ packages:
       supports-color: 7.2.0
     dev: false
 
+  /swagger-ui-dist/3.52.5:
+    resolution: {integrity: sha512-8z18eX8G/jbTXYzyNIaobrnD7PSN7yU/YkSasMmajrXtw0FGS64XjrKn5v37d36qmU3o1xLeuYnktshRr7uIFw==}
+    dev: false
+
+  /swagger-ui-express/4.1.6:
+    resolution: {integrity: sha512-Xs2BGGudvDBtL7RXcYtNvHsFtP1DBFPMJFRxHe5ez/VG/rzVOEjazJOOSc/kSCyxreCTKfJrII6MJlL9a6t8vw==}
+    engines: {node: '>= v0.10.32'}
+    peerDependencies:
+      express: '>=4.0.0'
+    dependencies:
+      swagger-ui-dist: 3.52.5
+    dev: false
+
   /symbol-observable/4.0.0:
     resolution: {integrity: sha512-b19dMThMV4HVFynSAM1++gBHAbk2Tc/osgLIBZMKsyqh34jb2e8Os7T6ZW/Bt3pJFdBTd2JwAnAAEQV7rSNvcQ==}
     engines: {node: '>=0.10'}
@@ -8076,7 +8154,7 @@ packages:
     dev: false
 
   file:projects/ssi-did.tgz_ts-node@10.4.0:
-    resolution: {integrity: sha512-i18w2FBCaNuLpwQGEjVqd94bP+owcWLqs6xBOLitF3WuEMeqIFaiaORiHnU2dC4R/20Q0xYlJWW1ZvkXbuMqJg==, tarball: file:projects/ssi-did.tgz}
+    resolution: {integrity: sha512-cFwrpzL7cFv+tOyUnQcr4SpV4mkGP30mAsiLqN6/va6QSYGdj9mm4o31Hivmdv7azS0JC6Ofms/kpjO+nyS3qg==, tarball: file:projects/ssi-did.tgz}
     id: file:projects/ssi-did.tgz
     name: '@rush-temp/ssi-did'
     version: 0.0.0
@@ -8107,25 +8185,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  file:projects/w3c-ccg-webkms.tgz:
-    resolution: {integrity: sha512-Pdbs+GVrJ7fT0fkFo5qsusfgiRxhpWMAyb/BGLjpo/J02+ox+CBDbu+JebZZibBHOQNlnnY4MiQyRf3BCR9ayQ==, tarball: file:projects/w3c-ccg-webkms.tgz}
-    name: '@rush-temp/w3c-ccg-webkms'
-    version: 0.0.0
-    dependencies:
-      '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
-      did-resolver: 3.1.3
-      eslint: 7.32.0
-      ethers: 5.5.1
-      jose: 4.1.5
-      typescript: 4.4.4
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-    dev: false
-
   file:projects/ssi-nestjs-wallet.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-GLPeiZMoZsrg18pN7AfpkNIqsoHowBNdvdMpmWytDfEk6A81cfzJCGSYV0LabS9LdYx12q3suW9QtLUbJ5wv5Q==, tarball: file:projects/ssi-nestjs-wallet.tgz}
+    resolution: {integrity: sha512-JEiHueSGmEnv+tM1cjQFVZDKvQ5+HFg1nP51vd3sxq38cuAO/kdb1eRI99wPMvVjMymwxDIsSwN3NbnIKnDyuQ==, tarball: file:projects/ssi-nestjs-wallet.tgz}
     id: file:projects/ssi-nestjs-wallet.tgz
     name: '@rush-temp/ssi-nestjs-wallet'
     version: 0.0.0
@@ -8137,6 +8198,7 @@ packages:
       '@nestjs/core': 8.1.2_3d1cfdac3af6acf6d20b789f19aaf219
       '@nestjs/platform-express': 8.1.2_bbf59b1cbf49bba2b2f47e404ee3cb27
       '@nestjs/schematics': 8.0.4_typescript@4.4.4
+      '@nestjs/swagger': 5.1.5_ea14560b646b9e6de5a63f20f1277708
       '@nestjs/testing': 8.1.2_830699a7a1bc4b367722dd63c0377123
       '@nestjs/typeorm': 8.0.2_12346420c5d0822584d78b786936ea28
       '@spruceid/didkit-wasm': 0.1.9
@@ -8161,6 +8223,7 @@ packages:
       rimraf: 3.0.2
       rxjs: 7.4.0
       supertest: 6.1.6
+      swagger-ui-express: 4.1.6
       ts-jest: 27.0.7_ec3222e78695a6b5e6d9aa95aceec9d7
       ts-loader: 9.2.6_typescript@4.4.4
       ts-node: 10.4.0_0cb88d80cb04d25b21fa3ec194608c65
@@ -8180,6 +8243,8 @@ packages:
       - canvas
       - debug
       - esbuild
+      - express
+      - fastify-swagger
       - hdb-pool
       - ioredis
       - mongodb
@@ -8200,4 +8265,21 @@ packages:
       - vue-template-compiler
       - webpack
       - webpack-cli
+    dev: false
+
+  file:projects/w3c-ccg-webkms.tgz:
+    resolution: {integrity: sha512-J3YcuUiSqqDbX2dfCVyfPrp+Syhozn9zE/iUpXavsSZE+J75GThFjkQDcF05jPDvVppT4i6j32ie0ju3SBQlJw==, tarball: file:projects/w3c-ccg-webkms.tgz}
+    name: '@rush-temp/w3c-ccg-webkms'
+    version: 0.0.0
+    dependencies:
+      '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
+      did-resolver: 3.1.3
+      eslint: 7.32.0
+      ethers: 5.5.1
+      jose: 4.1.5
+      typescript: 4.4.4
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: false
