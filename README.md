@@ -6,6 +6,8 @@
 
 # EWF and Elia Group Self-Sovereign-Identity (SSI) Wallet Apps
 
+[![CI](https://github.com/energywebfoundation/ssi/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/energywebfoundation/ssi/actions/workflows/main.yml)
+
 ## Introduction
 This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications and libraries to enable these apps.
 These are currently provided for demonstration purposes.
