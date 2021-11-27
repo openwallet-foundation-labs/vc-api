@@ -1,6 +1,6 @@
 import { ValidateNested } from 'class-validator';
 import { CredentialDto } from './credential.dto';
-import { IssueCredentialOptionsDto } from './issue-credential-options.dto';
+import { IssueOptionsDto } from './issue-options.dto';
 
 /**
  * DTO which contains credential and options
@@ -10,5 +10,5 @@ export class IssueDto {
   credential: CredentialDto;
 
   @ValidateNested()
-  options: IssueCredentialOptionsDto;
+  options: IssueOptionsDto;
 }

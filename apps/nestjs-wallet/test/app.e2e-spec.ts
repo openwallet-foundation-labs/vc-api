@@ -3,8 +3,10 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { DIDDocument } from 'did-resolver';
-import { CredentialDto } from '../src/credentials/dto/credential.dto';
-import { IssueCredentialOptionsDto } from '../src/credentials/dto/issue-credential-options.dto';
+import { CredentialDto } from '../src/vc-api/dto/credential.dto';
+import { IssueOptionsDto } from '../src/vc-api/dto/issue-options.dto';
+import { CredentialOfferDto } from '../src/elia-issuer/dtos/credential-offer.dto';
+import { WorkflowRequestResponse } from 'src/elia-issuer/types/workflow-request-response';
 
 describe('App (e2e)', () => {
   let app: INestApplication;
@@ -28,7 +30,7 @@ describe('App (e2e)', () => {
     });
   });
 
-  describe('Credentials', () => {
+  describe('VcApi', () => {
     it('should issue using a generated did:key', async () => {
       const didDoc = await createDID('key');
       const credential: CredentialDto = {
@@ -41,11 +43,11 @@ describe('App (e2e)', () => {
           id: 'did:example:d23dd687a7dc6787646f2eb98d0'
         }
       };
-      const options: IssueCredentialOptionsDto = {
+      const options: IssueOptionsDto = {
         verificationMethod: didDoc.verificationMethod[0].id
       };
       const postResponse = await request(app.getHttpServer())
-        .post('/credentials/issue')
+        .post('/vc-api/credentials/issue')
         .send({ credential, options })
         .expect(201);
       expect(postResponse.body).toBeDefined();
@@ -69,4 +71,34 @@ describe('App (e2e)', () => {
     expect(postResponse.body['verificationMethod']).toMatchObject(getResponse.body['verificationMethod']);
     return postResponse.body;
   }
+
+  describe('Elia Issuer', () => {
+    it('should get credential starting from an offer', async () => {
+      // GET credential offer
+      const credOfferResponse = await request(app.getHttpServer())
+        .get('/elia-issuer/credential-offer')
+        .expect(200);
+      expect(credOfferResponse).toBeDefined();
+      const credOffer = credOfferResponse.body as CredentialOfferDto;
+      const expectedWorkflow = '/elia-issuer/start-workflow/permanent-resident-card';
+      expect(credOffer.vcRequestUrl.endsWith(expectedWorkflow)).toBeTruthy();
+      const expectedCredentialType = 'PermanentResidentCard';
+      expect(credOffer.typeAvailable).toEqual(expectedCredentialType);
+
+      // POST start-workflow
+      const workflowResponse = await request(app.getHttpServer()).post(expectedWorkflow).expect(201);
+      const vpReqest = (workflowResponse.body as WorkflowRequestResponse).vpRequest;
+      expect(vpReqest).toBeDefined();
+      expect(vpReqest.challenge).toBeDefined();
+      expect(vpReqest.query).toHaveLength(1);
+      expect(vpReqest.query[0].type).toEqual('DIDAuth');
+
+      // Parse VP Request
+      // 1. Find DID auth query
+      // 2. Make DID auth presentation https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
+      // const did = createDID('key');
+
+      // Continue workflow and get VC
+    });
+  });
 });

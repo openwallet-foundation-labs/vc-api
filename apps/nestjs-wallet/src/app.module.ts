@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { KeyModule } from './key/key.module';
 import { DidModule } from './did/did.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { DIDPurposeModule } from './did-purpose/did-purpose.module';
-import { CredentialsModule } from './credentials/credentials.module';
+import { VcApiModule } from './vc-api/vc-api.module';
 import { DIDContactModule } from './did-contact/did-contact.module';
 import { TypeOrmSQLiteModule } from './in-memory-db';
+import { EliaIssuerModule } from './elia-issuer/elia-issuer.module';
 
 @Module({
   imports: [
@@ -15,8 +15,9 @@ import { TypeOrmSQLiteModule } from './in-memory-db';
     KeyModule,
     DidModule,
     DIDPurposeModule,
-    CredentialsModule,
-    DIDContactModule
+    VcApiModule,
+    DIDContactModule,
+    EliaIssuerModule
   ]
 })
 export class AppModule {}

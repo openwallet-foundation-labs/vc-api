@@ -1,16 +1,22 @@
 import { IsString, IsObject, IsOptional } from 'class-validator';
 
 /**
- * Parameters for verifying a verifiableCredential.
- * https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyCredential
+ * Options for specifying how the LinkedDataProof is created.
+ * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
  */
-export class VerifyCredentialOptionsDto {
+export class IssueOptionsDto {
+  /**
+   * The type of the proof. Default is an appropriate proof type corresponding to the verification method.
+   */
+  @IsString()
+  @IsOptional()
+  type?: string;
+
   /**
    * The URI of the verificationMethod used for the proof. Default assertionMethod URI.
    */
   @IsString()
-  @IsOptional()
-  verificationMethod?: string;
+  verificationMethod: string;
 
   /**
    * The purpose of the proof. Default 'assertionMethod'.
@@ -39,4 +45,11 @@ export class VerifyCredentialOptionsDto {
   @IsString()
   @IsOptional()
   domain?: string;
+
+  /**
+   * The method of credential status to issue the credential including. If omitted credential status will be included.
+   */
+  @IsObject()
+  @IsOptional()
+  credentialStatus?: Record<string, unknown>;
 }
