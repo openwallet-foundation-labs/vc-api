@@ -12,6 +12,8 @@
 This repository provides *sample* Self-Sovereign-Identity (SSI) wallet applications and libraries to enable these apps.
 These are currently provided for demonstration purposes.
 Currently, only a NestJs wallet is provided but more may be added in the future.
+The functionality is mostly generic functionality based on cryptography and SSI standards,
+however the intention is that it can be used to enable more specific energy industry use cases.
 
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
