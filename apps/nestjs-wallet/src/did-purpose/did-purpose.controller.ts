@@ -1,4 +1,4 @@
-import { Controller, Post, Put } from '@nestjs/common';
+import { Controller, Post, Put, Delete } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('did-purpose')
@@ -11,6 +11,11 @@ export class DIDPurposeController {
 
   @Put()
   async update(did: string, purpose: string) {
+    throw new Error('Not implemented');
+  }
+
+  @Delete()
+  async delete(did: string, purpose: string) {
     throw new Error('Not implemented');
   }
 }
