@@ -1,19 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { keyToDID, keyToVerificationMethod } from '@spruceid/didkit-wasm-node';
 import { JWK } from 'jose';
-import { CredentialsService } from './credentials.service';
-import { IssueCredentialOptionsDto } from './dto/issue-credential-options.dto';
-import { VerifyCredentialOptionsDto } from './dto/verify-credential-options.dto';
+import { TypeOrmSQLiteModule } from '../in-memory-db';
+import { DidModule } from '../did/did.module';
+import { KeyModule } from '../key/key.module';
+import { VcApiService } from './vc-api.service';
+import { IssueOptionsDto } from './dto/issue-options.dto';
+import { VerifyOptionsDto } from './dto/verify-options.dto';
 
-describe('CredentialsService', () => {
-  let service: CredentialsService;
+describe('VcApiService', () => {
+  let service: VcApiService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CredentialsService]
+      imports: [KeyModule, DidModule, TypeOrmSQLiteModule()],
+      providers: [VcApiService]
     }).compile();
 
-    service = module.get<CredentialsService>(CredentialsService);
+    service = module.get<VcApiService>(VcApiService);
   });
 
   it('should be defined', () => {
@@ -35,13 +39,13 @@ describe('CredentialsService', () => {
         id: 'did:example:d23dd687a7dc6787646f2eb98d0'
       }
     };
-    const issuanceOptions: IssueCredentialOptionsDto = {
+    const issuanceOptions: IssueOptionsDto = {
       proofPurpose: 'assertionMethod',
       verificationMethod: verificationMethod,
       created: '2021-11-16T14:52:19.514Z'
     };
     const jsonWebKey: JWK = JSON.parse(key);
-    const vc = JSON.parse(await service.issueCredential(credential, issuanceOptions, jsonWebKey));
+    const vc = await service.issueCredential(credential, issuanceOptions, jsonWebKey);
     const expectedVc = {
       '@context': ['https://www.w3.org/2018/credentials/v1'],
       id: 'http://example.org/credentials/3731',
@@ -69,7 +73,7 @@ describe('CredentialsService', () => {
   });
 
   it('should be able to verify a credential', async () => {
-    const verifyOptions: VerifyCredentialOptionsDto = {};
+    const verifyOptions: VerifyOptionsDto = {};
     const vc = {
       '@context': ['https://www.w3.org/2018/credentials/v1'],
       id: 'http://example.org/credentials/3731',
@@ -89,5 +93,27 @@ describe('CredentialsService', () => {
     const result = JSON.parse(await service.verifyCredential(vc, verifyOptions));
     const expectedResult = { checks: ['proof'], warnings: [], errors: [] };
     expect(result).toEqual(expectedResult);
+  });
+
+  it('should be able to generate DIDAuth', async () => {
+    const key =
+      '{"kty":"OKP","crv":"Ed25519","x":"gZbb93kdEoQ9Be78z7NG064wBq8Vv_0zR-qglxkiJ-g","d":"XXugDYUEtINLUefOLeztqOOtPukVIvNPreMTzl6wKgA"}';
+    const holder = keyToDID('key', key);
+    const verificationMethod = await keyToVerificationMethod('key', key);
+    const challenge = '2679f7f3-d9ff-4a7e-945c-0f30fb0765bd';
+    const issuanceOptions: IssueOptionsDto = {
+      proofPurpose: 'authentication',
+      verificationMethod: verificationMethod,
+      created: '2021-11-16T14:52:19.514Z',
+      challenge
+    };
+    const jsonWebKey: JWK = JSON.parse(key);
+    const vp = await service.didAuthenticate(holder, issuanceOptions, jsonWebKey);
+    expect(vp.holder).toEqual(holder);
+    expect(vp.proof).toBeDefined();
+    const authVerification = await service.verifyPresentation(vp, { challenge });
+    expect(authVerification.checks).toHaveLength(1);
+    expect(authVerification.checks[0]).toEqual('proof');
+    expect(authVerification.errors).toHaveLength(0);
   });
 });

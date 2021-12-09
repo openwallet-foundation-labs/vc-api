@@ -40,7 +40,8 @@
     "class-validator": "~0.13.1",
     "class-transformer": "~0.4.0",
     "@nestjs/swagger": "~5.1.5",
-    "swagger-ui-express": "~4.1.6"
+    "swagger-ui-express": "~4.1.6",
+    "uuid": "~8.3.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

@@ -46,12 +46,13 @@ export class DIDService {
 
   /**
    * Assumes a single verification method associated with the new DID Doc.
-   * As this is the case for did:ethr and did:key
+   * As this is the case for did:ethr and did:key.
+   * Could be made more robust by looping through verification methods of provided DID Doc.
    */
   private async saveNewDIDDoc(didDoc: DIDDocument): Promise<DIDDocument> {
     const didDocEntity = this.didRepository.create(didDoc);
     if (didDoc.verificationMethod?.length !== 1) {
-      throw new Error(`Default DID document for ethr method should contain one verificaiton method. 
+      throw new Error(`Default DID document for did:ethr and did:key methods should contain one verificaiton method. 
                        Found ${didDoc.verificationMethod?.length} methods instead.`);
     }
     const verificationMethod = didDoc.verificationMethod[0];

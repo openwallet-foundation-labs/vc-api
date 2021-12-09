@@ -2,20 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DidModule } from '../did/did.module';
 import { TypeOrmSQLiteModule } from '../in-memory-db';
 import { KeyModule } from '../key/key.module';
-import { CredentialsController } from './credentials.controller';
-import { CredentialsService } from './credentials.service';
+import { VcApiController } from './vc-api.controller';
+import { VcApiService } from './vc-api.service';
 
-describe('CredentialsController', () => {
-  let controller: CredentialsController;
+describe('VcApiController', () => {
+  let controller: VcApiController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [KeyModule, DidModule, TypeOrmSQLiteModule()],
-      controllers: [CredentialsController],
-      providers: [CredentialsService]
+      controllers: [VcApiController],
+      providers: [VcApiService]
     }).compile();
 
-    controller = module.get<CredentialsController>(CredentialsController);
+    controller = module.get<VcApiController>(VcApiController);
   });
 
   it('should be defined', () => {
