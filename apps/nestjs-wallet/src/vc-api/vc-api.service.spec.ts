@@ -1,23 +1,51 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { keyToDID, keyToVerificationMethod } from '@spruceid/didkit-wasm-node';
-import { JWK } from 'jose';
 import { TypeOrmSQLiteModule } from '../in-memory-db';
-import { DidModule } from '../did/did.module';
-import { KeyModule } from '../key/key.module';
 import { VcApiService } from './vc-api.service';
 import { IssueOptionsDto } from './dto/issue-options.dto';
 import { VerifyOptionsDto } from './dto/verify-options.dto';
+import { DIDService } from '../did/did.service';
+import { KeyService } from '../key/key.service';
+
+const key = {
+  kty: 'OKP',
+  crv: 'Ed25519',
+  x: 'gZbb93kdEoQ9Be78z7NG064wBq8Vv_0zR-qglxkiJ-g',
+  d: 'XXugDYUEtINLUefOLeztqOOtPukVIvNPreMTzl6wKgA'
+};
+const did = keyToDID('key', JSON.stringify(key));
 
 describe('VcApiService', () => {
   let service: VcApiService;
+  let didService: DIDService;
+  let keyService: KeyService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [KeyModule, DidModule, TypeOrmSQLiteModule()],
-      providers: [VcApiService]
+      providers: [
+        VcApiService,
+        {
+          provide: DIDService,
+          useValue: {
+            getVerificationMethod: jest.fn()
+          }
+        },
+        {
+          provide: KeyService,
+          useValue: {
+            getPrivateKeyFromKeyId: jest.fn()
+          }
+        }
+      ]
     }).compile();
 
+    didService = module.get<DIDService>(DIDService);
+    keyService = module.get<KeyService>(KeyService);
     service = module.get<VcApiService>(VcApiService);
+  });
+
+  afterEach(async () => {
+    jest.resetAllMocks();
   });
 
   it('should be defined', () => {
@@ -25,10 +53,7 @@ describe('VcApiService', () => {
   });
 
   it('should be able to issue a credential', async () => {
-    const key =
-      '{"kty":"OKP","crv":"Ed25519","x":"gZbb93kdEoQ9Be78z7NG064wBq8Vv_0zR-qglxkiJ-g","d":"XXugDYUEtINLUefOLeztqOOtPukVIvNPreMTzl6wKgA"}';
-    const did = keyToDID('key', key);
-    const verificationMethod = await keyToVerificationMethod('key', key);
+    const verificationMethod = await keyToVerificationMethod('key', JSON.stringify(key));
     const credential = {
       '@context': ['https://www.w3.org/2018/credentials/v1'],
       id: 'http://example.org/credentials/3731',
@@ -44,8 +69,17 @@ describe('VcApiService', () => {
       verificationMethod: verificationMethod,
       created: '2021-11-16T14:52:19.514Z'
     };
-    const jsonWebKey: JWK = JSON.parse(key);
-    const vc = await service.issueCredential(credential, issuanceOptions, jsonWebKey);
+    jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce({
+      id: verificationMethod,
+      type: 'some-verification-method-type',
+      controller: did,
+      publicKeyJwk: {
+        kid: 'some-key-id',
+        kty: 'OKP'
+      }
+    });
+    jest.spyOn(keyService, 'getPrivateKeyFromKeyId').mockResolvedValueOnce(key);
+    const vc = await service.issueCredential({ credential, options: issuanceOptions });
     const expectedVc = {
       '@context': ['https://www.w3.org/2018/credentials/v1'],
       id: 'http://example.org/credentials/3731',
@@ -90,16 +124,13 @@ describe('VcApiService', () => {
         jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..9N2qqOBBcQkJv_tF1DObaVRovT8nbuDLV1VMFk5sEd_WNKCcdGsPzNoOqVAJI7rCmzgqCtN_dZtzKrtnPZioDg'
       }
     };
-    const result = JSON.parse(await service.verifyCredential(vc, verifyOptions));
+    const result = await service.verifyCredential(vc, verifyOptions);
     const expectedResult = { checks: ['proof'], warnings: [], errors: [] };
     expect(result).toEqual(expectedResult);
   });
 
   it('should be able to generate DIDAuth', async () => {
-    const key =
-      '{"kty":"OKP","crv":"Ed25519","x":"gZbb93kdEoQ9Be78z7NG064wBq8Vv_0zR-qglxkiJ-g","d":"XXugDYUEtINLUefOLeztqOOtPukVIvNPreMTzl6wKgA"}';
-    const holder = keyToDID('key', key);
-    const verificationMethod = await keyToVerificationMethod('key', key);
+    const verificationMethod = await keyToVerificationMethod('key', JSON.stringify(key));
     const challenge = '2679f7f3-d9ff-4a7e-945c-0f30fb0765bd';
     const issuanceOptions: IssueOptionsDto = {
       proofPurpose: 'authentication',
@@ -107,9 +138,18 @@ describe('VcApiService', () => {
       created: '2021-11-16T14:52:19.514Z',
       challenge
     };
-    const jsonWebKey: JWK = JSON.parse(key);
-    const vp = await service.didAuthenticate(holder, issuanceOptions, jsonWebKey);
-    expect(vp.holder).toEqual(holder);
+    jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce({
+      id: verificationMethod,
+      type: 'some-verification-method-type',
+      controller: did,
+      publicKeyJwk: {
+        kid: 'some-key-id',
+        kty: 'OKP'
+      }
+    });
+    jest.spyOn(keyService, 'getPrivateKeyFromKeyId').mockResolvedValueOnce(key);
+    const vp = await service.didAuthenticate({ did, options: issuanceOptions });
+    expect(vp.holder).toEqual(did);
     expect(vp.proof).toBeDefined();
     const authVerification = await service.verifyPresentation(vp, { challenge });
     expect(authVerification.checks).toHaveLength(1);

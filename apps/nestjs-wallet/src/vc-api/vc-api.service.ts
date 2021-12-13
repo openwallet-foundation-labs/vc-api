@@ -11,10 +11,13 @@ import { DIDService } from '../did/did.service';
 import { KeyService } from '../key/key.service';
 import { CredentialDto } from './dto/credential.dto';
 import { IssueOptionsDto } from './dto/issue-options.dto';
+import { IssueCredentialDto } from './dto/issue-credential.dto';
 import { PresentationDto } from './dto/presentation.dto';
 import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
 import { VerifiablePresentationDto } from './dto/verifiable-presentation.dto';
 import { VerifyOptionsDto } from './dto/verify-options.dto';
+import { VerifyProofResponseDto } from './dto/verify-proof-response.dto';
+import { AuthenticateDto } from './dto/authenticate.dto';
 
 /**
  * Credential issuance options that Spruce accepts
@@ -36,26 +39,31 @@ interface ISpruceVerifyOptions {
 }
 
 /**
- * This service encapsulates the use of Spruce DIDKit for credential operations
+ * This service provide the VC-API operations
+ * This encapsulates the use of Spruce DIDKit
  */
 @Injectable()
 export class VcApiService {
   constructor(private didService: DIDService, private keyService: KeyService) {}
 
-  async issueCredential(
-    credential: CredentialDto,
-    options: IssueOptionsDto,
-    key: JWK
-  ): Promise<VerifiableCredentialDto> {
-    const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(options);
+  async issueCredential(issueDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {
+    const key = await this.getKeyForVerificationMethod(issueDto.options.verificationMethod);
+    const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(issueDto.options);
     return JSON.parse(
-      await issueCredential(JSON.stringify(credential), JSON.stringify(proofOptions), JSON.stringify(key))
+      await issueCredential(
+        JSON.stringify(issueDto.credential),
+        JSON.stringify(proofOptions),
+        JSON.stringify(key)
+      )
     );
   }
 
-  async verifyCredential(vc: VerifiableCredentialDto, options: VerifyOptionsDto) {
+  async verifyCredential(
+    vc: VerifiableCredentialDto,
+    options: VerifyOptionsDto
+  ): Promise<VerifyProofResponseDto> {
     const verifyOptions: ISpruceVerifyOptions = options;
-    return await verifyCredential(JSON.stringify(vc), JSON.stringify(verifyOptions));
+    return JSON.parse(await verifyCredential(JSON.stringify(vc), JSON.stringify(verifyOptions)));
   }
 
   async issuePresentation(
@@ -73,19 +81,19 @@ export class VcApiService {
    * Provide authentication as DID in response to DIDAuth Request
    * https://w3c-ccg.github.io/vp-request-spec/#did-authentication-request
    */
-  async didAuthenticate(
-    holder: string,
-    options: IssueOptionsDto,
-    key: JWK
-  ): Promise<VerifiablePresentationDto> {
-    if (options.proofPurpose !== 'authentication') {
+  async didAuthenticate(authenticateDto: AuthenticateDto): Promise<VerifiablePresentationDto> {
+    if (authenticateDto.options.proofPurpose !== 'authentication') {
       throw new Error('proof purpose must be authentication for DIDAuth');
     }
-    const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(options);
-    return JSON.parse(await DIDAuth(holder, JSON.stringify(proofOptions), JSON.stringify(key)));
+    const key = await this.getKeyForVerificationMethod(authenticateDto.options.verificationMethod);
+    const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(authenticateDto.options);
+    return JSON.parse(await DIDAuth(authenticateDto.did, JSON.stringify(proofOptions), JSON.stringify(key)));
   }
 
-  async verifyPresentation(vp: VerifiablePresentationDto, options: VerifyOptionsDto) {
+  async verifyPresentation(
+    vp: VerifiablePresentationDto,
+    options: VerifyOptionsDto
+  ): Promise<VerifyProofResponseDto> {
     const verifyOptions: ISpruceVerifyOptions = options;
     return JSON.parse(await verifyPresentation(JSON.stringify(vp), JSON.stringify(verifyOptions)));
   }
@@ -95,7 +103,7 @@ export class VcApiService {
    * @param desiredVerificationMethod
    * @returns the privateKey that can issue proofs as the verification method
    */
-  async getKeyForVerificationMethod(desiredVerificationMethod: string): Promise<JWK> {
+  private async getKeyForVerificationMethod(desiredVerificationMethod: string): Promise<JWK> {
     const verificationMethod = await this.didService.getVerificationMethod(desiredVerificationMethod);
     if (!verificationMethod) {
       throw new Error('This verification method is not known to this wallet');
@@ -103,7 +111,7 @@ export class VcApiService {
     const keyID = verificationMethod.publicKeyJwk?.kid;
     if (!keyID) {
       throw new Error(
-        'There is not key ID (kid) associated with this verification method. Unable to retrieve private key'
+        'There is no key ID (kid) associated with this verification method. Unable to retrieve private key'
       );
     }
     const privateKey = await this.keyService.getPrivateKeyFromKeyId(keyID);

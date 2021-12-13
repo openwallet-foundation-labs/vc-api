@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { VcApiService } from './vc-api.service';
-import { IssueDto } from './dto/issue.dto';
+import { IssueCredentialDto } from './dto/issue-credential.dto';
 import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
 import { AuthenticateDto } from './dto/authenticate.dto';
 import { VerifiablePresentationDto } from './dto/verifiable-presentation.dto';
@@ -21,12 +21,8 @@ export class VcApiController {
    * @returns a verifiable credential
    */
   @Post('credentials/issue')
-  async issueCredential(@Body() issueDto: IssueDto): Promise<VerifiableCredentialDto> {
-    const privateKey = await this.vcApiService.getKeyForVerificationMethod(
-      issueDto.options.verificationMethod
-    );
-    const vc = await this.vcApiService.issueCredential(issueDto.credential, issueDto.options, privateKey);
-    return vc;
+  async issueCredential(@Body() issueDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {
+    return await this.vcApiService.issueCredential(issueDto);
   }
 
   // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
@@ -43,9 +39,6 @@ export class VcApiController {
   async proveAuthenticationPresentation(
     @Body() authenticateDto: AuthenticateDto
   ): Promise<VerifiablePresentationDto> {
-    const privateKey = await this.vcApiService.getKeyForVerificationMethod(
-      authenticateDto.options.verificationMethod
-    );
-    return await this.vcApiService.didAuthenticate(authenticateDto.did, authenticateDto.options, privateKey);
+    return await this.vcApiService.didAuthenticate(authenticateDto);
   }
 }

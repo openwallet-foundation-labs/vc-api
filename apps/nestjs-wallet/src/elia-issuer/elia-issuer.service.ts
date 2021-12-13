@@ -8,11 +8,30 @@ import { CredentialOfferDto } from './dtos/credential-offer.dto';
 import { VpRequestEntity } from './entities/vp-request.entity';
 import { VerifiablePresentationDto } from '../vc-api/dto/verifiable-presentation.dto';
 import { ActiveFlowEntity } from './entities/active-flow.entity';
-import { WorkflowRequestResponse } from './types/workflow-request-response';
+import { WorkflowResponseDto } from './dtos/workflow-response.dto';
 import { WorkflowType } from './types/workflow-type';
+import { CredentialDto } from 'src/vc-api/dto/credential.dto';
+import { IssueOptionsDto } from 'src/vc-api/dto/issue-options.dto';
+
+/**
+ * A DID and verification method pair to use for proof generation
+ * It is assumed that:
+ * - The issuance service has access to the verification method
+ * - The verification method has the correct relationship to the DID (TODO: add link to DID spec relationships)
+ */
+export interface IssuingDID {
+  DID: string;
+  verificationMethodURI: string;
+}
 
 @Injectable()
 export class EliaIssuerService {
+  /**
+   * The DID to be used for proof generation
+   * TODO: Figure out how to best set this. Maybe should be set by config? Maybe use "DID Label" or "DID Purpose" features?
+   */
+  public issuingDID: IssuingDID;
+
   constructor(
     private configService: ConfigService,
     private vcApiService: VcApiService,
@@ -34,9 +53,9 @@ export class EliaIssuerService {
   /**
    * Starts a workflow to obtain a credential
    * @param workflowType
-   * @returns
+   * @returns workflow response
    */
-  public async startWorkflow(workflowType: WorkflowType): Promise<WorkflowRequestResponse> {
+  public async startWorkflow(workflowType: WorkflowType): Promise<WorkflowResponseDto> {
     const flowId = uuidv4();
     const challenge = uuidv4();
     const vpRequest = this.vpRequestRepository.create({
@@ -64,13 +83,79 @@ export class EliaIssuerService {
       vpRequests: [vpRequest]
     });
     await this.activeFlowRepository.save(activeFlow);
-    return { vpRequest };
+    return { errors: [], vpRequest };
   }
 
-  public async continueWorkflow(verifiablePresentation: VerifiablePresentationDto, challenge: string) {
-    await this.vpRequestRepository.findOneOrFail(challenge);
-    const result = await this.vcApiService.verifyPresentation(verifiablePresentation, { challenge });
+  /**
+   * Continue an in-progress workflow.
+   * TODO: add logging of errors (using structured logs?)
+   * @param verifiablePresentation
+   * @param flowId
+   * @returns workflow response
+   */
+  public async continueWorkflow(
+    verifiablePresentation: VerifiablePresentationDto,
+    flowId: string
+  ): Promise<WorkflowResponseDto> {
+    const flow = await this.activeFlowRepository.findOne(flowId, { relations: ['vpRequests'] });
+    if (!flow) {
+      return { errors: [`${flowId}: no workflow found for this flowId`] };
+    }
+    const vpRequest = flow?.vpRequests ? flow.vpRequests[0] : undefined;
+    if (!vpRequest) {
+      return { errors: [`${flowId}: no vp-request associated this flowId`] };
+    }
+    const result = await this.vcApiService.verifyPresentation(verifiablePresentation, {
+      challenge: vpRequest.challenge
+    });
+    if (!result.checks.includes('proof')) {
+      return { errors: [`${flowId}: verification of presentation proof not successful`] };
+    }
+    const credential = this.fillCredential();
+    if (!this.issuingDID?.verificationMethodURI) {
+      return { errors: ['verification method for issuance not set'] };
+    }
+    const options: IssueOptionsDto = {
+      verificationMethod: this.issuingDID.verificationMethodURI
+    };
+    const vc = await this.vcApiService.issueCredential({ credential, options });
+    return {
+      errors: [],
+      vc
+    };
+  }
 
-    return result;
+  private fillCredential(): CredentialDto {
+    if (!this.issuingDID) {
+      throw new Error('issuing DID not set');
+    }
+    // This hard-coded example is from https://w3c-ccg.github.io/citizenship-vocab/#example
+    return {
+      '@context': [
+        'https://www.w3.org/2018/credentials/v1',
+        'https://w3id.org/citizenship/v1'
+        // optional country-specific context can be added below
+        // e.g., https://uscis.gov/prc/v1
+      ],
+      id: 'https://issuer.oidp.uscis.gov/credentials/83627465',
+      type: ['VerifiableCredential', 'PermanentResidentCard'],
+      issuer: this.issuingDID.DID,
+      issuanceDate: '2019-12-03T12:19:52Z',
+      expirationDate: '2029-12-03T12:19:52Z',
+      credentialSubject: {
+        id: 'did:example:b34ca6cd37bbf23',
+        type: ['PermanentResident', 'Person'],
+        givenName: 'JOHN',
+        familyName: 'SMITH',
+        gender: 'Male',
+        image: 'data:image/png;base64,iVBORw0KGgo...kJggg==',
+        residentSince: '2015-01-01',
+        lprCategory: 'C09',
+        lprNumber: '999-999-999',
+        commuterClassification: 'C1',
+        birthCountry: 'Bahamas',
+        birthDate: '1958-07-17'
+      }
+    };
   }
 }

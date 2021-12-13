@@ -1,4 +1,4 @@
-import { IsString, IsObject, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 /**
  * Parameters for verifying a verifiable credential or a verifiable presentation
