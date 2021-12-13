@@ -95,8 +95,17 @@ describe('App (e2e)', () => {
 
       // Parse VP Request
       // 1. Find DID auth query
-      // 2. Make DID auth presentation https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
-      // const did = createDID('key');
+      // 2. Generate DID auth presentation https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
+      const didDoc = await createDID('key');
+      const options: IssueOptionsDto = {
+        verificationMethod: didDoc.verificationMethod[0].id,
+        proofPurpose: 'authentication'
+      };
+      const postResponse = await request(app.getHttpServer())
+        .post('/vc-api/presentations/prove/authentication')
+        .send({ did: didDoc.id, options })
+        .expect(201);
+      expect(postResponse.body).toBeDefined();
 
       // Continue workflow and get VC
     });

@@ -3,6 +3,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { VcApiService } from './vc-api.service';
 import { IssueDto } from './dto/issue.dto';
 import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
+import { AuthenticateDto } from './dto/authenticate.dto';
+import { VerifiablePresentationDto } from './dto/verifiable-presentation.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -19,7 +21,7 @@ export class VcApiController {
    * @returns a verifiable credential
    */
   @Post('credentials/issue')
-  async issue(@Body() issueDto: IssueDto): Promise<VerifiableCredentialDto> {
+  async issueCredential(@Body() issueDto: IssueDto): Promise<VerifiableCredentialDto> {
     const privateKey = await this.vcApiService.getKeyForVerificationMethod(
       issueDto.options.verificationMethod
     );
@@ -30,4 +32,20 @@ export class VcApiController {
   // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
 
   // HOLDER https://w3c-ccg.github.io/vc-api/holder.html
+
+  /**
+   * Issue a DIDAuth presentation that authenticates a DID.
+   * Not technically a part of VC-API? Maybe there is a DID Auth spec though?
+   * @param authenticateDto DID to authenticate as, and, proof options
+   * @returns a verifiable presentation
+   */
+  @Post('presentations/prove/authentication')
+  async proveAuthenticationPresentation(
+    @Body() authenticateDto: AuthenticateDto
+  ): Promise<VerifiablePresentationDto> {
+    const privateKey = await this.vcApiService.getKeyForVerificationMethod(
+      authenticateDto.options.verificationMethod
+    );
+    return await this.vcApiService.didAuthenticate(authenticateDto.did, authenticateDto.options, privateKey);
+  }
 }
