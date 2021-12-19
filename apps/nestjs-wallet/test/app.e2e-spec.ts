@@ -6,7 +6,11 @@ import { DIDDocument } from 'did-resolver';
 import { CredentialDto } from '../src/vc-api/dto/credential.dto';
 import { IssueOptionsDto } from '../src/vc-api/dto/issue-options.dto';
 import { CredentialOfferDto } from '../src/elia-issuer/dtos/credential-offer.dto';
-import { WorkflowRequestResponse } from 'src/elia-issuer/types/workflow-request-response';
+import { WorkflowResponseDto } from 'src/elia-issuer/dtos/workflow-response.dto';
+
+// Increasing timeout for debugging
+// Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
+jest.setTimeout(20 * 1000);
 
 describe('App (e2e)', () => {
   let app: INestApplication;
@@ -86,28 +90,41 @@ describe('App (e2e)', () => {
       expect(credOffer.typeAvailable).toEqual(expectedCredentialType);
 
       // POST start-workflow
-      const workflowResponse = await request(app.getHttpServer()).post(expectedWorkflow).expect(201);
-      const vpReqest = (workflowResponse.body as WorkflowRequestResponse).vpRequest;
-      expect(vpReqest).toBeDefined();
-      expect(vpReqest.challenge).toBeDefined();
-      expect(vpReqest.query).toHaveLength(1);
-      expect(vpReqest.query[0].type).toEqual('DIDAuth');
+      const startWorkflowResponse = await request(app.getHttpServer()).post(expectedWorkflow).expect(201);
+      const vpRequest = (startWorkflowResponse.body as WorkflowResponseDto).vpRequest;
+      expect(vpRequest).toBeDefined();
+      const challenge = vpRequest.challenge;
+      expect(challenge).toBeDefined();
+      expect(vpRequest.query).toHaveLength(1);
+      expect(vpRequest.query[0].type).toEqual('DIDAuth');
+      const workflowContinuationEndpoint = vpRequest.interact.service[0].serviceEndpoint;
+      expect(workflowContinuationEndpoint).toContain('/elia-issuer/active-flows/');
 
-      // Parse VP Request
-      // 1. Find DID auth query
-      // 2. Generate DID auth presentation https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
-      const didDoc = await createDID('key');
+      // Create new DID and presentation to authentication as this DID
+      // DID auth presentation: https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
+      const requesterDID = await createDID('key');
       const options: IssueOptionsDto = {
-        verificationMethod: didDoc.verificationMethod[0].id,
-        proofPurpose: 'authentication'
+        verificationMethod: requesterDID.verificationMethod[0].id,
+        proofPurpose: 'authentication',
+        challenge
       };
-      const postResponse = await request(app.getHttpServer())
+      const didAuthResponse = await request(app.getHttpServer())
         .post('/vc-api/presentations/prove/authentication')
-        .send({ did: didDoc.id, options })
+        .send({ did: requesterDID.id, options })
         .expect(201);
-      expect(postResponse.body).toBeDefined();
+      expect(didAuthResponse.body).toBeDefined();
 
       // Continue workflow and get VC
+      const issuerDID = await createDID('key');
+      await request(app.getHttpServer()).put('/elia-issuer/set-issuer-did').send({
+        DID: issuerDID.id,
+        verificationMethodURI: issuerDID.verificationMethod[0].id
+      });
+      const continueWorkflowResponse = await request(app.getHttpServer())
+        .post(workflowContinuationEndpoint.replace('undefined', '')) // TODO: Need to make this more robust, in event that domain actually was defined
+        .send(didAuthResponse.body)
+        .expect(201);
+      expect(continueWorkflowResponse.body).toBeDefined();
     });
   });
 });

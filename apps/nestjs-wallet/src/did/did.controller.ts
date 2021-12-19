@@ -2,14 +2,20 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DIDService } from './did.service';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateDidOptionsDto } from './dto/create-did-options.dto';
 
 @ApiTags('did')
 @Controller('did')
 export class DIDController {
   constructor(private didService: DIDService) {}
 
+  /**
+   * Generate a new DID
+   * @param body options for DID creation
+   * @returns DIDDocument of new DID
+   */
   @Post()
-  async create(@Body() body: any): Promise<DIDDocument> {
+  async create(@Body() body: CreateDidOptionsDto): Promise<DIDDocument> {
     if (body.method === 'ethr') {
       return await this.didService.generateEthrDID();
     }

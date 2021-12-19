@@ -5,7 +5,7 @@ import { IssueOptionsDto } from './issue-options.dto';
 /**
  * DTO which contains credential and options
  */
-export class IssueDto {
+export class IssueCredentialDto {
   @ValidateNested()
   credential: CredentialDto;
 

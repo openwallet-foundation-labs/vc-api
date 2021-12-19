@@ -10,7 +10,7 @@ import { VpRequestEntity } from './vp-request.entity';
 export class ActiveFlowEntity {
   /**
    * An id for the active flow.
-   * uuid chosen so as to not make the flow id guessable (want to avoid "flow bombing")
+   * uuid chosen so as to not make the flow id guessable
    */
   @Column('text', { primary: true })
   id: string;

@@ -47,8 +47,8 @@ export class KeyService implements IGenerateKey {
    *
    * It is probably NOT reasonable to expect that KMS would support
    *
-   * @param keyId Id of the key
-   * @returns private JWK corresponding to
+   * @param keyId Id of the public key of the key pair
+   * @returns private JWK of the key pair
    */
   async getPrivateKeyFromKeyId(keyId: string): Promise<JWK> {
     const keyPair = await this.keyRepository.findOne(keyId);
