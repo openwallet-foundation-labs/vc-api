@@ -1,6 +1,6 @@
 import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { VerifiableCredentialDto } from '../../vc-api/dto/verifiable-credential.dto';
-import { VpRequestEntity } from '../entities/vp-request.entity';
+import { VpRequestDto } from './vp-request.dto';
 
 /**
  * Describes the possible contents of response to a start/continue workflow request
@@ -21,7 +21,7 @@ export class WorkflowResponseDto {
    */
   @ValidateNested()
   @IsOptional()
-  vpRequest?: VpRequestEntity;
+  vpRequest?: VpRequestDto;
 
   @ValidateNested()
   @IsOptional()

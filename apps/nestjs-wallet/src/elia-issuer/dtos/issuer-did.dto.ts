@@ -1,6 +1,4 @@
-import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { VerifiableCredentialDto } from '../../vc-api/dto/verifiable-credential.dto';
-import { VpRequestEntity } from '../entities/vp-request.entity';
+import { IsString } from 'class-validator';
 
 /**
  * Describes DID + Verification Method to use for issuing credentials

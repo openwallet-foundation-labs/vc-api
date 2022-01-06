@@ -12,6 +12,7 @@ import { WorkflowResponseDto } from './dtos/workflow-response.dto';
 import { WorkflowType } from './types/workflow-type';
 import { CredentialDto } from 'src/vc-api/dto/credential.dto';
 import { IssueOptionsDto } from 'src/vc-api/dto/issue-options.dto';
+import { VpRequestDto } from './dtos/vp-request.dto';
 
 /**
  * A DID and verification method pair to use for proof generation
@@ -83,7 +84,7 @@ export class EliaIssuerService {
       vpRequests: [vpRequest]
     });
     await this.activeFlowRepository.save(activeFlow);
-    return { errors: [], vpRequest };
+    return { errors: [], vpRequest: VpRequestDto.toDto(vpRequest) };
   }
 
   /**
