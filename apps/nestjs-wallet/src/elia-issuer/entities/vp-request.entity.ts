@@ -27,7 +27,8 @@ export class VpRequestEntity {
 
   /**
    * The schema for this property is taken from https://github.com/w3c-ccg/vc-api/issues/245
-   * Probably makes sense for property to be optional until it is mentioned in the vp-request-spec
+   * Probably makes sense for property to be optional until it is mentioned in the vp-request-spec:
+   * https://github.com/w3c-ccg/vp-request-spec/pull/13/
    */
   @Column('simple-json')
   interact?: { service: { type: string; serviceEndpoint: string }[] };
