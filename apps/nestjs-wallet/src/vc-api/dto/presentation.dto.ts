@@ -1,5 +1,6 @@
-import { IsString, IsArray, IsObject, IsOptional, ValidateNested } from 'class-validator';
+import { IsString, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { VerifiableCredentialDto } from './verifiable-credential.dto';
+import { IsStringOrStringArray } from './custom-class-validator/is-string-or-string-array';
 
 /**
  * A JSON-LD Verifiable Presentation without a proof.
@@ -15,15 +16,17 @@ export class PresentationDto {
 
   /**
    * The ID of the presentation.
+   * The id property is optional and MAY be used to provide a unique identifier for the presentation.
+   * https://www.w3.org/TR/vc-data-model/#presentations-0
    */
   @IsString()
+  @IsOptional()
   id: string;
 
   /**
    * The JSON-LD type of the presentation.
    */
-  @IsArray()
-  @IsString({ each: true })
+  @IsStringOrStringArray()
   type: string[];
 
   /**

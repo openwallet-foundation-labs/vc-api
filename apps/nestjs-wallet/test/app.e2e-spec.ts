@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { DIDDocument } from 'did-resolver';
@@ -21,6 +21,7 @@ describe('App (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe()); // https://github.com/nestjs/nest/issues/5264
     await app.init();
   });
 
@@ -121,7 +122,7 @@ describe('App (e2e)', () => {
         verificationMethodURI: issuerDID.verificationMethod[0].id
       });
       const continueWorkflowResponse = await request(app.getHttpServer())
-        .post(workflowContinuationEndpoint.replace('undefined', '')) // TODO: Need to make this more robust, in event that domain actually was defined
+        .post(workflowContinuationEndpoint.replace(/https?:\/\/[^\/]+/i, '').replace('undefined', '')) // https://stackoverflow.com/a/2599721
         .send(didAuthResponse.body)
         .expect(201);
       expect(continueWorkflowResponse.body).toBeDefined();

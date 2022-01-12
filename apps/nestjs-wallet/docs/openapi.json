@@ -1,0 +1,150 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/did": {
+      "post": {
+        "operationId": "DIDController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateDidOptionsDto" } }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["did"]
+      }
+    },
+    "/did/{did}": {
+      "get": {
+        "operationId": "DIDController_getByDID",
+        "parameters": [{ "name": "did", "required": true, "in": "path", "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "" } },
+        "tags": ["did"]
+      }
+    },
+    "/did/verification-method/{id}": {
+      "get": {
+        "operationId": "DIDController_getVerificationMethods",
+        "parameters": [{ "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "" } },
+        "tags": ["did"]
+      }
+    },
+    "/did/label/{did}": {
+      "post": {
+        "operationId": "DIDController_label",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["did"]
+      }
+    },
+    "/did-purpose": {
+      "post": {
+        "operationId": "DIDPurposeController_create",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["did-purpose"]
+      },
+      "put": {
+        "operationId": "DIDPurposeController_update",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["did-purpose"]
+      },
+      "delete": {
+        "operationId": "DIDPurposeController_delete",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["did-purpose"]
+      }
+    },
+    "/vc-api/credentials/issue": {
+      "post": {
+        "operationId": "VcApiController_issueCredential",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/IssueCredentialDto" } }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/presentations/prove/authentication": {
+      "post": {
+        "operationId": "VcApiController_proveAuthenticationPresentation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthenticateDto" } } }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/elia-issuer/credential-offer": {
+      "get": {
+        "operationId": "EliaIssuerController_getCredentialOffer",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["elia-workflow"]
+      }
+    },
+    "/elia-issuer/start-workflow/{workflowtype}": {
+      "post": {
+        "operationId": "EliaIssuerController_startWorkflow",
+        "parameters": [
+          { "name": "workflowtype", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "201": { "description": "" } },
+        "tags": ["elia-workflow"]
+      }
+    },
+    "/elia-issuer/active-flows/{flowid}": {
+      "post": {
+        "operationId": "EliaIssuerController_continueWorkflow",
+        "parameters": [{ "name": "flowid", "required": true, "in": "path", "schema": { "type": "string" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["elia-workflow"]
+      }
+    },
+    "/elia-issuer/set-issuer-did": {
+      "put": {
+        "operationId": "EliaIssuerController_setIssueDid",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/IssuerDidDto" } } }
+        },
+        "responses": { "200": { "description": "" } },
+        "tags": ["elia-workflow"]
+      }
+    }
+  },
+  "info": {
+    "title": "SSI Wallet API",
+    "description": "Sample SSI Wallet NestJs API",
+    "version": "0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateDidOptionsDto": { "type": "object", "properties": {} },
+      "IssueCredentialDto": { "type": "object", "properties": {} },
+      "AuthenticateDto": { "type": "object", "properties": {} },
+      "VerifiablePresentationDto": { "type": "object", "properties": {} },
+      "IssuerDidDto": { "type": "object", "properties": {} }
+    }
+  }
+}

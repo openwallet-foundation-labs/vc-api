@@ -1,12 +1,14 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { VerifiablePresentationDto } from '../vc-api/dto/verifiable-presentation.dto';
 import { CredentialOfferDto } from './dtos/credential-offer.dto';
-import { EliaIssuerService, IssuingDID } from './elia-issuer.service';
+import { EliaIssuerService } from './elia-issuer.service';
 import { WorkflowResponseDto } from './dtos/workflow-response.dto';
 import { WorkflowType } from './types/workflow-type';
 import { EnumValueValidationPipe } from './validation-pipes/enum-value.pipe';
 import { IssuerDidDto } from './dtos/issuer-did.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('elia-workflow')
 @Controller('elia-issuer')
 export class EliaIssuerController {
   constructor(private eliaIssuerService: EliaIssuerService) {}
@@ -24,7 +26,7 @@ export class EliaIssuerController {
   }
 
   @Post('/active-flows/:flowid')
-  async proveAuthenticationPresentation(
+  async continueWorkflow(
     @Param('flowid') flowId: string,
     @Body() presentation: VerifiablePresentationDto
   ): Promise<WorkflowResponseDto> {
