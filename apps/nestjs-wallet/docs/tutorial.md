@@ -1,5 +1,54 @@
 # Tutorial
 
+## Business overview
+The business objective of this tutorial is to demonstrate how to issue a Verifiable Credential (VC) to a known user connected to a portal that we will call "authority portal".
+In the example below, we will issue a permanent residency card to a user we will call "citizen". We use the context "https://w3id.org/citizenship/v1" which describes the data of a VC of type "PermanentResidentCard".
+
+Here is an extract of the context:
+
+        ...
+        "id": "@id",
+        "type": "@type",
+
+        "ctzn": "https://w3id.org/citizenship#",
+        "schema": "http://schema.org/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+        "birthCountry": "ctzn:birthCountry",
+        "birthDate": {"@id": "schema:birthDate", "@type": "xsd:dateTime"},
+        "commuterClassification": "ctzn:commuterClassification",
+        "familyName": "schema:familyName",
+        "gender": "schema:gender",
+        "givenName": "schema:givenName",
+        "lprCategory": "ctzn:lprCategory",
+        "lprNumber": "ctzn:lprNumber",
+        "residentSince": {"@id": "ctzn:residentSince", "@type": "xsd:dateTime"}
+        ...
+
+To get the definition of the field "gender" which points to the definition "schema:gender", use the URI of "schema" which points to "http://schema.org/", so we will have a definition available at "http://schema.org/gender".
+Regarding the aliasing of `id` to `@id` and `type` to `@type`, see the [VC specification](https://www.w3.org/TR/vc-data-model/#syntactic-sugar).
+
+We therefore assume that the citizen is connected to the autority portal and that the information contained in the context about the citizen is available in the autority portal database.
+
+Business workflow:
+- The citizen requests a "PermanentResidentCard" proof on the autority portal
+- The autority portal displays a QR code for the citizen to scan with his mobile wallet.
+- The citizen's mobile wallet contacts the autority portal to prove that he has a DID
+- The citizen's mobile wallet contacts the autority portal again to receive the "PermanentResidentCard"
+- The autority portal responds by sending the "PermanentResidentCard" proof containing the citizen's information signed by the autority portal.
+
+## Technical overview
+From a technical point of view, in this tutorial, we have access to the server API but no mobile wallet is available. So we will use the server API for both roles of the portal and the mobile wallet.
+
+We will follow the following steps in this tutorial:
+- [Authority portal action] Create a DID for the autority portal in the form of a key DID method
+- [Authority portal action] Register the DID as default DID for the authority portal
+- [Authority portal action] Create a credential offer that can be transmitted to the citizen as a QR code or a deep link
+- [Citizen action] Request a credential using the request URL and obtain a [VP Request](https://w3c-ccg.github.io/vp-request-spec/) in return
+- [Citizen action] Create a DID for the citizen in the form of a key DID method
+- [Citizen action] Create an authentication proof (as a verfiable presentation) for the new DID
+- [Citizen action] Send the authentication proof to the authority portal and receive the Permenant Resident verifiable credential in return
+
 ## Overview and Objective
 
 The objective of this tutorial is walk through a simple credential issuance flow. A diagram of this flow is available in the root README.
@@ -19,7 +68,7 @@ Copy the values from the tutorial `env` file to the `env` file that will be pick
 cp .env.tutorial .env
 ```
 
-### Setup the credential issuer
+### [Authority portal] Setup the credential issuer
 
 The credential needs to be issued by an entity. In this step, we will create the identifier for this entity and the private key required to sign the credential proof.
 
@@ -79,7 +128,7 @@ Once you have filled in the request body, send the request. The response should 
 
 The wallet is now configured to issue credentials as the newly created DID.
 
-### Get a credential offer
+### [Authority portal] Generate a credential offer
 
 We will now obtain a credential offer from the `elia-issuer` module.
 
@@ -130,7 +179,7 @@ This means that we must authenticate as our chosen DID in order to obtain the cr
 Also note the `service` in the `interact` section of the VP Request.
 This is providing the location at which we can continue the credential request flow once we have met the `query` requirements.
       
-### Create a DID authentication
+### Create a DID authentication proof
 
 Let's create a new DID as which we can authenticate.
 This DID will be the Subject identifier of our credential.
@@ -213,6 +262,24 @@ To obtain the VC, continue the workflow using the DIDAuth presentation.
 To do this, open the `Elia Issuer Controller continue Workflow` request in the `elia-issuer` folder.
 In the request params, use the `flowid` from the `serviceEndpoint` in the VP Request.
 In the request body, copy the VP that was obtained from the previous step.
+
+```json
+{
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1"
+    ],
+    "type": "VerifiablePresentation",
+    "proof": {
+        "type": "Ed25519Signature2018",
+        "proofPurpose": "authentication",
+        "challenge": "57ca126c-acbf-4da4-8f79-447150e93128",
+        "verificationMethod": "did:key:z6Mkj1L6dqc7tU7TNA4a5qftmfKEo58bDmEzfYmz5cw7JGDV#z6Mkj1L6dqc7tU7TNA4a5qftmfKEo58bDmEzfYmz5cw7JGDV",
+        "created": "2022-01-11T06:56:23.156Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9.._8E6x42yrx8B5qveo0nAp6MNXnZ5rn0dYAH6regtDyk9Fhk9pgSKmVgVPt1NiTPFGrOxhUx_p-MM6GtCPRZcCQ"
+    },
+    "holder": "did:key:z6Mkj1L6dqc7tU7TNA4a5qftmfKEo58bDmEzfYmz5cw7JGDV"
+}
+```
 
 Send the request. The response should be similar to as shown below and contain the issued VC.
 ```json
