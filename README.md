@@ -52,7 +52,7 @@ The rational for Spruce's use is that it:
 
 ![Image](ssi-wallet-architecture.drawio.svg)
 
-![architecture](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/energywebfoundation/ssi/presentation-tutorial/ssi-agent.component.puml)
+![architecture](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/energywebfoundation/ssi/master/ssi-agent.component.puml)
 
 ## NestJS Wallet 
 
@@ -86,27 +86,92 @@ Implements the [vc-issuer specification](https://w3c-ccg.github.io/vc-api/issuer
 The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.
 The rationale for this for tests (rather than mocking the db) is that it speeds test writing time, elimates mocking boilerplate and possibly buggy DB mocks.
 
-## Core Flow
+## Core Issuance/Presentation Flow
 
-### Issuance
-The issuance flow is supported by the wallet currently is largely based off of this discussion in the VC API repository:
-https://github.com/w3c-ccg/vc-api/issues/245
+This flow is based of [VC-API Exchanges](https://w3c-ccg.github.io/vc-api/#initiate-exchange).
 
-It is also similar to the flow described for issuance in the VC API use cases:
-https://w3c-ccg.github.io/vc-api-use-cases/index.html#get-digital-permanent-resident-card
+### Initial Exchange Configuration
+```mermaid
+sequenceDiagram
+    participant E as Elia Frontend
+    actor EA as Elia Admin
+    participant VC as Generic VC-API
+    
+    EA->>VC: configure the exchange definition 
+    EA->>E: communicate "exchange invitation" 
+```
 
-[![](https://mermaid.ink/img/eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG4gICAgcGFydGljaXBhbnQgQXV0aCBhcyBBdXRoZW50aWNhdGlvbiBDbGllbnRcbiAgICBwYXJ0aWNpcGFudCBIIGFzIFJlcXVlc3QvSG9sZGVyIFdhbGxldCBcbiAgICBwYXJ0aWNpcGFudCBFIGFzIEVsaWEgQXBwXG4gICAgcGFydGljaXBhbnQgSSBhcyBFbGlhIFNTSSBXb3JrZmxvdyBBUElcbiAgICBcbiAgICBFLT4-STogYXNrIHNlcnZlciB0byBnZW5lcmF0ZSBcIkNyZWRlbnRpYWwgT2ZmZXJcIiBcbiAgICBhY3RpdmF0ZSBJXG4gICAgSS0tPj5FOiByZXR1cm4gIFwiQ3JlZGVudGlhbCBPZmZlclwiXG4gICAgZGVhY3RpdmF0ZSBJXG4gICAgRS0-Pkg6IGRpc3BsYXkgXCJDcmVkZW50aWFsIE9mZmVyXCIgKGUuZy4gYXMgUVIgY29kZSlcbiAgICBILT4-SDogcGFyc2Ugb2ZmZXIgZm9yIGF1dGhfdHlwZSwgdHlwZV9hdmFpbGFibGUsIHZjX3JlcXVlc3RfdXJsXG4gICAgXG4gICAgYWx0IGF1dGhlbnRpY2F0aW9uIHJlcXVpcmVkXG4gICAgICBILT4-QXV0aDogcGVyZm9ybSBhdXRoZW50aWNhdGlvblxuICAgICAgQXV0aC0tPj5IOiByZXR1cm4gYXV0aCB0b2tlblxuICAgIGVuZFxuICAgIFxuICAgIEgtPj5JOiBQT1NUIC9zdGFydC13b3JrZmxvdy97d29ya2Zsb3d0eXBlfSAod29ya2Zsb3d0eXBlIGZyb20gdHlwZV9hdmFpbGFibGUpXG4gICAgYWN0aXZhdGUgSVxuICAgIEktLT4-SDogcmV0dXJuIFZQIFJlcXVlc3QgaW5jbHVkaW5nIERJREF1dGggcXVlcnkgYW5kIHJlcGx5IGVuZHBvaW50XG4gICAgZGVhY3RpdmF0ZSBJXG5cbiAgICBILT4-SDogc2lnbiBESURBdXRoIFZQXG4gICAgXG4gICAgSC0-Pkk6IFBPU1QgL2FjdGl2ZS1mbG93cy97Zmxvd2lkfSB3aXRoIERJREF1dGggVlBcbiAgICBhY3RpdmF0ZSBJXG4gICAgSS0tPj5IOiByZXR1cm4gVkNcbiAgICBkZWFjdGl2YXRlIElcbiAgICBcbiAgICBILT4-SDogc3RvcmUgVkMgXG4iLCJtZXJtYWlkIjp7InRoZW1lIjoiZGVmYXVsdCJ9LCJ1cGRhdGVFZGl0b3IiOnRydWUsImF1dG9TeW5jIjp0cnVlLCJ1cGRhdGVEaWFncmFtIjp0cnVlfQ)](https://mermaid-js.github.io/mermaid-live-editor/edit/#eyJjb2RlIjoic2VxdWVuY2VEaWFncmFtXG4gICAgcGFydGljaXBhbnQgQXV0aCBhcyBBdXRoZW50aWNhdGlvbiBDbGllbnRcbiAgICBwYXJ0aWNpcGFudCBIIGFzIFJlcXVlc3QvSG9sZGVyIFdhbGxldCBcbiAgICBwYXJ0aWNpcGFudCBFIGFzIEVsaWEgQXBwXG4gICAgcGFydGljaXBhbnQgSSBhcyBFbGlhIFNTSSBXb3JrZmxvdyBBUElcbiAgICBcbiAgICBFLT4-STogYXNrIHNlcnZlciB0byBnZW5lcmF0ZSBcIkNyZWRlbnRpYWwgT2ZmZXJcIiBcbiAgICBhY3RpdmF0ZSBJXG4gICAgSS0tPj5FOiByZXR1cm4gIFwiQ3JlZGVudGlhbCBPZmZlclwiXG4gICAgZGVhY3RpdmF0ZSBJXG4gICAgRS0-Pkg6IGRpc3BsYXkgXCJDcmVkZW50aWFsIE9mZmVyXCIgKGUuZy4gYXMgUVIgY29kZSlcbiAgICBILT4-SDogcGFyc2Ugb2ZmZXIgZm9yIGF1dGhfdHlwZSwgdHlwZV9hdmFpbGFibGUsIHZjX3JlcXVlc3RfdXJsXG4gICAgXG4gICAgYWx0IGF1dGhlbnRpY2F0aW9uIHJlcXVpcmVkXG4gICAgICBILT4-QXV0aDogcGVyZm9ybSBhdXRoZW50aWNhdGlvblxuICAgICAgQXV0aC0tPj5IOiByZXR1cm4gYXV0aCB0b2tlblxuICAgIGVuZFxuICAgIFxuICAgIEgtPj5JOiBQT1NUIC9zdGFydC13b3JrZmxvdy97d29ya2Zsb3d0eXBlfSAod29ya2Zsb3d0eXBlIGZyb20gdHlwZV9hdmFpbGFibGUpXG4gICAgYWN0aXZhdGUgSVxuICAgIEktLT4-SDogcmV0dXJuIFZQIFJlcXVlc3QgaW5jbHVkaW5nIERJREF1dGggcXVlcnkgYW5kIHJlcGx5IGVuZHBvaW50XG4gICAgZGVhY3RpdmF0ZSBJXG5cbiAgICBILT4-SDogc2lnbiBESURBdXRoIFZQXG4gICAgXG4gICAgSC0-Pkk6IFBPU1QgL2FjdGl2ZS1mbG93cy97Zmxvd2lkfSB3aXRoIERJREF1dGggVlBcbiAgICBhY3RpdmF0ZSBJXG4gICAgSS0tPj5IOiByZXR1cm4gVkNcbiAgICBkZWFjdGl2YXRlIElcbiAgICBcbiAgICBILT4-SDogc3RvcmUgVkMgXG4iLCJtZXJtYWlkIjoie1xuICBcInRoZW1lXCI6IFwiZGVmYXVsdFwiXG59IiwidXBkYXRlRWRpdG9yIjp0cnVlLCJhdXRvU3luYyI6dHJ1ZSwidXBkYXRlRGlhZ3JhbSI6dHJ1ZX0)
+### Credential Presentation/Issuance
 
-### Presentation
-TO BE IMPLEMENTED:
+The initial HTTP request for the VP Request could be made directly to the generic VC-API.
 
-[![](https://mermaid.ink/img/pako:eNq9VE1vozAQ_Ssjn1op6Q_gUClqkOCyyzar9oIUWfbAWjE2a5tUqOp_33EMbT6a7p6Wg8Hw5s2bmWdembASWcY8_h7QCFwr3jre1Qbo6rkLSqiemwCrIfwC7g93NPSaB2UNPGhFu0t4EbGF1RIdPHOtMcAlKI-gXCsOq76__Fy-f95sSni2btdo-wKrqkzYtObL-_sygxYNOh4QalY59CQqCSzNXqXHmqUALoLaR-REUy6JIc_AYRic-Xu8xHOGKKHIQCrfaz5-xQA3eNfexbp-PMIDtf52qqJIFFS-R7BNQ21rrANO3d6GsccF7MW2P6LdDk4ft4HrcEAfzcbRTJVDmQApRxwfpUFH7N1ZwIyLmGXSM_Uk4iDYHU4YNPI4d5FGUH3f_CTUdaWfdv4jy1MFj9GGPoAyQg9SmRbW5fpgPXrvRuBGErrXY5TQWzVb73QmJy31qjXvLE_VF7pP8gdykwjg0e2VQHhRFH3O8u_1cL-LxcSRzlMBQUtsPtcebj4K5makrLpZRuEob6-Z7r-U4Ach0Hva-kGHa1LKdIC-2aCakdw7hzWDhmMnQDy_bME6dB1Xkn47r5GgZuTCDmuW0aPEhsdUdNjeCDr0khLlUgXrWNZQr3DByI52MxrBsuAGnEHTr2tCvf0Bk1ebfw)](https://mermaid-js.github.io/mermaid-live-editor/edit/#pako:eNq9VE1vozAQ_Ssjn1op6Q_gUClqkOCyyzar9oIUWfbAWjE2a5tUqOp_33EMbT6a7p6Wg8Hw5s2bmWdembASWcY8_h7QCFwr3jre1Qbo6rkLSqiemwCrIfwC7g93NPSaB2UNPGhFu0t4EbGF1RIdPHOtMcAlKI-gXCsOq76__Fy-f95sSni2btdo-wKrqkzYtObL-_sygxYNOh4QalY59CQqCSzNXqXHmqUALoLaR-REUy6JIc_AYRic-Xu8xHOGKKHIQCrfaz5-xQA3eNfexbp-PMIDtf52qqJIFFS-R7BNQ21rrANO3d6GsccF7MW2P6LdDk4ft4HrcEAfzcbRTJVDmQApRxwfpUFH7N1ZwIyLmGXSM_Uk4iDYHU4YNPI4d5FGUH3f_CTUdaWfdv4jy1MFj9GGPoAyQg9SmRbW5fpgPXrvRuBGErrXY5TQWzVb73QmJy31qjXvLE_VF7pP8gdykwjg0e2VQHhRFH3O8u_1cL-LxcSRzlMBQUtsPtcebj4K5makrLpZRuEob6-Z7r-U4Ach0Hva-kGHa1LKdIC-2aCakdw7hzWDhmMnQDy_bME6dB1Xkn47r5GgZuTCDmuW0aPEhsdUdNjeCDr0khLlUgXrWNZQr3DByI52MxrBsuAGnEHTr2tCvf0Bk1ebfw)
+```mermaid
+sequenceDiagram
+    actor R as requester/holder
+    participant H as SSI Wallet 
+    participant E as Elia Frontend
+    participant EWA as Elia Workflow API
+    participant VC as Generic VC-API
+    
+    E->>H: display "exchange invitation" (e.g. as QR code)
+    H->>H: parse offer for type_available, vc_request_url
+    
+    alt VC-API is encapsulated by use case API
+      H->>EWA: POST /exchanges/{exchange-id} (this is the vc_request_url)
+      activate EWA
+      EWA->>VC: POST /exchanges/{exchange-id}
+      activate VC
+        VC->>VC: Create workflow record
+        VC->>VC: Look up the configured workflow definition
+        VC-->>EWA: return VP Request with configured presentation definition
+      deactivate VC
+      EWA-->>H: return VP Request with presentation definition 
+      deactivate EWA
+    else VC-API is exposed directly
+      H->>VC: POST /exchanges/{exchange-id} (this is the vc_request_url)
+      activate VC
+      VC->>VC: Create workflow record
+      VC->>VC: Look up the configured workflow definition
+      VC-->>H: return VP Request with presentation definition 
+      deactivate VC
+    end
 
-- "Interact" property of VP Request is proposed here: https://github.com/w3c-ccg/vp-request-spec/pull/15
+    H->>R: request vp signature
+    R-->>H: approve vp signature
+    
+    alt VC-API is encapsulated by use case API
+      H->>EWA: POST /exchanges/{exchange-id}/{transaction-id} with VP
+      activate EWA
+      EWA->>VC: POST /exchanges/{exchange-id}/{transaction-id} 
+      activate VC
+        VC->>VC: Verify the presentation
+        VC-->>EWA: return presentation verification result 
+      deactivate VC
+      opt for an issuance flow
+      EWA->>EWA: create VC
+      end
+      EWA-->>H: return VC
+      deactivate EWA
+    else VC-API is exposed directly
+      H->>VC: POST /exchanges/{exchange-id}/{transaction-id} with VP
+      activate VC
+        VC->>VC: Verify the presentation
+        VC-->>H: return presentation verification result 
+      deactivate VC
+      opt for an issuance flow
+        H->>EWA: POST /exchanges/{exchange-id}/{transaction-id}
+        activate EWA
+        EWA->>VC: GET /workflows/{id}/status 
+        VC-->>EWA: return workflow result confirming successful status
+        EWA->>EWA: create VC
+        EWA-->>H: return VC
+      end
+      deactivate EWA
+    end
+    
+    H->>H: store VC 
+```
 
-- Multi-stage presentation is mentioned here:
-  - https://github.com/w3c-ccg/vc-api/pull/255
-  - https://w3c-ccg.github.io/vc-api-use-cases/#execute-multi-stage-presentation-workflow
 
 - Presentation Definition as means of requesting credentials https://identity.foundation/presentation-exchange/#presentation-definition
 
@@ -212,8 +277,8 @@ For a deep-dive into the motivation and methodology behind our technical solutio
 However, it does not provide any functionality for key or DID management.
 Therefore, iam-client-lib can be used with the keys and DIDs managed by the wallet applications.
 
-### iam-cache-server
-[iam-cache-server](https://github.com/energywebfoundation/iam-cache-server)'s persistence of issued credentials, requested credentials and DID relationships can used as a shared trusted third-party between wallets.
+### ssi-hub
+[ssi-hub](https://github.com/energywebfoundation/ssi-hub)'s persistence of issued credentials, requested credentials and DID relationships could be integrated with the code in this repository.
 
 ### ew-did-registry
 [ew-did-registry](https://github.com/energywebfoundation/ew-did-registry) Though some code should be integrated between ew-did-registry and this repository,
