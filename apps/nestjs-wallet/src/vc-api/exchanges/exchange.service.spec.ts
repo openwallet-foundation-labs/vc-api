@@ -3,24 +3,23 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmSQLiteModule } from '../../in-memory-db';
 import { Repository } from 'typeorm';
 import { VcApiService } from '../vc-api.service';
-import { ActiveFlowEntity } from './entities/active-flow.entity';
+import { ExchangeExecutionEntity } from './entities/exchange-execution.entity';
 import { VpRequestEntity } from './entities/vp-request.entity';
-import { WorkflowService } from './workflow.service';
-import { WorkflowDefinitionDto } from './dtos/workflow-definition.dto';
+import { ExchangeService } from './exchange.service';
+import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from './types/vp-request-interact-service-type';
-import { VpRequestInteractDto } from './dtos/vp-request-interact.dto';
 
-describe('WorkflowService', () => {
-  let service: WorkflowService;
+describe('ExchangeService', () => {
+  let service: ExchangeService;
   let vcApiService: VcApiService;
-  let activeFlowRepository: Repository<ActiveFlowEntity>;
+  let activeFlowRepository: Repository<ExchangeExecutionEntity>;
   let vpRequestRepository: Repository<VpRequestEntity>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmSQLiteModule(), TypeOrmModule.forFeature([VpRequestEntity, ActiveFlowEntity])],
+      imports: [TypeOrmSQLiteModule(), TypeOrmModule.forFeature([VpRequestEntity, ExchangeExecutionEntity])],
       providers: [
-        WorkflowService,
+        ExchangeService,
         {
           provide: VcApiService,
           useValue: {}
@@ -29,8 +28,10 @@ describe('WorkflowService', () => {
     }).compile();
 
     vcApiService = module.get<VcApiService>(VcApiService);
-    service = module.get<WorkflowService>(WorkflowService);
-    activeFlowRepository = module.get<Repository<ActiveFlowEntity>>(getRepositoryToken(ActiveFlowEntity));
+    service = module.get<ExchangeService>(ExchangeService);
+    activeFlowRepository = module.get<Repository<ExchangeExecutionEntity>>(
+      getRepositoryToken(ExchangeExecutionEntity)
+    );
     vpRequestRepository = module.get<Repository<VpRequestEntity>>(getRepositoryToken(VpRequestEntity));
   });
 
@@ -42,12 +43,12 @@ describe('WorkflowService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('startWorkflow', () => {
-    it('should start workflow from a workflow definition', async () => {
-      const workflowName = 'test-workflow';
+  describe('start exchange', () => {
+    it('should start exchange from an exchange definition', async () => {
+      const exchangeId = 'test-exchange';
       const baseUrl = 'https://test-issuer.com';
-      const workflowDef: WorkflowDefinitionDto = {
-        workflowName,
+      const exchangeDef: ExchangeDefinitionDto = {
+        exchangeId: exchangeId,
         interactServices: [
           {
             type: VpRequestInteractServiceType.unmediatedPresentation,
@@ -56,10 +57,10 @@ describe('WorkflowService', () => {
         ],
         query: []
       };
-      service.configureWorkflow(workflowDef);
-      const workflowResponse = await service.startWorkflow(workflowName);
-      expect(workflowResponse.vpRequest.interact.service).toHaveLength(1);
-      expect(workflowResponse.vpRequest.interact.service[0].serviceEndpoint).toContain(baseUrl);
+      service.configureWorkflow(exchangeDef);
+      const exchangeResponse = await service.startExchange(exchangeId);
+      expect(exchangeResponse.vpRequest.interact.service).toHaveLength(1);
+      expect(exchangeResponse.vpRequest.interact.service[0].serviceEndpoint).toContain(baseUrl);
     });
   });
 });

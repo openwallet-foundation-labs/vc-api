@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { VpRequestQueryType } from '../types/vp-request-query-type';
-import { ActiveFlowEntity } from './active-flow.entity';
+import { ExchangeExecutionEntity } from './exchange-execution.entity';
 
 /**
  * A TypeOrm entity representing a VP Request
@@ -39,6 +39,6 @@ export class VpRequestEntity {
    * From https://github.com/w3c-ccg/vc-api/issues/245 :
    * "The ID on the end is bound to this particular request" (on the the of the interact.serviceEndpoints)
    */
-  @ManyToOne((type) => ActiveFlowEntity, (activeFlow) => activeFlow.vpRequests)
-  activeFlow: ActiveFlowEntity;
+  @ManyToOne((type) => ExchangeExecutionEntity, (activeFlow) => activeFlow.vpRequests)
+  activeFlow: ExchangeExecutionEntity;
 }

@@ -4,7 +4,7 @@ import { VpRequestInteractServiceType } from '../types/vp-request-interact-servi
 /**
  * A definition of an interact service to be used in a workflow
  */
-export class WorkflowInteractServiceDefinitionDto {
+export class ExchangeInteractServiceDefinitionDto {
   @IsEnum(VpRequestInteractServiceType)
   type: VpRequestInteractServiceType;
 

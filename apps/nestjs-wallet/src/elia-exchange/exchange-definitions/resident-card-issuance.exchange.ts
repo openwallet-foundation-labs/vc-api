@@ -1,13 +1,13 @@
-import { IssuanceWorkflowDefinition } from '../types/issuance-workflow-definition';
+import { IssuanceExchangeDefinition as IssuanceExchangeDefinition } from '../types/issuance-exchange-definition';
 import { CredentialDto } from 'src/vc-api/dtos/credential.dto';
 import { VcApiService } from 'src/vc-api/vc-api.service';
-import { AckStatus } from '../../vc-api/workflow/types/ack-status';
+import { AckStatus } from '../../vc-api/exchanges/types/ack-status';
 import { IssueOptionsDto } from '../../vc-api/dtos/issue-options.dto';
 import { VerifiablePresentationDto } from '../../vc-api/dtos/verifiable-presentation.dto';
-import { WorkflowResponseDto } from '../../vc-api/workflow/dtos/workflow-response.dto';
+import { ExchangeResponseDto } from '../../vc-api/exchanges/dtos/exchange-response.dto';
 import { DIDService } from 'src/did/did.service';
 
-export class ResidentCardIssuanceWorkflow implements IssuanceWorkflowDefinition {
+export class ResidentCardIssuanceExchange implements IssuanceExchangeDefinition {
   #vcApiService: VcApiService;
   #didService: DIDService;
 
@@ -16,9 +16,9 @@ export class ResidentCardIssuanceWorkflow implements IssuanceWorkflowDefinition 
     this.#didService = didService;
   }
 
-  handlePresentation: (vp: VerifiablePresentationDto) => Promise<WorkflowResponseDto> = async (
+  handlePresentation: (vp: VerifiablePresentationDto) => Promise<ExchangeResponseDto> = async (
     vp: VerifiablePresentationDto
-  ): Promise<WorkflowResponseDto> => {
+  ): Promise<ExchangeResponseDto> => {
     if (!vp.holder) {
       return { errors: ['holder of vp not provided'], ack: { status: AckStatus.fail } };
     }

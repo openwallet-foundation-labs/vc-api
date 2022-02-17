@@ -6,9 +6,9 @@ import { TypeOrmSQLiteModule } from '../in-memory-db';
 import { KeyModule } from '../key/key.module';
 import { VcApiController } from './vc-api.controller';
 import { VcApiService } from './vc-api.service';
-import { ActiveFlowEntity } from './workflow/entities/active-flow.entity';
-import { VpRequestEntity } from './workflow/entities/vp-request.entity';
-import { WorkflowService } from './workflow/workflow.service';
+import { ExchangeExecutionEntity } from './exchanges/entities/exchange-execution.entity';
+import { VpRequestEntity } from './exchanges/entities/vp-request.entity';
+import { ExchangeService } from './exchanges/exchange.service';
 
 describe('VcApiController', () => {
   let controller: VcApiController;
@@ -22,7 +22,7 @@ describe('VcApiController', () => {
           useValue: {}
         },
         {
-          provide: WorkflowService,
+          provide: ExchangeService,
           useValue: {}
         }
       ]

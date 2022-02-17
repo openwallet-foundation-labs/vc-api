@@ -4,9 +4,9 @@ import { AckPresentationDto } from './ack-presentation.dto';
 import { VpRequestDto } from './vp-request.dto';
 
 /**
- * Describes the possible contents of response to a start/continue workflow request
+ * Describes the possible contents of response to a start/continue exchange request
  */
-export class WorkflowResponseDto {
+export class ExchangeResponseDto {
   /**
    * Any errors encountered during workflow request processing
    */

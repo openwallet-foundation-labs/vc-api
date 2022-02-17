@@ -103,9 +103,9 @@ The body should be similar to the following:
 }
 ```
 
-We now need to configure the `elia-workflow` module to issue credentials using our newly created DID.
+We now need to configure the `elia-exchange` module to issue credentials using our newly created DID.
 
-In Postman, navigate to the `Elia Issuer Controller set Issue Did` request under the `elia-workflow` folder.
+In Postman, navigate to the `Elia Issuer Controller set Issue Did` request under the `elia-exchange` folder.
 
 Edit the json below with the DID `id` and verfification method `id` obtained from the DID document return in the request prior to this. Enter the filled json in the Body tab of the Postman request dialog.
 ```json
@@ -130,15 +130,15 @@ The wallet is now configured to issue credentials as the newly created DID.
 
 ### [Authority portal] Generate a credential offer
 
-We will now obtain a credential offer from the `elia-workflow` module.
+We will now obtain a credential offer from the `elia-exchange` module.
 
-In Postman, navigate to the `Elia Issuer Controller get Credential Offer` `GET` request under the `elia-workflow` folder.
+In Postman, navigate to the `Elia Issuer Controller get Credential Offer` `GET` request under the `elia-exchange` folder.
 This request doesn't need any configuration and can be sent as is.
 It should return the following json in the response body:
 ```json
 {
     "typeAvailable": "PermanentResidentCard",
-    "vcRequestUrl": "http://localhost:3000/elia-workflow/workflows/permanent-resident-card/start"
+    "vcRequestUrl": "http://localhost:3000/elia-exchange/workflows/permanent-resident-card/start"
 }
 ```
 This response indicates that a Verifiable Credential of type "PermanentResidentCard" is available from this API and that a request for the credential can be initiated at the `vcRequestUrl`.
@@ -163,7 +163,7 @@ Send the request. A similar json should be returned in the response body:
             "service": [
                 {
                     "type": "VcApiPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/elia-workflow/workflows/c4e0e642-02a2-4a1a-91c6-40069b328238/presentations"
+                    "serviceEndpoint": "http://localhost:3000/elia-exchange/workflows/c4e0e642-02a2-4a1a-91c6-40069b328238/presentations"
                 }
             ]
         }
@@ -259,7 +259,7 @@ Send the request. The response should be a verifiable presentation, similar to t
 ### Continue workflow and obtain the verifiable credential
 
 To obtain the VC, continue the workflow using the DIDAuth presentation.
-To do this, open the `Elia Issuer Controller continue Workflow` request in the `elia-workflow` folder.
+To do this, open the `Elia Issuer Controller continue Workflow` request in the `elia-exchange` folder.
 In the request params, use the `flowid` from the `serviceEndpoint` in the VP Request.
 In the request body, copy the VP that was obtained from the previous step.
 

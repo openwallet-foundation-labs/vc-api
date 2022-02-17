@@ -3,13 +3,13 @@
 
 Container_Boundary(nestjs_agent, "NestJs SSI Wallet") {
   Component(vc_api, "VC API Module", "NestJs Module", "VC API Spec Holder, Issuer and Verifier")
-  Component(elia_workflow, "Elia Workflow Module", "NestJs Module", "Workflow definitions for Elia use cases")
+  Component(elia_exchange, "Elia Exchange Module", "NestJs Module", "Exchange definitions for Elia use cases")
   Component(did, "DID Module", "NestJs Module", "DID Generation, Storage/Retrieval")
   Component(key, "Key Module", "NestJs Module", "Key Generation, Storage/Retrieval")
   Component_Ext(spruce_didkit, "Spruce DIDKit", "Credential Signing and Verification")
 }
 
-Rel(elia_workflow, vc_api, "Calls/Configures")
+Rel(elia_exchange, vc_api, "Calls/Configures")
 Rel(vc_api, did, "Get Verification Method for signing")
 Rel(vc_api, key, "Get Private Key for signing")
 Rel(vc_api, spruce_didkit, "Import for signing & verification")

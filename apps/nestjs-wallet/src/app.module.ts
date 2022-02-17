@@ -6,7 +6,7 @@ import { DIDPurposeModule } from './did-purpose/did-purpose.module';
 import { VcApiModule } from './vc-api/vc-api.module';
 import { DIDContactModule } from './did-contact/did-contact.module';
 import { TypeOrmSQLiteModule } from './in-memory-db';
-import { EliaWorkflowModule } from './elia-workflow/elia-workflow.module';
+import { EliaExchangeModule } from './elia-exchange/elia-exchange.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { EliaWorkflowModule } from './elia-workflow/elia-workflow.module';
     DIDPurposeModule,
     VcApiModule,
     DIDContactModule,
-    EliaWorkflowModule
+    EliaExchangeModule
   ]
 })
 export class AppModule {}
