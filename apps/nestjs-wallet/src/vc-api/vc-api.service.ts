@@ -9,15 +9,14 @@ import {
 import { JWK } from 'jose';
 import { DIDService } from '../did/did.service';
 import { KeyService } from '../key/key.service';
-import { CredentialDto } from './dto/credential.dto';
-import { IssueOptionsDto } from './dto/issue-options.dto';
-import { IssueCredentialDto } from './dto/issue-credential.dto';
-import { PresentationDto } from './dto/presentation.dto';
-import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
-import { VerifiablePresentationDto } from './dto/verifiable-presentation.dto';
-import { VerifyOptionsDto } from './dto/verify-options.dto';
-import { VerifyProofResponseDto } from './dto/verify-proof-response.dto';
-import { AuthenticateDto } from './dto/authenticate.dto';
+import { IssueOptionsDto } from './dtos/issue-options.dto';
+import { IssueCredentialDto } from './dtos/issue-credential.dto';
+import { PresentationDto } from './dtos/presentation.dto';
+import { VerifiableCredentialDto } from './dtos/verifiable-credential.dto';
+import { VerifiablePresentationDto } from './dtos/verifiable-presentation.dto';
+import { VerifyOptionsDto } from './dtos/verify-options.dto';
+import { VerifyProofResponseDto } from './dtos/verify-proof-response.dto';
+import { AuthenticateDto } from './dtos/authenticate.dto';
 
 /**
  * Credential issuance options that Spruce accepts

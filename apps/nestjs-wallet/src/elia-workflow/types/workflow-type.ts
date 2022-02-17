@@ -5,6 +5,6 @@
  * {@link https://w3c-ccg.github.io/vc-api-use-cases}
  * But they could very well not be standard as well.
  */
-export enum WorkflowType {
-  permanent_resident_card = 'permanent-resident-card'
+export enum WorkflowName {
+  permanent_resident_card_issuance = 'permanent-resident-card-issuance'
 }

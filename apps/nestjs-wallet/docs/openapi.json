@@ -85,7 +85,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/elia-issuer/credential-offer": {
+    "/elia-workflow/credential-offer": {
       "get": {
         "operationId": "EliaIssuerController_getCredentialOffer",
         "parameters": [],
@@ -93,7 +93,7 @@
         "tags": ["elia-workflow"]
       }
     },
-    "/elia-issuer/start-workflow/{workflowtype}": {
+    "/elia-workflow/start-workflow/{workflowtype}": {
       "post": {
         "operationId": "EliaIssuerController_startWorkflow",
         "parameters": [
@@ -103,7 +103,7 @@
         "tags": ["elia-workflow"]
       }
     },
-    "/elia-issuer/active-flows/{flowid}": {
+    "/elia-workflow/workflows/{flowid}/presentations": {
       "post": {
         "operationId": "EliaIssuerController_continueWorkflow",
         "parameters": [{ "name": "flowid", "required": true, "in": "path", "schema": { "type": "string" } }],
@@ -117,7 +117,7 @@
         "tags": ["elia-workflow"]
       }
     },
-    "/elia-issuer/set-issuer-did": {
+    "/elia-workflow/set-issuer-did": {
       "put": {
         "operationId": "EliaIssuerController_setIssueDid",
         "parameters": [],

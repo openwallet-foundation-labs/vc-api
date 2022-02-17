@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { VpRequestQueryType } from '../types/vp-request-query-type';
 import { ActiveFlowEntity } from './active-flow.entity';
 
 /**
@@ -23,7 +24,7 @@ export class VpRequestEntity {
    *  This document defines several common query types."
    */
   @Column('simple-json')
-  query: { type: string }[];
+  query: { type: VpRequestQueryType; credentialQuery: any }[];
 
   /**
    * The schema for this property is taken from https://github.com/w3c-ccg/vc-api/issues/245

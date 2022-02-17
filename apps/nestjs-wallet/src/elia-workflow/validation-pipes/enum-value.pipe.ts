@@ -30,7 +30,7 @@ export class EnumValueValidationPipe implements PipeTransform<string, Promise<an
  * @param enumValue the enum value
  * @returns the enum key corresponding to the value
  */
-function getEnumKeyByEnumValue<T extends { [index: string]: string }>(
+export function getEnumKeyByEnumValue<T extends { [index: string]: string }>(
   myEnum: T,
   enumValue: string
 ): keyof T | null {

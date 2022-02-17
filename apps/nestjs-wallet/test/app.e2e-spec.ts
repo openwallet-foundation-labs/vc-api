@@ -3,14 +3,16 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { DIDDocument } from 'did-resolver';
-import { CredentialDto } from '../src/vc-api/dto/credential.dto';
-import { IssueOptionsDto } from '../src/vc-api/dto/issue-options.dto';
-import { CredentialOfferDto } from '../src/elia-issuer/dtos/credential-offer.dto';
-import { WorkflowResponseDto } from 'src/elia-issuer/dtos/workflow-response.dto';
+import { CredentialDto } from '../src/vc-api/dtos/credential.dto';
+import { IssueOptionsDto } from '../src/vc-api/dtos/issue-options.dto';
+import { WorkflowResponseDto } from '../src/vc-api/workflow/dtos/workflow-response.dto';
+import { WorkflowDefinitionDto } from '../src/vc-api/workflow/dtos/workflow-definition.dto';
+import { VpRequestQueryType } from '../src/vc-api/workflow/types/vp-request-query-type';
+import { VpRequestInteractServiceType } from '../src/vc-api/workflow/types/vp-request-interact-service-type';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
-jest.setTimeout(20 * 1000);
+jest.setTimeout(300 * 1000);
 
 describe('App (e2e)', () => {
   let app: INestApplication;
@@ -77,21 +79,34 @@ describe('App (e2e)', () => {
     return postResponse.body;
   }
 
-  describe('Elia Issuer', () => {
+  describe('Credential Issuance', () => {
     it('should get credential starting from an offer', async () => {
-      // GET credential offer
-      const credOfferResponse = await request(app.getHttpServer())
-        .get('/elia-issuer/credential-offer')
-        .expect(200);
-      expect(credOfferResponse).toBeDefined();
-      const credOffer = credOfferResponse.body as CredentialOfferDto;
-      const expectedWorkflow = '/elia-issuer/start-workflow/permanent-resident-card';
-      expect(credOffer.vcRequestUrl.endsWith(expectedWorkflow)).toBeTruthy();
-      const expectedCredentialType = 'PermanentResidentCard';
-      expect(credOffer.typeAvailable).toEqual(expectedCredentialType);
+      // POST /workflows/configure
+      const workflowName = 'permanent-resident-card-issuance';
+      const workflowDefinition: WorkflowDefinitionDto = {
+        workflowName: 'permanent-resident-card-issuance',
+        query: [
+          {
+            type: VpRequestQueryType.didAuth,
+            credentialQuery: []
+          }
+        ],
+        interactServices: [
+          {
+            type: VpRequestInteractServiceType.unmediatedPresentation,
+            baseUrl: '/elia-workflow'
+          }
+        ]
+      };
+      await request(app.getHttpServer())
+        .post(`/vc-api/workflows/configure`)
+        .send(workflowDefinition)
+        .expect(201);
 
-      // POST start-workflow
-      const startWorkflowResponse = await request(app.getHttpServer()).post(expectedWorkflow).expect(201);
+      // POST /workflows/{name}/start
+      const startWorkflowResponse = await request(app.getHttpServer())
+        .post(`/elia-workflow/workflows/${workflowName}/start`)
+        .expect(201);
       const vpRequest = (startWorkflowResponse.body as WorkflowResponseDto).vpRequest;
       expect(vpRequest).toBeDefined();
       const challenge = vpRequest.challenge;
@@ -99,7 +114,7 @@ describe('App (e2e)', () => {
       expect(vpRequest.query).toHaveLength(1);
       expect(vpRequest.query[0].type).toEqual('DIDAuth');
       const workflowContinuationEndpoint = vpRequest.interact.service[0].serviceEndpoint;
-      expect(workflowContinuationEndpoint).toContain('/elia-issuer/active-flows/');
+      expect(workflowContinuationEndpoint).toContain('/elia-workflow/workflows/');
 
       // Create new DID and presentation to authentication as this DID
       // DID auth presentation: https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
@@ -116,16 +131,11 @@ describe('App (e2e)', () => {
       expect(didAuthResponse.body).toBeDefined();
 
       // Continue workflow and get VC
-      const issuerDID = await createDID('key');
-      await request(app.getHttpServer()).put('/elia-issuer/set-issuer-did').send({
-        DID: issuerDID.id,
-        verificationMethodURI: issuerDID.verificationMethod[0].id
-      });
       const continueWorkflowResponse = await request(app.getHttpServer())
-        .post(workflowContinuationEndpoint.replace(/https?:\/\/[^\/]+/i, '').replace('undefined', '')) // https://stackoverflow.com/a/2599721
+        .post(workflowContinuationEndpoint)
         .send(didAuthResponse.body)
         .expect(201);
-      expect(continueWorkflowResponse.body).toBeDefined();
+      expect(continueWorkflowResponse.body.vc).toBeDefined();
     });
   });
 });

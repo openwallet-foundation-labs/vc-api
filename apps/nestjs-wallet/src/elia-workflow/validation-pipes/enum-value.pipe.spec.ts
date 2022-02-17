@@ -1,12 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
-import { WorkflowType } from '../types/workflow-type';
+import { WorkflowName } from '../types/workflow-type';
 import { EnumValueValidationPipe } from './enum-value.pipe';
 
 describe('EnumValueValidationPipe', () => {
   let target: EnumValueValidationPipe;
 
   beforeEach(() => {
-    target = new EnumValueValidationPipe(WorkflowType);
+    target = new EnumValueValidationPipe(WorkflowName);
   });
 
   it('throws exception if value is undefined', async () => {
@@ -28,8 +28,8 @@ describe('EnumValueValidationPipe', () => {
   });
 
   it('returns enum is value is part of enum', async () => {
-    expect(target.transform(WorkflowType.permanent_resident_card)).toEqual(
-      WorkflowType.permanent_resident_card
+    expect(target.transform(WorkflowName.permanent_resident_card_issuance)).toEqual(
+      WorkflowName.permanent_resident_card_issuance
     );
   });
 });

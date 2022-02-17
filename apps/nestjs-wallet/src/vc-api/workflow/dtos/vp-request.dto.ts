@@ -2,6 +2,7 @@ import { classToPlain, plainToClass, Type } from 'class-transformer';
 import { IsArray, IsObject, IsString, ValidateNested } from 'class-validator';
 import { VpRequestEntity } from '../entities/vp-request.entity';
 import { VpRequestInteractDto } from './vp-request-interact.dto';
+import { VpRequestQueryDto } from './vp-request-query.dto';
 
 /**
  * VP Request DTO
@@ -24,7 +25,7 @@ export class VpRequestDto {
    *  This document defines several common query types."
    */
   @IsArray()
-  query: { type: string }[];
+  query: VpRequestQueryDto[];
 
   @ValidateNested()
   interact?: VpRequestInteractDto;

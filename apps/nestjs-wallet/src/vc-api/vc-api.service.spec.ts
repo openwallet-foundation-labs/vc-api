@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { keyToDID, keyToVerificationMethod } from '@spruceid/didkit-wasm-node';
 import { TypeOrmSQLiteModule } from '../in-memory-db';
 import { VcApiService } from './vc-api.service';
-import { IssueOptionsDto } from './dto/issue-options.dto';
-import { VerifyOptionsDto } from './dto/verify-options.dto';
+import { IssueOptionsDto } from './dtos/issue-options.dto';
+import { VerifyOptionsDto } from './dtos/verify-options.dto';
 import { DIDService } from '../did/did.service';
 import { KeyService } from '../key/key.service';
 

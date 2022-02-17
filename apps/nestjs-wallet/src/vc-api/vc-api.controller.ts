@@ -1,10 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { VcApiService } from './vc-api.service';
-import { IssueCredentialDto } from './dto/issue-credential.dto';
-import { VerifiableCredentialDto } from './dto/verifiable-credential.dto';
-import { AuthenticateDto } from './dto/authenticate.dto';
-import { VerifiablePresentationDto } from './dto/verifiable-presentation.dto';
+import { IssueCredentialDto } from './dtos/issue-credential.dto';
+import { VerifiableCredentialDto } from './dtos/verifiable-credential.dto';
+import { AuthenticateDto } from './dtos/authenticate.dto';
+import { VerifiablePresentationDto } from './dtos/verifiable-presentation.dto';
+import { WorkflowService } from './workflow/workflow.service';
+import { WorkflowResponseDto } from './workflow/dtos/workflow-response.dto';
+import { WorkflowDefinitionDto } from './workflow/dtos/workflow-definition.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -13,7 +16,7 @@ import { VerifiablePresentationDto } from './dto/verifiable-presentation.dto';
 @ApiTags('vc-api')
 @Controller('vc-api')
 export class VcApiController {
-  constructor(private vcApiService: VcApiService) {}
+  constructor(private vcApiService: VcApiService, private workflowService: WorkflowService) {}
 
   /**
    * Issues a credential and returns it in the response body. Conforms to https://w3c-ccg.github.io/vc-api/issuer.html
@@ -27,7 +30,36 @@ export class VcApiController {
 
   // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
 
-  // HOLDER https://w3c-ccg.github.io/vc-api/holder.html
+  // HOLDER/PRESENTER
+  // https://w3c-ccg.github.io/vc-api/#presenting
+  // https://w3c-ccg.github.io/vc-api/holder.html
+
+  // WORKFLOW
+  // https://w3c-ccg.github.io/vc-api/#workflows
+
+  /**
+   * TODO: Needs to have special authorization
+   * Maybe better as config files?
+   * @param workflowDefinitionDto
+   * @returns
+   */
+  @Post('/workflows/configure')
+  async configureWorkflow(@Body() workflowDefinitionDto: WorkflowDefinitionDto) {
+    return this.workflowService.configureWorkflow(workflowDefinitionDto);
+  }
+
+  @Post('/workflows/:workflowname/start')
+  startWorkflow(@Param('workflowname') workflowName: string): Promise<WorkflowResponseDto> {
+    return this.workflowService.startWorkflow(workflowName);
+  }
+
+  @Post('/workflows/:flowid/presentations')
+  async submitPresentation(
+    @Param('flowid') flowId: string,
+    @Body() presentation: VerifiablePresentationDto
+  ): Promise<WorkflowResponseDto> {
+    return await this.workflowService.handlePresentation(presentation, flowId);
+  }
 
   /**
    * Issue a DIDAuth presentation that authenticates a DID.

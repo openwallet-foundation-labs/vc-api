@@ -15,6 +15,9 @@ export class ActiveFlowEntity {
   @Column('text', { primary: true })
   id: string;
 
+  @Column('text')
+  name: string;
+
   /**
    * As the active flow can be iterative, there could be many VP Requests sent in a single flow
    * VP Requests are defined here: https://w3c-ccg.github.io/vp-request-spec/
