@@ -2,16 +2,37 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 Container_Boundary(nestjs_agent, "NestJs SSI Wallet") {
-  Component(vc_api, "VC API Module", "NestJs Module", "VC API Spec Holder, Issuer and Verifier")
   Component(elia_exchange, "Elia Exchange Module", "NestJs Module", "Exchange definitions for Elia use cases")
+
+  Component(vc_api, "VC API Module", "NestJs Module", "VC API Spec Holder, Issuer and Verifier")
+  ComponentDb(exchange_db, "Exchanges & VP Requests", "SQLite")
+  Rel(vc_api, exchange_db, "Read/Write")
+  
   Component(did, "DID Module", "NestJs Module", "DID Generation, Storage/Retrieval")
+  Rel(vc_api, did, "Get Verification Method for signing")
+  ComponentDb(did_db, "DIDs & Verification Methods", "SQLite")
+  Rel(did, did_db, "Read/Write")
+  
   Component(key, "Key Module", "NestJs Module", "Key Generation, Storage/Retrieval")
-  Component_Ext(spruce_didkit, "Spruce DIDKit", "Credential Signing and Verification")
+  Rel(vc_api, key, "Get Private Key for signing")
+  ComponentDb(key_db, "Keys", "SQLite")
+  Rel(key, key_db, "Read/Write")
 }
 
+Component(web_kms,"WebKMS Interface","Typescript Lib", "Provides interface conforming to w3c-ccg WebKMS")
+Rel(key, web_kms, "Implements")
+
+Component(did_generation,"DID Generation Module","Typescript Lib","generation of initial DID and DID docs")
+
+Component_Ext(ethr_resolver, "DIF did:ethr Resolver", "Resolution of DID Ethr doc")
+Rel(did_generation, ethr_resolver, "Import for did generation")
+
+Component_Ext(didkit, "Spruce DIDKit", "Credential Signing & Verification, did:key resolution")
+Rel(did_generation, didkit, "Import for did generation")
+Rel(vc_api, didkit, "Import for signing & verification")
+
+Component_Ext(didkit, "Spruce DIDKit", "Credential Signing and Verification")
+
 Rel(elia_exchange, vc_api, "Calls/Configures")
-Rel(vc_api, did, "Get Verification Method for signing")
-Rel(vc_api, key, "Get Private Key for signing")
-Rel(vc_api, spruce_didkit, "Import for signing & verification")
 
 @enduml

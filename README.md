@@ -50,8 +50,6 @@ The rational for Spruce's use is that it:
 
 ## Architecture
 
-![Image](ssi-wallet-architecture.drawio.svg)
-
 ![architecture](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/energywebfoundation/ssi/master/ssi-agent.component.puml)
 
 ## NestJS Wallet 
