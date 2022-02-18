@@ -8,13 +8,14 @@ import { VcApiService } from './vc-api.service';
 import { ExchangeExecutionEntity } from './exchanges/entities/exchange-execution.entity';
 import { VpRequestEntity } from './exchanges/entities/vp-request.entity';
 import { ExchangeService } from './exchanges/exchange.service';
+import { ExchangeTransactionEntity } from './exchanges/entities/exchange-transaction.entity';
 
 @Module({
   imports: [
     ConfigModule,
     DidModule,
     KeyModule,
-    TypeOrmModule.forFeature([VpRequestEntity, ExchangeExecutionEntity])
+    TypeOrmModule.forFeature([VpRequestEntity, ExchangeExecutionEntity, ExchangeTransactionEntity])
   ],
   controllers: [VcApiController],
   providers: [VcApiService, ExchangeService],

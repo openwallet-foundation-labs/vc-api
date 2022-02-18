@@ -12,6 +12,7 @@ import { VpRequestDto } from './dtos/vp-request.dto';
 import { AckStatus } from './types/ack-status';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from './types/vp-request-interact-service-type';
+import { ExchangeTransactionEntity } from './entities/exchange-transaction.entity';
 
 @Injectable()
 export class ExchangeService {
@@ -21,6 +22,8 @@ export class ExchangeService {
     private vcApiService: VcApiService,
     @InjectRepository(VpRequestEntity)
     private vpRequestRepository: Repository<VpRequestEntity>,
+    @InjectRepository(ExchangeTransactionEntity)
+    private exchangeTransactionRespository: Repository<ExchangeTransactionEntity>,
     @InjectRepository(ExchangeExecutionEntity)
     private exchangeExecutionRepository: Repository<ExchangeExecutionEntity>
   ) {}
@@ -42,13 +45,14 @@ export class ExchangeService {
         ack: { status: AckStatus.fail }
       };
     }
+    const executionId = uuidv4();
     const transactionId = uuidv4();
     const challenge = uuidv4();
     const interactServices = exchangeDefinition.interactServices.map((serviceDef) => {
       if (serviceDef.type === VpRequestInteractServiceType.unmediatedPresentation) {
         return {
           type: VpRequestInteractServiceType.unmediatedPresentation,
-          serviceEndpoint: `${serviceDef.baseUrl}/exchanges/${transactionId}`
+          serviceEndpoint: `${serviceDef.baseUrl}/exchanges/${exchangeId}/${transactionId}`
         };
       }
     });
@@ -59,12 +63,17 @@ export class ExchangeService {
         service: interactServices
       }
     });
-    const activeFlow = this.exchangeExecutionRepository.create({
-      exchangeId: exchangeId,
-      id: transactionId,
-      vpRequests: [vpRequest]
+    await this.vpRequestRepository.save(vpRequest);
+    const exchangeTransaction = this.exchangeTransactionRespository.create({
+      transactionId: transactionId,
+      vpRequest
     });
-    await this.exchangeExecutionRepository.save(activeFlow);
+    const exchangeExecution = this.exchangeExecutionRepository.create({
+      exchangeId,
+      executionId,
+      transactions: [exchangeTransaction]
+    });
+    await this.exchangeExecutionRepository.save(exchangeExecution);
     return { errors: [], vpRequest: VpRequestDto.toDto(vpRequest), ack: { status: AckStatus.pending } };
   }
 
@@ -80,21 +89,23 @@ export class ExchangeService {
     transactionId: string,
     exchangeId: string
   ): Promise<ExchangeResponseDto> {
-    const flow = await this.exchangeExecutionRepository.findOne(transactionId, { relations: ['vpRequests'] });
-    if (!flow) {
+    const exchangeTransaction = await this.exchangeTransactionRespository.findOne(transactionId, {
+      relations: ['vpRequest', 'execution']
+    });
+    if (!exchangeTransaction) {
       return {
-        errors: [`${transactionId}: no exchange found for this transactionId`],
+        errors: [`${transactionId}: no exchange transaction found for this transactionId`],
         ack: { status: AckStatus.fail }
       };
     }
-    const exchangeDefinition = this.#exchangeDefinitions[flow.exchangeId];
+    const exchangeDefinition = this.#exchangeDefinitions[exchangeTransaction.execution.exchangeId];
     if (!exchangeDefinition) {
       return {
-        errors: [`${flow.exchangeId}: no exchange definition found for this exchangeId`],
+        errors: [`${transactionId}: no exchange definition found for this exchangeId`],
         ack: { status: AckStatus.fail }
       };
     }
-    const vpRequest = flow?.vpRequests ? flow.vpRequests[0] : undefined;
+    const vpRequest = exchangeTransaction.vpRequest;
     if (!vpRequest) {
       return {
         errors: [`${transactionId}: no vp-request associated this flowId`],
@@ -116,28 +127,18 @@ export class ExchangeService {
     };
   }
 
-  // public async getExchangeExecution(flowId: string) {
-  //   const exchangeExecution = await this.getExchangeExecution(flowId);
-  //   if (exchangeExecution.errors.length > 0) {
-  //     return { errors: exchangeExecution.errors };
-  //   }
-  //   return {
-  //     errors: [],
-  //     workflowDetails: {
-  //       name: exchangeExecution.exchangeExecution.exchangeId
-  //     }
-  //   };
-  // }
-
-  public async getExchangeExecution(
-    flowId: string
-  ): Promise<{ errors: string[]; exchangeExecution?: ExchangeExecutionEntity }> {
-    const exchangeExecution = await this.exchangeExecutionRepository.findOne(flowId, {
-      relations: ['vpRequests']
+  public async getExchangeTransaction(
+    transactionId: string
+  ): Promise<{ errors: string[]; exchangeTransaction?: ExchangeTransactionEntity }> {
+    const exchangeTransaction = await this.exchangeTransactionRespository.findOne(transactionId, {
+      relations: ['execution', 'vpRequest']
     });
-    if (!exchangeExecution) {
-      return { errors: [`${flowId}: no exchange execution found for this transaction id`] };
+    if (!exchangeTransaction) {
+      return { errors: [`${transactionId}: no exchange transaction found for this transaction id`] };
     }
-    return { errors: [], exchangeExecution };
+    if (!exchangeTransaction.execution) {
+      return { errors: [`${transactionId}: no exchange execution found for this transaction id`] };
+    }
+    return { errors: [], exchangeTransaction };
   }
 }

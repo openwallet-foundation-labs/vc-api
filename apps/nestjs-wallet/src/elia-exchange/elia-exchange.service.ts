@@ -35,8 +35,8 @@ export class EliaExchangeService {
     transactionId: string,
     exchangeId: string
   ): Promise<ExchangeResponseDto> {
-    const exchangeExecution = await this.exchangeService.getExchangeExecution(transactionId);
-    if (exchangeExecution.exchangeExecution.exchangeId !== exchangeId) {
+    const exchangeTransactionStatus = await this.exchangeService.getExchangeTransaction(transactionId);
+    if (exchangeTransactionStatus.exchangeTransaction.execution.exchangeId !== exchangeId) {
       return {
         errors: [
           `${exchangeId}: submitted exchange id does not match expected exchange id for this transaction`

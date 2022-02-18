@@ -133,9 +133,10 @@ describe('App (e2e)', () => {
 
       // Continue exchange and get VC
       const continueWorkflowResponse = await request(app.getHttpServer())
-        .post(workflowContinuationEndpoint)
+        .put(workflowContinuationEndpoint)
         .send(didAuthResponse.body)
-        .expect(201);
+        .expect(200);
+      expect(continueWorkflowResponse.body.errors).toHaveLength(0);
       expect(continueWorkflowResponse.body.vc).toBeDefined();
     });
   });

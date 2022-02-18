@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { VpRequestEntity } from './vp-request.entity';
+import { ExchangeTransactionEntity } from './exchange-transaction.entity';
 
 /**
  * A TypeOrm entity representing an in-progress or completed exchange
@@ -11,21 +11,20 @@ import { VpRequestEntity } from './vp-request.entity';
 @Entity()
 export class ExchangeExecutionEntity {
   /**
-   * An id for the active flow.
+   * An id for the exchange execution.
    * uuid chosen so as to not make the flow id guessable
    */
   @Column('text', { primary: true })
-  id: string;
+  executionId: string;
 
   @Column('text')
   exchangeId: string;
 
   /**
-   * As the active flow can be iterative, there could be many VP Requests sent in a single flow
-   * VP Requests are defined here: https://w3c-ccg.github.io/vp-request-spec/
+   * As the exchange can be iterative, there could be many transactions sent in a single flow
    */
-  @OneToMany((type) => VpRequestEntity, (vpRequest) => vpRequest.activeFlow, {
+  @OneToMany((type) => ExchangeTransactionEntity, (transaction) => transaction.execution, {
     cascade: true
   })
-  vpRequests: VpRequestEntity[];
+  transactions: ExchangeTransactionEntity[];
 }

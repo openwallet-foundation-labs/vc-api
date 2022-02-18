@@ -8,6 +8,7 @@ import { VpRequestEntity } from './entities/vp-request.entity';
 import { ExchangeService } from './exchange.service';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from './types/vp-request-interact-service-type';
+import { ExchangeTransactionEntity } from './entities/exchange-transaction.entity';
 
 describe('ExchangeService', () => {
   let service: ExchangeService;
@@ -17,7 +18,10 @@ describe('ExchangeService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmSQLiteModule(), TypeOrmModule.forFeature([VpRequestEntity, ExchangeExecutionEntity])],
+      imports: [
+        TypeOrmSQLiteModule(),
+        TypeOrmModule.forFeature([VpRequestEntity, ExchangeExecutionEntity, ExchangeTransactionEntity])
+      ],
       providers: [
         ExchangeService,
         {

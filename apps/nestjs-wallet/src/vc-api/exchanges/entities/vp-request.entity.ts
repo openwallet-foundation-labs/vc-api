@@ -33,12 +33,4 @@ export class VpRequestEntity {
    */
   @Column('simple-json')
   interact?: { service: { type: string; serviceEndpoint: string }[] };
-
-  /**
-   * Assumes that each VP Request is a part of an "Active Flow"
-   * From https://github.com/w3c-ccg/vc-api/issues/245 :
-   * "The ID on the end is bound to this particular request" (on the the of the interact.serviceEndpoints)
-   */
-  @ManyToOne((type) => ExchangeExecutionEntity, (activeFlow) => activeFlow.vpRequests)
-  activeFlow: ExchangeExecutionEntity;
 }
