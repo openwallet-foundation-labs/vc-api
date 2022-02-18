@@ -39,26 +39,6 @@
         "tags": ["did"]
       }
     },
-    "/did-purpose": {
-      "post": {
-        "operationId": "DIDPurposeController_create",
-        "parameters": [],
-        "responses": { "201": { "description": "" } },
-        "tags": ["did-purpose"]
-      },
-      "put": {
-        "operationId": "DIDPurposeController_update",
-        "parameters": [],
-        "responses": { "200": { "description": "" } },
-        "tags": ["did-purpose"]
-      },
-      "delete": {
-        "operationId": "DIDPurposeController_delete",
-        "parameters": [],
-        "responses": { "200": { "description": "" } },
-        "tags": ["did-purpose"]
-      }
-    },
     "/vc-api/credentials/issue": {
       "post": {
         "operationId": "VcApiController_issueCredential",
@@ -70,6 +50,47 @@
           }
         },
         "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/exchanges/configure": {
+      "post": {
+        "operationId": "VcApiController_configureWorkflow",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeDefinitionDto" } }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/exchanges/{exchangeId}": {
+      "post": {
+        "operationId": "VcApiController_initiateExchange",
+        "parameters": [
+          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/exchanges/{exchangeId}/{transactionId}": {
+      "put": {
+        "operationId": "VcApiController_continueExchange",
+        "parameters": [
+          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
+          }
+        },
+        "responses": { "200": { "description": "" } },
         "tags": ["vc-api"]
       }
     },
@@ -85,48 +106,31 @@
         "tags": ["vc-api"]
       }
     },
-    "/elia-workflow/credential-offer": {
-      "get": {
-        "operationId": "EliaIssuerController_getCredentialOffer",
-        "parameters": [],
-        "responses": { "200": { "description": "" } },
-        "tags": ["elia-workflow"]
-      }
-    },
-    "/elia-workflow/start-workflow/{workflowtype}": {
+    "/elia-exchange/exchanges/{exchangeId}": {
       "post": {
-        "operationId": "EliaIssuerController_startWorkflow",
+        "operationId": "EliaExchangeController_initiateExchange",
         "parameters": [
-          { "name": "workflowtype", "required": true, "in": "path", "schema": { "type": "string" } }
+          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "responses": { "201": { "description": "" } },
-        "tags": ["elia-workflow"]
+        "tags": ["elia-exchange"]
       }
     },
-    "/elia-workflow/workflows/{flowid}/presentations": {
-      "post": {
-        "operationId": "EliaIssuerController_continueWorkflow",
-        "parameters": [{ "name": "flowid", "required": true, "in": "path", "schema": { "type": "string" } }],
+    "/elia-exchange/exchanges/{exchangeId}/{transactionId}": {
+      "put": {
+        "operationId": "EliaExchangeController_continueExchange",
+        "parameters": [
+          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
           }
         },
-        "responses": { "201": { "description": "" } },
-        "tags": ["elia-workflow"]
-      }
-    },
-    "/elia-workflow/set-issuer-did": {
-      "put": {
-        "operationId": "EliaIssuerController_setIssueDid",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/IssuerDidDto" } } }
-        },
         "responses": { "200": { "description": "" } },
-        "tags": ["elia-workflow"]
+        "tags": ["elia-exchange"]
       }
     }
   },
@@ -142,9 +146,9 @@
     "schemas": {
       "CreateDidOptionsDto": { "type": "object", "properties": {} },
       "IssueCredentialDto": { "type": "object", "properties": {} },
-      "AuthenticateDto": { "type": "object", "properties": {} },
+      "ExchangeDefinitionDto": { "type": "object", "properties": {} },
       "VerifiablePresentationDto": { "type": "object", "properties": {} },
-      "IssuerDidDto": { "type": "object", "properties": {} }
+      "AuthenticateDto": { "type": "object", "properties": {} }
     }
   }
 }
