@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DidModule } from '../did/did.module';
 import { KeyModule } from '../key/key.module';
@@ -12,7 +11,6 @@ import { ExchangeTransactionEntity } from './exchanges/entities/exchange-transac
 
 @Module({
   imports: [
-    ConfigModule,
     DidModule,
     KeyModule,
     TypeOrmModule.forFeature([VpRequestEntity, ExchangeExecutionEntity, ExchangeTransactionEntity])
