@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
+import { v4 as uuidv4 } from 'uuid';
 import { AppModule } from '../src/app.module';
 import { DIDDocument } from 'did-resolver';
 import { CredentialDto } from '../src/vc-api/dtos/credential.dto';
@@ -79,13 +80,15 @@ describe('App (e2e)', () => {
     return postResponse.body;
   }
 
-  describe('Credential Issuance', () => {
-    it('should get credential starting from an offer', async () => {
-      const baseUrl = '/elia-exchange';
-      // POST /workflows/configure
-      const exchangeId = 'permanent-resident-card-issuance';
+  describe('Credential Issuance and Presentation', () => {
+    it('should get credential starting from an invitation and present this credential', async () => {
+      const eliaExchangeBaseUrl = '/elia-exchange';
+      const vcApiBaseUrl = '/vc-api';
+      // Configure credential issuance exchange
+      // POST /exchanges/configure
+      const issuanceExchangeId = 'permanent-resident-card-issuance';
       const exchangeDefinition: ExchangeDefinitionDto = {
-        exchangeId: 'permanent-resident-card-issuance',
+        exchangeId: issuanceExchangeId,
         query: [
           {
             type: VpRequestQueryType.didAuth,
@@ -95,18 +98,18 @@ describe('App (e2e)', () => {
         interactServices: [
           {
             type: VpRequestInteractServiceType.unmediatedPresentation,
-            baseUrl
+            baseUrl: eliaExchangeBaseUrl
           }
         ]
       };
       await request(app.getHttpServer())
-        .post(`/vc-api/exchanges/configure`)
+        .post(`${vcApiBaseUrl}/exchanges/configure`)
         .send(exchangeDefinition)
         .expect(201);
 
       // POST /exchanges/{exchangeId}
       const startWorkflowResponse = await request(app.getHttpServer())
-        .post(`${baseUrl}/exchanges/${exchangeId}`)
+        .post(`${eliaExchangeBaseUrl}/exchanges/${issuanceExchangeId}`)
         .expect(201);
       const vpRequest = (startWorkflowResponse.body as ExchangeResponseDto).vpRequest;
       expect(vpRequest).toBeDefined();
@@ -115,7 +118,7 @@ describe('App (e2e)', () => {
       expect(vpRequest.query).toHaveLength(1);
       expect(vpRequest.query[0].type).toEqual('DIDAuth');
       const workflowContinuationEndpoint = vpRequest.interact.service[0].serviceEndpoint;
-      expect(workflowContinuationEndpoint).toContain(`${baseUrl}/exchanges/`);
+      expect(workflowContinuationEndpoint).toContain(`${eliaExchangeBaseUrl}/exchanges/`);
 
       // Create new DID and presentation to authentication as this DID
       // DID auth presentation: https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
@@ -126,18 +129,53 @@ describe('App (e2e)', () => {
         challenge
       };
       const didAuthResponse = await request(app.getHttpServer())
-        .post('/vc-api/presentations/prove/authentication')
+        .post(`${vcApiBaseUrl}/presentations/prove/authentication`)
         .send({ did: requesterDID.id, options })
         .expect(201);
       expect(didAuthResponse.body).toBeDefined();
 
       // Continue exchange and get VC
+      // PUT /exchanges/{exchangeId}/{transactionId}
       const continueWorkflowResponse = await request(app.getHttpServer())
         .put(workflowContinuationEndpoint)
         .send(didAuthResponse.body)
         .expect(200);
       expect(continueWorkflowResponse.body.errors).toHaveLength(0);
       expect(continueWorkflowResponse.body.vc).toBeDefined();
+
+      // Configure presentation exchange
+      // POST /exchanges/configure
+      const presentationExchangeId = 'permanent-resident-card-presentation';
+      const presentationExchangeDefinition: ExchangeDefinitionDto = {
+        exchangeId: presentationExchangeId,
+        query: [
+          {
+            type: VpRequestQueryType.presentationDefinition,
+            credentialQuery: [
+              {
+                id: uuidv4(),
+                input_descriptors: [
+                  {
+                    id: 'permanent_resident_card',
+                    name: 'Permanent Resident Card',
+                    purpose: 'We can only allow permanent residents into the application'
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        interactServices: [
+          {
+            type: VpRequestInteractServiceType.unmediatedPresentation,
+            baseUrl: eliaExchangeBaseUrl
+          }
+        ]
+      };
+      await request(app.getHttpServer())
+        .post(`${vcApiBaseUrl}/exchanges/configure`)
+        .send(presentationExchangeDefinition)
+        .expect(201);
     });
   });
 });

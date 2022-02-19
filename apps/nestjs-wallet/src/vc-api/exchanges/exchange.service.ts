@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PEX, Status } from '@sphereon/pex';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { VcApiService } from '../vc-api.service';
@@ -13,10 +13,12 @@ import { AckStatus } from './types/ack-status';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from './types/vp-request-interact-service-type';
 import { ExchangeTransactionEntity } from './entities/exchange-transaction.entity';
+import { VpRequestQueryType } from './types/vp-request-query-type';
 
 @Injectable()
 export class ExchangeService {
   #exchangeDefinitions: Record<string, ExchangeDefinitionDto> = {};
+  #pex: PEX;
 
   constructor(
     private vcApiService: VcApiService,
@@ -26,10 +28,37 @@ export class ExchangeService {
     private exchangeTransactionRespository: Repository<ExchangeTransactionEntity>,
     @InjectRepository(ExchangeExecutionEntity)
     private exchangeExecutionRepository: Repository<ExchangeExecutionEntity>
-  ) {}
+  ) {
+    this.#pex = new PEX();
+  }
 
-  public async configureWorkflow(exchangeDefinitionDto: ExchangeDefinitionDto) {
+  public configureExchange(exchangeDefinitionDto: ExchangeDefinitionDto) {
+    exchangeDefinitionDto.query.forEach((query) => {
+      if (query.type === VpRequestQueryType.presentationDefinition) {
+        query.credentialQuery.forEach((credentialQuery) => {
+          const validated = this.#pex.validateDefinition(credentialQuery);
+          if (Array.isArray(validated)) {
+            validated.forEach((checked) => {
+              if (checked.status === Status.ERROR || checked.status === Status.WARN) {
+                return {
+                  errors: ['an error from validated']
+                };
+              }
+            });
+          } else {
+            if (validated.status === Status.ERROR || validated.status === Status.WARN) {
+              return {
+                errors: ['an error from validated']
+              };
+            }
+          }
+        });
+      }
+    });
     this.#exchangeDefinitions[exchangeDefinitionDto.exchangeId] = exchangeDefinitionDto;
+    return {
+      errors: []
+    };
   }
 
   /**

@@ -42,7 +42,7 @@ export class VcApiController {
    */
   @Post('/exchanges/configure')
   async configureExchange(@Body() exchangeDefinitionDto: ExchangeDefinitionDto) {
-    return this.exchangeService.configureWorkflow(exchangeDefinitionDto);
+    return this.exchangeService.configureExchange(exchangeDefinitionDto);
   }
 
   @Post('/exchanges/:exchangeId')

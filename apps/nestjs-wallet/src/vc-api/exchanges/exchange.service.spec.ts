@@ -9,6 +9,7 @@ import { ExchangeService } from './exchange.service';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from './types/vp-request-interact-service-type';
 import { ExchangeTransactionEntity } from './entities/exchange-transaction.entity';
+import { VpRequestQueryType } from './types/vp-request-query-type';
 
 describe('ExchangeService', () => {
   let service: ExchangeService;
@@ -47,6 +48,38 @@ describe('ExchangeService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('configure exchange', () => {
+    it('should accept a presentation definition in an exchange definition', async () => {
+      const presentationDefinition = {
+        id: '57ca126c-acbf-4da4-8f79-447150e93128',
+        input_descriptors: [
+          {
+            id: 'permanent_resident_card',
+            name: 'Permanent Resident Card',
+            purpose: 'We can only allow permanent residents into the application'
+          }
+        ]
+      };
+      const exchangeDef = {
+        exchangeId: 'permanent-resident-card-presentation',
+        query: [
+          {
+            type: VpRequestQueryType.presentationDefinition,
+            credentialQuery: [presentationDefinition]
+          }
+        ],
+        interactServices: [
+          {
+            type: VpRequestInteractServiceType.unmediatedPresentation,
+            baseUrl: 'https://example.org/'
+          }
+        ]
+      };
+      const result = service.configureExchange(exchangeDef);
+      expect(result.errors).toHaveLength(0);
+    });
+  });
+
   describe('start exchange', () => {
     it('should start exchange from an exchange definition', async () => {
       const exchangeId = 'test-exchange';
@@ -61,7 +94,7 @@ describe('ExchangeService', () => {
         ],
         query: []
       };
-      service.configureWorkflow(exchangeDef);
+      service.configureExchange(exchangeDef);
       const exchangeResponse = await service.startExchange(exchangeId);
       expect(exchangeResponse.vpRequest.interact.service).toHaveLength(1);
       expect(exchangeResponse.vpRequest.interact.service[0].serviceEndpoint).toContain(baseUrl);
