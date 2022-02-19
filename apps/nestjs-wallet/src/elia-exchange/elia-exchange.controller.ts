@@ -10,7 +10,7 @@ export class EliaExchangeController {
   constructor(private eliaExchangeService: EliaExchangeService) {}
 
   @Post('/exchanges/:exchangeId')
-  initiateExchange(@Param('exchangeId') exchangeId: string): Promise<ExchangeResponseDto> {
+  async initiateExchange(@Param('exchangeId') exchangeId: string): Promise<ExchangeResponseDto> {
     return this.eliaExchangeService.startExchange(exchangeId);
   }
 

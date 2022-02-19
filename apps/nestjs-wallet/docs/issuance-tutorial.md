@@ -41,9 +41,8 @@ Business workflow:
 From a technical point of view, in this tutorial, we have access to the server API but no mobile wallet is available. So we will use the server API for both roles of the portal and the mobile wallet.
 
 We will follow the following steps in this tutorial:
-- [Authority portal action] Create a DID for the autority portal in the form of a key DID method
-- [Authority portal action] Register the DID as default DID for the authority portal
-- [Authority portal action] Create a credential offer that can be transmitted to the citizen as a QR code or a deep link
+- [Authority portal action] Configure credential issuance workflow
+- [Authority portal action] Transmit an exchange invitation to the citizen as a QR code or a deep link
 - [Citizen action] Request a credential using the request URL and obtain a [VP Request](https://w3c-ccg.github.io/vp-request-spec/) in return
 - [Citizen action] Create a DID for the citizen in the form of a key DID method
 - [Citizen action] Create an authentication proof (as a verfiable presentation) for the new DID
@@ -61,92 +60,47 @@ First, download and install [Postman](https://www.postman.com/downloads/).
 
 Then, from the Postman app, import [the open-api json](./open-api.json) and [the environment](./ewf-ssi-wallet.postman_environment.json) for the Nest.js wallet. Instructions on how to import into Postman can be found [here](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman).
 
-### Setup up the app environment variables
+### [Authority portal] Configure the credential issuance exchange
 
-Copy the values from the tutorial `env` file to the `env` file that will be picked up by the app.
-```json
-cp .env.tutorial .env
-```
+The authority portal needs to configure the parameters of the parameters of the permanent resident card issuance exchange.
+To do this, navigate to the `Vc Api Controller configure Exchange` under `vc-api/exchanges` and send with the json below.
 
-### [Authority portal] Setup the credential issuer
+For information about the interact service type see https://w3c-ccg.github.io/vp-request-spec/#unmediated-presentation.
 
-The credential needs to be issued by an entity. In this step, we will create the identifier for this entity and the private key required to sign the credential proof.
-
-In Postman, navigate to the `DID Controller create` request under the `did` folder.
-
-In the Body tab of the Postman request dialog, enter the following json:
 ```json
 {
-    "method": "key"
-}
-```
-This asks the wallet to generate a DID with the [key](https://w3c-ccg.github.io/did-method-key/) DID method.
-
-Send the request. The response should have HTTP status code `201 Created` and have a body that is a DID Document.
-The body should be similar to the following:
-```json
-{
-    "id": "did:key:z6MknYDcJqDMBtyB1YThCvm3Y42xspMptCbhxoqc3meegdDJ",
-    "verificationMethod": [
-        {
-            "id": "did:key:z6MknYDcJqDMBtyB1YThCvm3Y42xspMptCbhxoqc3meegdDJ#z6MknYDcJqDMBtyB1YThCvm3Y42xspMptCbhxoqc3meegdDJ",
-            "type": "Ed25519VerificationKey2018",
-            "controller": "did:key:z6MknYDcJqDMBtyB1YThCvm3Y42xspMptCbhxoqc3meegdDJ",
-            "publicKeyJwk": {
-                "kty": "OKP",
-                "crv": "Ed25519",
-                "x": "eCKlKS0Y207MvheQhALmKXc2iG9nLbtj30ZBMFdKlmE",
-                "kid": "1vU9vQPMpBbxyHz8HA7pRkEPB57hTSAuXaKmTk02xIo"
-            }
-        }
+    "exchangeId": "permanent-resident-card-issuance",
+    "query": [
+      {
+        "type": "DIDAuth",
+        "credentialQuery": []
+      }
+    ],
+    "interactServices": [
+      {
+        "type": "UnmediatedHttpPresentationService2021",
+        "baseUrl": "http://localhost:3000"
+      }
     ]
 }
 ```
 
-We now need to configure the `elia-exchange` module to issue credentials using our newly created DID.
+### [Authority portal] Provide an exchange invitation to the citizen
 
-In Postman, navigate to the `Elia Issuer Controller set Issue Did` request under the `elia-exchange` folder.
+The authority portal can communicate to the citizen that they can initiate request for a "PermanentResidentCard" credential by
+providing them the json object below. They can do this through a QR code for example.
 
-Edit the json below with the DID `id` and verfification method `id` obtained from the DID document return in the request prior to this. Enter the filled json in the Body tab of the Postman request dialog.
-```json
-{
-    "DID": "FILL YOUR DID HERE",
-    "verificationMethodURI": "FILL YOUR VERIFICATION METHOD HERE"
-}
-```
-
-Using sample DID document from, above the input would be as shown:
-```json
-{
-    "DID": "did:key:z6MknYDcJqDMBtyB1YThCvm3Y42xspMptCbhxoqc3meegdDJ",
-    "verificationMethodURI": "did:key:z6MknYDcJqDMBtyB1YThCvm3Y42xspMptCbhxoqc3meegdDJ#z6MknYDcJqDMBtyB1YThCvm3Y42xspMptCbhxoqc3meegdDJ"
-}
-```
-You cannot use this sample input because your wallet instance does not control the private key associated with the DID/verification method.
-
-Once you have filled in the request body, send the request. The response should have HTTP response code `200 OK`.
-
-The wallet is now configured to issue credentials as the newly created DID.
-
-### [Authority portal] Generate a credential offer
-
-We will now obtain a credential offer from the `elia-exchange` module.
-
-In Postman, navigate to the `Elia Issuer Controller get Credential Offer` `GET` request under the `elia-exchange` folder.
-This request doesn't need any configuration and can be sent as is.
-It should return the following json in the response body:
 ```json
 {
     "typeAvailable": "PermanentResidentCard",
-    "vcRequestUrl": "http://localhost:3000/elia-exchange/workflows/permanent-resident-card/start"
+    "vcRequestUrl": "http://localhost:3000/elia-exchange/exchanges/permanent-resident-card-issuance"
 }
 ```
-This response indicates that a Verifiable Credential of type "PermanentResidentCard" is available from this API and that a request for the credential can be initiated at the `vcRequestUrl`.
 
-### Request a credential using the request URL
+### [Citizen] Request a credential using the request URL
 
-Initiate a request for a PermanentResidentCard by using the `vcRequestUrl` directly in Postman or by navigating to the `Elia Issuer Controller start Workflow` request in the collection.
-If using the collection request, fill in the `workflowtype` param to be `permanent-resident-card`.
+Initiate a request for a PermanentResidentCard by POSTing to the `vcRequestUrl` directly in Postman or by navigating to the `Elia Exchange Controller initiate Exchange` request in the collection.
+If using the collection request, fill in the `exchangeid` param to be `permanent-resident-card-issuance`.
 
 Send the request. A similar json should be returned in the response body:
 ```json
@@ -156,21 +110,25 @@ Send the request. A similar json should be returned in the response body:
         "challenge": "57ca126c-acbf-4da4-8f79-447150e93128",
         "query": [
             {
-                "type": "DIDAuth"
+                "type": "DIDAuth",
+                "credentialQuery": []
             }
         ],
         "interact": {
             "service": [
                 {
-                    "type": "VcApiPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/elia-exchange/workflows/c4e0e642-02a2-4a1a-91c6-40069b328238/presentations"
+                    "type": "UnmediatedHttpPresentationService2021",
+                    "serviceEndpoint": "http://localhost:3000/exchanges/permanent-resident-card-issuance/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
                 }
             ]
         }
+    },
+    "ack": {
+        "status": "PENDING"
     }
 }
 ```
-The `challenge` value and the final fragment of the `serviceEndpoint`, which is the `flow id`, should be different.
+The `challenge` value and the final fragment of the `serviceEndpoint`, which is the `transaction id`, should be different.
 
 The response contains a VP Request, which is a specification defined here: https://w3c-ccg.github.io/vp-request-spec/.
 You can see that the VP Request's `query` section contains a `DIDAuth` query.
@@ -256,11 +214,11 @@ Send the request. The response should be a verifiable presentation, similar to t
 }
 ```
 
-### Continue workflow and obtain the verifiable credential
+### Continue exchange and obtain the verifiable credential
 
 To obtain the VC, continue the workflow using the DIDAuth presentation.
-To do this, open the `Elia Issuer Controller continue Workflow` request in the `elia-exchange` folder.
-In the request params, use the `flowid` from the `serviceEndpoint` in the VP Request.
+To do this, open the `Elia Exchange Controller continue Exchange` request in the `elia-exchange` folder.
+In the request params, use the `transactionId` from the `serviceEndpoint` in the VP Request and `exchangeId` as `permanent-resident-card-issuance`.
 In the request body, copy the VP that was obtained from the previous step.
 
 ```json
@@ -296,7 +254,7 @@ Send the request. The response should be similar to as shown below and contain t
             "PermanentResidentCard"
         ],
         "credentialSubject": {
-            "id": "did:example:b34ca6cd37bbf23",
+            "id": "did:key:z6Mkj1L6dqc7tU7TNA4a5qftmfKEo58bDmEzfYmz5cw7JGDV",
             "gender": "Male",
             "commuterClassification": "C1",
             "birthDate": "1958-07-17",

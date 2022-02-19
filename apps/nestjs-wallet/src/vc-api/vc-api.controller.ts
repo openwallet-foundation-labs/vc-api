@@ -41,12 +41,12 @@ export class VcApiController {
    * @returns
    */
   @Post('/exchanges/configure')
-  async configureWorkflow(@Body() exchangeDefinitionDto: ExchangeDefinitionDto) {
+  async configureExchange(@Body() exchangeDefinitionDto: ExchangeDefinitionDto) {
     return this.exchangeService.configureWorkflow(exchangeDefinitionDto);
   }
 
   @Post('/exchanges/:exchangeId')
-  initiateExchange(@Param('exchangeId') exchangeId: string): Promise<ExchangeResponseDto> {
+  async initiateExchange(@Param('exchangeId') exchangeId: string): Promise<ExchangeResponseDto> {
     return this.exchangeService.startExchange(exchangeId);
   }
 

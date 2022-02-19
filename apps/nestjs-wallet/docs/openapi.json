@@ -55,7 +55,7 @@
     },
     "/vc-api/exchanges/configure": {
       "post": {
-        "operationId": "VcApiController_configureWorkflow",
+        "operationId": "VcApiController_configureExchange",
         "parameters": [],
         "requestBody": {
           "required": true,
