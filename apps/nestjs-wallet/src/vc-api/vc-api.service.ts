@@ -17,6 +17,7 @@ import { VerifiablePresentationDto } from './dtos/verifiable-presentation.dto';
 import { VerifyOptionsDto } from './dtos/verify-options.dto';
 import { VerifyProofResponseDto } from './dtos/verify-proof-response.dto';
 import { AuthenticateDto } from './dtos/authenticate.dto';
+import { ProvePresentationDto } from './dtos/prove-presentation.dto';
 
 /**
  * Credential issuance options that Spruce accepts
@@ -65,14 +66,15 @@ export class VcApiService {
     return JSON.parse(await verifyCredential(JSON.stringify(vc), JSON.stringify(verifyOptions)));
   }
 
-  async issuePresentation(
-    presentation: PresentationDto,
-    options: IssueOptionsDto,
-    key: JWK
-  ): Promise<VerifiablePresentationDto> {
-    const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(options);
+  async provePresentation(provePresentationDto: ProvePresentationDto): Promise<VerifiablePresentationDto> {
+    const key = await this.getKeyForVerificationMethod(provePresentationDto.options.verificationMethod);
+    const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(provePresentationDto.options);
     return JSON.parse(
-      await issuePresentation(JSON.stringify(presentation), JSON.stringify(proofOptions), JSON.stringify(key))
+      await issuePresentation(
+        JSON.stringify(provePresentationDto.presentation),
+        JSON.stringify(proofOptions),
+        JSON.stringify(key)
+      )
     );
   }
 

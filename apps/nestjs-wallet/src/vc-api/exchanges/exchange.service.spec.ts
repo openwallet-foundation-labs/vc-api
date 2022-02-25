@@ -3,40 +3,55 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmSQLiteModule } from '../../in-memory-db';
 import { Repository } from 'typeorm';
 import { VcApiService } from '../vc-api.service';
-import { ExchangeExecutionEntity } from './entities/exchange-execution.entity';
+import { ExchangeEntity } from './entities/exchange.entity';
 import { VpRequestEntity } from './entities/vp-request.entity';
 import { ExchangeService } from './exchange.service';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from './types/vp-request-interact-service-type';
-import { ExchangeTransactionEntity } from './entities/exchange-transaction.entity';
+import { TransactionEntity } from './entities/transaction.entity';
 import { VpRequestQueryType } from './types/vp-request-query-type';
+import { PresentationReviewEntity } from './entities/presentation-review.entity';
+import { ConfigService } from '@nestjs/config';
+
+const baseUrl = 'https://test-exchange.com';
 
 describe('ExchangeService', () => {
   let service: ExchangeService;
   let vcApiService: VcApiService;
-  let activeFlowRepository: Repository<ExchangeExecutionEntity>;
+  let exchangeRepository: Repository<ExchangeEntity>;
   let vpRequestRepository: Repository<VpRequestEntity>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmSQLiteModule(),
-        TypeOrmModule.forFeature([VpRequestEntity, ExchangeExecutionEntity, ExchangeTransactionEntity])
+        TypeOrmModule.forFeature([
+          VpRequestEntity,
+          ExchangeEntity,
+          TransactionEntity,
+          PresentationReviewEntity
+        ])
       ],
       providers: [
         ExchangeService,
         {
           provide: VcApiService,
           useValue: {}
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn((key: string) => {
+              return baseUrl;
+            })
+          }
         }
       ]
     }).compile();
 
     vcApiService = module.get<VcApiService>(VcApiService);
     service = module.get<ExchangeService>(ExchangeService);
-    activeFlowRepository = module.get<Repository<ExchangeExecutionEntity>>(
-      getRepositoryToken(ExchangeExecutionEntity)
-    );
+    exchangeRepository = module.get<Repository<ExchangeEntity>>(getRepositoryToken(ExchangeEntity));
     vpRequestRepository = module.get<Repository<VpRequestEntity>>(getRepositoryToken(VpRequestEntity));
   });
 
@@ -48,7 +63,7 @@ describe('ExchangeService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('configure exchange', () => {
+  describe('create exchange', () => {
     it('should accept a presentation definition in an exchange definition', async () => {
       const presentationDefinition = {
         id: '57ca126c-acbf-4da4-8f79-447150e93128',
@@ -73,9 +88,10 @@ describe('ExchangeService', () => {
             type: VpRequestInteractServiceType.unmediatedPresentation,
             baseUrl: 'https://example.org/'
           }
-        ]
+        ],
+        isOneTime: false
       };
-      const result = service.configureExchange(exchangeDef);
+      const result = await service.createExchange(exchangeDef);
       expect(result.errors).toHaveLength(0);
     });
   });
@@ -83,18 +99,17 @@ describe('ExchangeService', () => {
   describe('start exchange', () => {
     it('should start exchange from an exchange definition', async () => {
       const exchangeId = 'test-exchange';
-      const baseUrl = 'https://test-issuer.com';
       const exchangeDef: ExchangeDefinitionDto = {
         exchangeId: exchangeId,
         interactServices: [
           {
-            type: VpRequestInteractServiceType.unmediatedPresentation,
-            baseUrl
+            type: VpRequestInteractServiceType.unmediatedPresentation
           }
         ],
-        query: []
+        query: [],
+        isOneTime: false
       };
-      service.configureExchange(exchangeDef);
+      await service.createExchange(exchangeDef);
       const exchangeResponse = await service.startExchange(exchangeId);
       expect(exchangeResponse.vpRequest.interact.service).toHaveLength(1);
       expect(exchangeResponse.vpRequest.interact.service[0].serviceEndpoint).toContain(baseUrl);

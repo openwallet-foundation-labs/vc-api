@@ -12,5 +12,5 @@ export class VpRequestQueryDto {
    * TODO: Validate the queries. Maybe with a custom validator E.g. this.#pex.validateDefinition(workflowDefinition.presentationDefinition);
    */
   @IsArray()
-  credentialQuery: any[];
+  credentialQuery?: any[];
 }

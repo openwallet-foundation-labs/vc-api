@@ -82,10 +82,9 @@ describe('App (e2e)', () => {
 
   describe('Credential Issuance and Presentation', () => {
     it('should get credential starting from an invitation and present this credential', async () => {
-      const eliaExchangeBaseUrl = '/elia-exchange';
       const vcApiBaseUrl = '/vc-api';
       // Configure credential issuance exchange
-      // POST /exchanges/configure
+      // POST /exchanges
       const issuanceExchangeId = 'permanent-resident-card-issuance';
       const exchangeDefinition: ExchangeDefinitionDto = {
         exchangeId: issuanceExchangeId,
@@ -97,28 +96,31 @@ describe('App (e2e)', () => {
         ],
         interactServices: [
           {
-            type: VpRequestInteractServiceType.unmediatedPresentation,
-            baseUrl: eliaExchangeBaseUrl
+            type: VpRequestInteractServiceType.mediatedPresentation
           }
-        ]
+        ],
+        isOneTime: false
       };
       await request(app.getHttpServer())
-        .post(`${vcApiBaseUrl}/exchanges/configure`)
+        .post(`${vcApiBaseUrl}/exchanges`)
         .send(exchangeDefinition)
         .expect(201);
 
       // POST /exchanges/{exchangeId}
-      const startWorkflowResponse = await request(app.getHttpServer())
-        .post(`${eliaExchangeBaseUrl}/exchanges/${issuanceExchangeId}`)
-        .expect(201);
+      const exchangeEndpoint = `${vcApiBaseUrl}/exchanges/${issuanceExchangeId}`;
+      const startWorkflowResponse = await request(app.getHttpServer()).post(exchangeEndpoint).expect(201);
       const vpRequest = (startWorkflowResponse.body as ExchangeResponseDto).vpRequest;
       expect(vpRequest).toBeDefined();
       const challenge = vpRequest.challenge;
       expect(challenge).toBeDefined();
       expect(vpRequest.query).toHaveLength(1);
       expect(vpRequest.query[0].type).toEqual('DIDAuth');
-      const workflowContinuationEndpoint = vpRequest.interact.service[0].serviceEndpoint;
-      expect(workflowContinuationEndpoint).toContain(`${eliaExchangeBaseUrl}/exchanges/`);
+      // https://stackoverflow.com/a/2599721 , because only need path for test
+      const workflowContinuationEndpoint = vpRequest.interact.service[0].serviceEndpoint.replace(
+        /https?:\/\/[^\/]+/i,
+        ''
+      );
+      expect(workflowContinuationEndpoint).toContain(exchangeEndpoint);
 
       // Create new DID and presentation to authentication as this DID
       // DID auth presentation: https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
@@ -134,14 +136,14 @@ describe('App (e2e)', () => {
         .expect(201);
       expect(didAuthResponse.body).toBeDefined();
 
-      // Continue exchange and get VC
+      // Continue exchange by submitting presention
       // PUT /exchanges/{exchangeId}/{transactionId}
-      const continueWorkflowResponse = await request(app.getHttpServer())
+      const continueExchangeResponse = await request(app.getHttpServer())
         .put(workflowContinuationEndpoint)
         .send(didAuthResponse.body)
         .expect(200);
-      expect(continueWorkflowResponse.body.errors).toHaveLength(0);
-      expect(continueWorkflowResponse.body.vc).toBeDefined();
+      expect(continueExchangeResponse.body.errors).toHaveLength(0);
+      expect(continueExchangeResponse.body.vpRequest).toBeDefined();
 
       // Configure presentation exchange
       // POST /exchanges/configure
@@ -167,13 +169,13 @@ describe('App (e2e)', () => {
         ],
         interactServices: [
           {
-            type: VpRequestInteractServiceType.unmediatedPresentation,
-            baseUrl: eliaExchangeBaseUrl
+            type: VpRequestInteractServiceType.unmediatedPresentation
           }
-        ]
+        ],
+        isOneTime: false
       };
       await request(app.getHttpServer())
-        .post(`${vcApiBaseUrl}/exchanges/configure`)
+        .post(`${vcApiBaseUrl}/exchanges`)
         .send(presentationExchangeDefinition)
         .expect(201);
     });

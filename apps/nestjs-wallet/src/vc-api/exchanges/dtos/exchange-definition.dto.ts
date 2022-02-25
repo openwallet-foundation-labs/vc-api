@@ -1,4 +1,4 @@
-import { IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsString, ValidateNested } from 'class-validator';
 import { VpRequestQueryDto } from './vp-request-query.dto';
 import { ExchangeInteractServiceDefinitionDto } from './exchange-interact-service-definition.dto';
 
@@ -14,4 +14,7 @@ export class ExchangeDefinitionDto {
 
   @ValidateNested({ each: true })
   query: VpRequestQueryDto[];
+
+  @IsBoolean()
+  isOneTime: boolean;
 }

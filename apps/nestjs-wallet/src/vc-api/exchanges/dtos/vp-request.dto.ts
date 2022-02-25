@@ -28,7 +28,7 @@ export class VpRequestDto {
   query: VpRequestQueryDto[];
 
   @ValidateNested()
-  interact?: VpRequestInteractDto;
+  interact: VpRequestInteractDto;
 
   static toDto(vpRequestEntity: VpRequestEntity): VpRequestDto {
     const data = classToPlain(vpRequestEntity);

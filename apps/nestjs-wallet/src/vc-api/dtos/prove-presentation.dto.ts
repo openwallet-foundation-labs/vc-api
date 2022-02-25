@@ -5,7 +5,7 @@ import { PresentationDto } from './presentation.dto';
 /**
  * DTO which contains presentation and options
  */
-export class IssuePresentationDto {
+export class ProvePresentationDto {
   @ValidateNested()
   presentation: PresentationDto;
 

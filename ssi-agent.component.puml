@@ -1,8 +1,11 @@
 @startuml ssi-agent-component
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
+Container_Boundary(business_logic, "Sample Business Logic Service") {
+  Component(business_logic_module, "Business Logic Module", "NestJs Module", "Custom Business Logic for Credential Exchanges")
+}
+
 Container_Boundary(nestjs_agent, "NestJs SSI Wallet") {
-  Component(elia_exchange, "Elia Exchange Module", "NestJs Module", "Exchange definitions for Elia use cases")
 
   Component(vc_api, "VC API Module", "NestJs Module", "VC API Spec Holder, Issuer and Verifier")
   ComponentDb(exchange_db, "Exchanges & VP Requests", "SQLite")
@@ -33,6 +36,6 @@ Rel(vc_api, didkit, "Import for signing & verification")
 
 Component_Ext(didkit, "Spruce DIDKit", "Credential Signing and Verification")
 
-Rel(elia_exchange, vc_api, "Calls/Configures")
+Rel(business_logic, vc_api, "Calls/Configures")
 
 @enduml

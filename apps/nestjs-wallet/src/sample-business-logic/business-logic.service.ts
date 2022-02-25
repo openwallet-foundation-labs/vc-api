@@ -6,11 +6,10 @@ import { ExchangeResponseDto } from '../vc-api/exchanges/dtos/exchange-response.
 import { ExchangeId } from './types/exchange-id';
 import { ResidentCardIssuanceExchange } from './exchange-definitions/resident-card-issuance.exchange';
 import { VerifiablePresentationDto } from '../vc-api/dtos/verifiable-presentation.dto';
-import { AckStatus } from '../vc-api/exchanges/types/ack-status';
 import { DIDService } from '../did/did.service';
 
 @Injectable()
-export class EliaExchangeService {
+export class BusinessLogicService {
   #exchangeDefinitions: Record<string, IssuanceExchangeDefinition>;
 
   constructor(
@@ -26,36 +25,29 @@ export class EliaExchangeService {
     };
   }
 
-  public async startExchange(exchangeId: string): Promise<ExchangeResponseDto> {
-    return this.exchangeService.startExchange(exchangeId);
-  }
-
   public async handlePresentation(
     vp: VerifiablePresentationDto,
     transactionId: string,
     exchangeId: string
   ): Promise<ExchangeResponseDto> {
     const exchangeTransactionStatus = await this.exchangeService.getExchangeTransaction(transactionId);
-    if (exchangeTransactionStatus.exchangeTransaction.execution.exchangeId !== exchangeId) {
+    if (exchangeTransactionStatus.transaction.exchangeId !== exchangeId) {
       return {
         errors: [
           `${exchangeId}: submitted exchange id does not match expected exchange id for this transaction`
-        ],
-        ack: { status: AckStatus.fail }
+        ]
       };
     }
     const exchangeDefinition = this.#exchangeDefinitions[exchangeId];
     if (!exchangeDefinition) {
       return {
-        errors: [`${exchangeId}: no exchange definition found for this workflowtype`],
-        ack: { status: AckStatus.fail }
+        errors: [`${exchangeId}: no exchange definition found for this workflowtype`]
       };
     }
-    const { errors, ack } = await this.exchangeService.handlePresentation(vp, transactionId, exchangeId);
-    if (errors.length > 0 || ack.status === AckStatus.fail) {
+    const { errors } = await this.exchangeService.handlePresentation(vp, transactionId, exchangeId);
+    if (errors.length > 0) {
       return {
-        errors,
-        ack
+        errors
       };
     }
     return await exchangeDefinition.handlePresentation(vp);

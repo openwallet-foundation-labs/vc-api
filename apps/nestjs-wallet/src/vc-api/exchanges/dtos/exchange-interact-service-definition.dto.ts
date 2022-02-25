@@ -7,12 +7,4 @@ import { VpRequestInteractServiceType } from '../types/vp-request-interact-servi
 export class ExchangeInteractServiceDefinitionDto {
   @IsEnum(VpRequestInteractServiceType)
   type: VpRequestInteractServiceType;
-
-  /**
-   * As details specific to the workflow (such as the workflow id) are not know,
-   * the full serviceEndpoint cannot be specified. Instead the baseUrl is specified.
-   * This allows a configured workflow response to be sent to another service endpoint.
-   */
-  @IsUrl()
-  baseUrl: string;
 }

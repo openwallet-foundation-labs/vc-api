@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, NotImplementedException, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { VcApiService } from './vc-api.service';
 import { IssueCredentialDto } from './dtos/issue-credential.dto';
@@ -8,6 +8,7 @@ import { VerifiablePresentationDto } from './dtos/verifiable-presentation.dto';
 import { ExchangeService } from './exchanges/exchange.service';
 import { ExchangeResponseDto } from './exchanges/dtos/exchange-response.dto';
 import { ExchangeDefinitionDto } from './exchanges/dtos/exchange-definition.dto';
+import { ProvePresentationDto } from './dtos/prove-presentation.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -35,21 +36,62 @@ export class VcApiController {
   // https://w3c-ccg.github.io/vc-api/holder.html
 
   /**
+   * Issue a DIDAuth presentation that authenticates a DID.
+   * Not a part of VC-API? Maybe there is a DID Auth spec though?
+   * A NON-STANDARD endpoint currently.
+   * @param authenticateDto DID to authenticate as, and, proof options
+   * @returns a verifiable presentation
+   */
+  @Post('presentations/prove/authentication')
+  async proveAuthenticationPresentation(
+    @Body() authenticateDto: AuthenticateDto
+  ): Promise<VerifiablePresentationDto> {
+    return await this.vcApiService.didAuthenticate(authenticateDto);
+  }
+
+  @Post('presentations/prove')
+  async provePresentation(
+    @Body() provePresentationDto: ProvePresentationDto
+  ): Promise<VerifiablePresentationDto> {
+    return await this.vcApiService.provePresentation(provePresentationDto);
+  }
+
+  /**
+   * Allows the creation of a new exchange by providing the credential query and interaction endpoints
+   * A NON-STANDARD endpoint currently.
+   *
+   * Similar to https://gataca-io.github.io/vui-core/#/Presentations/post_api_v2_presentations
+   *
    * TODO: Needs to have special authorization
-   * Maybe better as config files?
    * @param exchangeDefinitionDto
    * @returns
    */
-  @Post('/exchanges/configure')
-  async configureExchange(@Body() exchangeDefinitionDto: ExchangeDefinitionDto) {
-    return this.exchangeService.configureExchange(exchangeDefinitionDto);
+  @Post('/exchanges')
+  async createExchange(@Body() exchangeDefinitionDto: ExchangeDefinitionDto) {
+    return this.exchangeService.createExchange(exchangeDefinitionDto);
   }
 
+  /**
+   * Initiates an exchange of information.
+   * https://w3c-ccg.github.io/vc-api/#initiate-exchange
+   *
+   * @param exchangeId
+   * @returns
+   */
   @Post('/exchanges/:exchangeId')
   async initiateExchange(@Param('exchangeId') exchangeId: string): Promise<ExchangeResponseDto> {
     return this.exchangeService.startExchange(exchangeId);
   }
 
+  /**
+   * Receives information related to an existing exchange.
+   * https://w3c-ccg.github.io/vc-api/#continue-exchange
+   *
+   * @param exchangeId
+   * @param transactionId
+   * @param presentation
+   * @returns
+   */
   @Put('/exchanges/:exchangeId/:transactionId')
   async continueExchange(
     @Param('exchangeId') exchangeId: string,
@@ -60,15 +102,33 @@ export class VcApiController {
   }
 
   /**
-   * Issue a DIDAuth presentation that authenticates a DID.
-   * Not a part of VC-API? Maybe there is a DID Auth spec though?
-   * @param authenticateDto DID to authenticate as, and, proof options
-   * @returns a verifiable presentation
+   * Get exchange transactions that require reviews
+   * A NON-STANDARD endpoint currently.
+   * Similar to https://identitycache.energyweb.org/api/#/Claims/ClaimController_getByIssuerDid
+   *
+   * TODO: Needs to have special authorization. For SSI-Hub it is by DID
+   * @param exchangeId id of the exchange
+   * @param transactionId id of the exchange transaction
+   * @returns
    */
-  @Post('presentations/prove/authentication')
-  async proveAuthenticationPresentation(
-    @Body() authenticateDto: AuthenticateDto
-  ): Promise<VerifiablePresentationDto> {
-    return await this.vcApiService.didAuthenticate(authenticateDto);
+  @Get('/exchanges/reviews')
+  async getExchangeReviews(@Param('transactionId') transactionId: string) {
+    return new NotImplementedException();
+  }
+
+  /**
+   * Update a review (or maybe a transaction needing a review)
+   * A NON-STANDARD endpoint currently.
+   * Similar to https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.controller.ts#L80
+   *
+   * TODO: Perhaps reviews are not separate from transactions? Perhaps one updated the transaction directly
+   * TODO: Needs to have special authorization
+   * @param exchangeId id of the exchange
+   * @param transactionId id of the exchange transaction
+   * @returns
+   */
+  @Put('/exchanges/reviews/:transactionId')
+  async getExchangeTransaction(@Param('transactionId') transactionId: string) {
+    return new NotImplementedException();
   }
 }

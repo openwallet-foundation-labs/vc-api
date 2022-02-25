@@ -7,5 +7,10 @@ export enum VpRequestInteractServiceType {
   /**
    * https://w3c-ccg.github.io/vp-request-spec/#unmediated-presentation
    */
-  unmediatedPresentation = 'UnmediatedHttpPresentationService2021'
+  unmediatedPresentation = 'UnmediatedHttpPresentationService2021',
+
+  /**
+   * https://w3c-ccg.github.io/vp-request-spec/#mediated-presentation
+   */
+  mediatedPresentation = 'MediatedHttpPresentationService2021'
 }

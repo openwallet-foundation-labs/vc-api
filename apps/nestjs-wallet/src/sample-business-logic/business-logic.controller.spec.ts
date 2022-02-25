@@ -1,22 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EliaExchangeController } from './elia-exchange.controller';
-import { EliaExchangeService } from './elia-exchange.service';
+import { BusinessLogicController } from './business-logic.controller';
+import { BusinessLogicService } from './business-logic.service';
 
 describe('EliaExchangeController', () => {
-  let controller: EliaExchangeController;
+  let controller: BusinessLogicController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [EliaExchangeController],
+      controllers: [BusinessLogicController],
       providers: [
         {
-          provide: EliaExchangeService,
+          provide: BusinessLogicService,
           useValue: {}
         }
       ]
     }).compile();
 
-    controller = module.get<EliaExchangeController>(EliaExchangeController);
+    controller = module.get<BusinessLogicController>(BusinessLogicController);
   });
 
   it('should be defined', () => {

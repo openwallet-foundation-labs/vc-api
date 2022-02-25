@@ -2,37 +2,33 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PEX, Status } from '@sphereon/pex';
 import { Repository } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { VcApiService } from '../vc-api.service';
-import { VpRequestEntity } from './entities/vp-request.entity';
 import { VerifiablePresentationDto } from '../dtos/verifiable-presentation.dto';
-import { ExchangeExecutionEntity } from './entities/exchange-execution.entity';
+import { ExchangeEntity } from './entities/exchange.entity';
 import { ExchangeResponseDto } from './dtos/exchange-response.dto';
 import { VpRequestDto } from './dtos/vp-request.dto';
-import { AckStatus } from './types/ack-status';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
-import { VpRequestInteractServiceType } from './types/vp-request-interact-service-type';
-import { ExchangeTransactionEntity } from './entities/exchange-transaction.entity';
+import { TransactionEntity } from './entities/transaction.entity';
 import { VpRequestQueryType } from './types/vp-request-query-type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ExchangeService {
-  #exchangeDefinitions: Record<string, ExchangeDefinitionDto> = {};
   #pex: PEX;
 
   constructor(
     private vcApiService: VcApiService,
-    @InjectRepository(VpRequestEntity)
-    private vpRequestRepository: Repository<VpRequestEntity>,
-    @InjectRepository(ExchangeTransactionEntity)
-    private exchangeTransactionRespository: Repository<ExchangeTransactionEntity>,
-    @InjectRepository(ExchangeExecutionEntity)
-    private exchangeExecutionRepository: Repository<ExchangeExecutionEntity>
+    @InjectRepository(TransactionEntity)
+    private transactionRepository: Repository<TransactionEntity>,
+    @InjectRepository(ExchangeEntity)
+    private exchangeRepository: Repository<ExchangeEntity>,
+    private configService: ConfigService
   ) {
     this.#pex = new PEX();
   }
 
-  public configureExchange(exchangeDefinitionDto: ExchangeDefinitionDto) {
+  public async createExchange(exchangeDefinitionDto: ExchangeDefinitionDto) {
+    // Validate the queries. This should be done in a custom DTO validator
     exchangeDefinitionDto.query.forEach((query) => {
       if (query.type === VpRequestQueryType.presentationDefinition) {
         query.credentialQuery.forEach((credentialQuery) => {
@@ -55,55 +51,47 @@ export class ExchangeService {
         });
       }
     });
-    this.#exchangeDefinitions[exchangeDefinitionDto.exchangeId] = exchangeDefinitionDto;
+
+    // Persist the exchange
+    const exchange = this.exchangeRepository.create({
+      exchangeId: exchangeDefinitionDto.exchangeId,
+      query: exchangeDefinitionDto.query,
+      interactServiceDefinitions: exchangeDefinitionDto.interactServices,
+      isOneTime: exchangeDefinitionDto.isOneTime
+    });
+    await this.exchangeRepository.save(exchange);
     return {
       errors: []
     };
   }
 
   /**
-   * Starts an exchange to obtain a credential
+   * Starts a credential exchange
    * @param exchangeId
    * @returns exchange response
    */
   public async startExchange(exchangeId: string): Promise<ExchangeResponseDto> {
-    const exchangeDefinition = this.#exchangeDefinitions[exchangeId];
-    if (!exchangeDefinition) {
+    const exchange = await this.exchangeRepository.findOne(exchangeId);
+    if (!exchange) {
       return {
-        errors: [`${exchangeId}: no exchange definition found for this exchangeId`],
-        ack: { status: AckStatus.fail }
+        errors: [`${exchangeId}: no exchange definition found for this exchangeId`]
       };
     }
-    const executionId = uuidv4();
-    const transactionId = uuidv4();
-    const challenge = uuidv4();
-    const interactServices = exchangeDefinition.interactServices.map((serviceDef) => {
-      if (serviceDef.type === VpRequestInteractServiceType.unmediatedPresentation) {
-        return {
-          type: VpRequestInteractServiceType.unmediatedPresentation,
-          serviceEndpoint: `${serviceDef.baseUrl}/exchanges/${exchangeId}/${transactionId}`
-        };
-      }
-    });
-    const vpRequest = this.vpRequestRepository.create({
-      challenge,
-      query: exchangeDefinition.query,
-      interact: {
-        service: interactServices
-      }
-    });
-    await this.vpRequestRepository.save(vpRequest);
-    const exchangeTransaction = this.exchangeTransactionRespository.create({
-      transactionId: transactionId,
-      vpRequest
-    });
-    const exchangeExecution = this.exchangeExecutionRepository.create({
-      exchangeId,
-      executionId,
-      transactions: [exchangeTransaction]
-    });
-    await this.exchangeExecutionRepository.save(exchangeExecution);
-    return { errors: [], vpRequest: VpRequestDto.toDto(vpRequest), ack: { status: AckStatus.pending } };
+    const baseUrl = this.configService.get<string>('baseUrl');
+    if (!baseUrl) {
+      return {
+        errors: [`base url is not defined`]
+      };
+    }
+    const baseWithControllerPath = `${baseUrl}/vc-api`;
+    const transaction = exchange.start(baseWithControllerPath);
+    // TODO: considering saving as a transaction
+    await this.exchangeRepository.save(exchange);
+    await this.transactionRepository.save(transaction);
+    return {
+      errors: [],
+      vpRequest: VpRequestDto.toDto(transaction.vpRequest)
+    };
   }
 
   /**
@@ -118,56 +106,53 @@ export class ExchangeService {
     transactionId: string,
     exchangeId: string
   ): Promise<ExchangeResponseDto> {
-    const exchangeTransaction = await this.exchangeTransactionRespository.findOne(transactionId, {
-      relations: ['vpRequest', 'execution']
-    });
-    if (!exchangeTransaction) {
+    const transactionQuery = await this.getExchangeTransaction(transactionId);
+    if (transactionQuery.errors.length > 0 || !transactionQuery.transaction) {
       return {
-        errors: [`${transactionId}: no exchange transaction found for this transactionId`],
-        ack: { status: AckStatus.fail }
+        errors: transactionQuery.errors
       };
     }
-    const exchangeDefinition = this.#exchangeDefinitions[exchangeTransaction.execution.exchangeId];
-    if (!exchangeDefinition) {
-      return {
-        errors: [`${transactionId}: no exchange definition found for this exchangeId`],
-        ack: { status: AckStatus.fail }
-      };
-    }
-    const vpRequest = exchangeTransaction.vpRequest;
-    if (!vpRequest) {
-      return {
-        errors: [`${transactionId}: no vp-request associated this flowId`],
-        ack: { status: AckStatus.fail }
-      };
-    }
+    const transaction = transactionQuery.transaction;
+    const vpRequest = transaction.vpRequest;
     const result = await this.vcApiService.verifyPresentation(verifiablePresentation, {
       challenge: vpRequest.challenge
     });
     if (!result.checks.includes('proof')) {
       return {
-        errors: [`${transactionId}: verification of presentation proof not successful`],
-        ack: { status: AckStatus.fail }
+        errors: [`${transactionId}: verification of presentation proof not successful`]
       };
     }
-    return {
-      errors: [],
-      ack: { status: AckStatus.ok }
-    };
+    const response = transaction.processPresentation(verifiablePresentation);
+    await this.transactionRepository.save(transaction);
+    return response;
+  }
+
+  public async getExchange(exchangeId: string): Promise<{ errors: string[]; exchange?: ExchangeEntity }> {
+    const exchange = await this.exchangeRepository.findOne(exchangeId);
+    if (!exchange) {
+      return { errors: [`${exchangeId}: no exchange found for this transaction id`] };
+    }
+    return { errors: [], exchange: exchange };
   }
 
   public async getExchangeTransaction(
     transactionId: string
-  ): Promise<{ errors: string[]; exchangeTransaction?: ExchangeTransactionEntity }> {
-    const exchangeTransaction = await this.exchangeTransactionRespository.findOne(transactionId, {
-      relations: ['execution', 'vpRequest']
+  ): Promise<{ errors: string[]; transaction?: TransactionEntity }> {
+    const transaction = await this.transactionRepository.findOne(transactionId, {
+      relations: ['vpRequest', 'presentationReview']
     });
-    if (!exchangeTransaction) {
-      return { errors: [`${transactionId}: no exchange transaction found for this transaction id`] };
+    if (!transaction) {
+      return { errors: [`${transactionId}: no transaction found for this transaction id`] };
     }
-    if (!exchangeTransaction.execution) {
-      return { errors: [`${transactionId}: no exchange execution found for this transaction id`] };
+    const vpRequest = transaction.vpRequest;
+    if (!vpRequest) {
+      return {
+        errors: [`${transactionId}: no vp-request associated this transaction id`]
+      };
     }
-    return { errors: [], exchangeTransaction };
+    if (!transaction.exchangeId) {
+      return { errors: [`${transactionId}: no exchange found for this transaction id`] };
+    }
+    return { errors: [], transaction: transaction };
   }
 }

@@ -1,11 +1,11 @@
 import { IssuanceExchangeDefinition as IssuanceExchangeDefinition } from '../types/issuance-exchange-definition';
 import { CredentialDto } from 'src/vc-api/dtos/credential.dto';
 import { VcApiService } from 'src/vc-api/vc-api.service';
-import { AckStatus } from '../../vc-api/exchanges/types/ack-status';
 import { IssueOptionsDto } from '../../vc-api/dtos/issue-options.dto';
 import { VerifiablePresentationDto } from '../../vc-api/dtos/verifiable-presentation.dto';
 import { ExchangeResponseDto } from '../../vc-api/exchanges/dtos/exchange-response.dto';
 import { DIDService } from 'src/did/did.service';
+import { Presentation } from 'src/vc-api/exchanges/types/presentation';
 
 export class ResidentCardIssuanceExchange implements IssuanceExchangeDefinition {
   #vcApiService: VcApiService;
@@ -20,22 +20,27 @@ export class ResidentCardIssuanceExchange implements IssuanceExchangeDefinition 
     vp: VerifiablePresentationDto
   ): Promise<ExchangeResponseDto> => {
     if (!vp.holder) {
-      return { errors: ['holder of vp not provided'], ack: { status: AckStatus.fail } };
+      return { errors: ['holder of vp not provided'] };
     }
     const issuingDID = await this.#didService.generateKeyDID();
     const credential = this.fillCredential(issuingDID.id, vp.holder);
     const verificationMethodURI = issuingDID?.verificationMethod[0]?.id;
     if (!verificationMethodURI) {
-      return { errors: ['verification method for issuance not available'], ack: { status: AckStatus.fail } };
+      return { errors: ['verification method for issuance not available'] };
     }
     const options: IssueOptionsDto = {
       verificationMethod: verificationMethodURI
     };
     const vc = await this.#vcApiService.issueCredential({ credential, options });
+    const presentation: Presentation = {
+      '@context': ['https://www.w3.org/2018/credentials/v1'],
+      type: ['VerifiablePresentation'],
+      verifiableCredential: [vc]
+    };
+    const returnVp = await this.#vcApiService.provePresentation({ presentation, options });
     return {
       errors: [],
-      vc,
-      ack: { status: AckStatus.ok }
+      vp: returnVp
     };
   };
 

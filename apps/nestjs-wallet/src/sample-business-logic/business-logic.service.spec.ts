@@ -2,15 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DIDService } from '../did/did.service';
 import { VcApiService } from '../vc-api/vc-api.service';
 import { ExchangeService } from '../vc-api/exchanges/exchange.service';
-import { EliaExchangeService } from './elia-exchange.service';
+import { BusinessLogicService } from './business-logic.service';
 
-describe('EliaWorkflowService', () => {
-  let service: EliaExchangeService;
+describe('BusinessLogicService', () => {
+  let service: BusinessLogicService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        EliaExchangeService,
+        BusinessLogicService,
         {
           provide: VcApiService,
           useValue: {}
@@ -26,7 +26,7 @@ describe('EliaWorkflowService', () => {
       ]
     }).compile();
 
-    service = module.get<EliaExchangeService>(EliaExchangeService);
+    service = module.get<BusinessLogicService>(BusinessLogicService);
   });
 
   it('should be defined', () => {
