@@ -18,24 +18,6 @@ however the intention is that it can be used to enable more specific energy indu
 These SSI wallet apps are a component of the [Energy Web Decentralized Operating System](#ew-dos).
 For more information about SSI at EWF, see the [EWF Gitbook page on SSI](https://energy-web-foundation.gitbook.io/energy-web/foundational-concepts/self-sovereign-identity).
 
-## Relevant SSI Ecosystem Entities
-### W3C Credentials Community Group
-The [W3C Credentials Community Group](https://w3c-ccg.github.io/) provides drafting and incubating Internet specifications for further standardization and prototyping and testing reference implementations.
-Several of these specifications are used to guide the development of the wallets in this repository.
-Though these specifications are not on the W3C standards track, adherance to them is valuable because:
-- It leverages the design and experience of a collaboration of experts in the SSI credentials ecosystem
-- It increases interoperability and the likelihood that apps/components could be swapped for other implementations
-
-#### Universal Wallet Interop Spec
-The [W3C Credentials Community Group](https://w3c-ccg.github.io/) [Universal Wallet Interop Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/) provides a model for how wallet data could be made interoperable between other wallet implementations.
-
-#### VC API
-The [W3C Credentials Community Group](https://w3c-ccg.github.io/) [VC API Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/) provides a data model and HTTP protocols to issue, verify, present, and manage verifiable credentials on the Web.
-The [W3C Credentials Community Group](https://w3c-ccg.github.io/) also publishes [use cases for VC API](https://w3c-ccg.github.io/vc-api-use-cases/index.html).
-
-### DIF Wallet Security Group
-The [DIF Wallet Secruity Group](https://identity.foundation/working-groups/wallet-security.html) is helping defined SSI wallet best practices.
-
 ## Technology Decisions
 ### Rationale for Spruce DIDKit
 Spruce's DIDKit is used for DID generation and credential issuance+verification.
@@ -55,6 +37,25 @@ The rational for Spruce's use is that it:
 ## NestJS Wallet 
 
 The NestJS Wallet can be considered a [Cloud Wallet](https://w3c-ccg.github.io/universal-wallet-interop-spec/#cloud-wallets).
+
+### VC-API Module
+(Partial) implementation of the [W3C Credentials Community Group](https://w3c-ccg.github.io/) [VC API Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/).
+This spec provides a data model and HTTP protocols to issue, verify, present, and exchange verifiable credentials on the Web.
+The [W3C Credentials Community Group](https://w3c-ccg.github.io/) also publishes [use cases for VC API](https://w3c-ccg.github.io/vc-api-use-cases/index.html).
+
+#### Standard vs Custom Endpoints
+
+Not all of the endpoints available from the VC-API module are standard.
+
+| Purpose | Standard | Spec Link
+| --- | --- | --- |
+| Issue Credential | Yes | https://w3c-ccg.github.io/vc-api/#issue-credential
+| Prove Presentation | Yes | https://w3c-ccg.github.io/vc-api/#prove-presentation
+| Initiate Exchange | Yes | https://w3c-ccg.github.io/vc-api/#initiate-exchange
+| Continue Exchange | Yes | https://w3c-ccg.github.io/vc-api/#continue-exchange
+| Configure Exchange | No | 
+| Query Submissions | No |  
+| Submit Processing Result | No |
 
 ### DID Module
 
@@ -76,102 +77,100 @@ const did = generateDID(key); // Code from ssi-did lib. Returns initial DID Docu
 ### Key Module
 The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
 
-### Issuer Module
-Implements the [vc-issuer specification](https://w3c-ccg.github.io/vc-api/issuer.html) from the [W3C Credentials Community Group](https://w3c-ccg.github.io/).
-
 ## NestJS Wallet Implementation Notes
 - Uses **in-memory DB** for now for app execution and tests.
 The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.
 The rationale for this for tests (rather than mocking the db) is that it speeds test writing time, elimates mocking boilerplate and possibly buggy DB mocks.
 
-## Core Issuance/Presentation Flow
+## Credential Exchange Flow
 
 This flow is based of [VC-API Exchanges](https://w3c-ccg.github.io/vc-api/#initiate-exchange).
 
 ### Initial Exchange Configuration
 ```mermaid
 sequenceDiagram
-    participant E as Elia Frontend
-    actor EA as Elia Admin
-    participant VC as Generic VC-API
+    participant App as Use Case App
+    actor Admin as Use Case Admin
+    participant VC as VC-API
     
-    EA->>VC: configure the exchange definition 
-    EA->>E: communicate "exchange invitation" 
+    Admin->>VC: configure the exchange definition 
+    Admin->>App: communicate "exchange invitation" 
 ```
 
 ### Credential Presentation/Issuance
 
-The initial HTTP request for the VP Request could be made directly to the generic VC-API.
+The following is a sequence diagram of an credential exchange flow.
+This flow can be either a credential verification exchange (an exchange between a holder and a verifier) or a credential issuance exchange (an exchange between an issuer and a verifier).
 
 ```mermaid
 sequenceDiagram
-    actor R as requester/holder
-    participant H as SSI Wallet 
-    participant E as Elia Frontend
-    participant EWA as Elia Workflow API
-    participant VC as Generic VC-API
-    
-    E->>H: display "exchange invitation" (e.g. as QR code)
-    H->>H: parse offer for type_available, vc_request_url
-    
-    alt VC-API is encapsulated by use case API
-      H->>EWA: POST /exchanges/{exchange-id} (this is the vc_request_url)
-      activate EWA
-      EWA->>VC: POST /exchanges/{exchange-id}
-      activate VC
-        VC->>VC: Create workflow record
-        VC->>VC: Look up the configured workflow definition
-        VC-->>EWA: return VP Request with configured presentation definition
-      deactivate VC
-      EWA-->>H: return VP Request with presentation definition 
-      deactivate EWA
-    else VC-API is exposed directly
-      H->>VC: POST /exchanges/{exchange-id} (this is the vc_request_url)
-      activate VC
-      VC->>VC: Create workflow record
-      VC->>VC: Look up the configured workflow definition
-      VC-->>H: return VP Request with presentation definition 
-      deactivate VC
-    end
+  actor R as Holder
+  participant RSH as Holder SSI Hub
+  participant RSB as Web UI
+  participant ISH as Verifier/Issuer SSI Wallet
+  participant IService as Verification/Issuance Service
 
-    H->>R: request vp signature
-    R-->>H: approve vp signature
-    
-    alt VC-API is encapsulated by use case API
-      H->>EWA: POST /exchanges/{exchange-id}/{transaction-id} with VP
-      activate EWA
-      EWA->>VC: POST /exchanges/{exchange-id}/{transaction-id} 
-      activate VC
-        VC->>VC: Verify the presentation
-        VC-->>EWA: return presentation verification result 
-      deactivate VC
-      opt for an issuance flow
-      EWA->>EWA: create VC
+  rect rgb(243, 255, 255)
+  note right of R: initiate exchange
+    R->>RSB: provide exchange url (e.g. from QR code or link)
+    RSB->>ISH: initiate credential exchange
+
+    activate ISH
+      ISH->>ISH: Read exchange definition
+      ISH-->>RSB: return VP request
+    deactivate ISH
+  end
+
+  rect rgb(255, 243, 255)
+  note right of R: submit presentation
+    RSB->>R: display required presentation data
+    R-->>RSB: enter required input and/or select credentials
+    RSB->>R: request credential application (presentation) signature
+    R-->>RSB: approve signature
+  end
+  
+  rect rgb(255, 255, 235)
+  note right of R: process presention
+  alt mediated presention processing
+    RSB->>ISH: submit presentation 
+    activate ISH
+      ISH->>ISH: Verify presentation signatures and satisfaction of credential query
+      ISH-->>RSB: reply with "mediation in progress" VP Request
+    deactivate ISH
+
+    par review presentation
+      ISH->>IService: notify verification service of new presentation
+      IService->>ISH: query outstanding presentations to review
+      activate ISH
+        ISH-->>IService: return presentation to review
+      deactivate ISH
+      IService->>IService: process presentation
+      opt credential issuance
+        IService->>IService: prepare & issue VCs (as a VP)
       end
-      EWA-->>H: return VC
-      deactivate EWA
-    else VC-API is exposed directly
-      H->>VC: POST /exchanges/{exchange-id}/{transaction-id} with VP
-      activate VC
-        VC->>VC: Verify the presentation
-        VC-->>H: return presentation verification result 
-      deactivate VC
-      opt for an issuance flow
-        H->>EWA: POST /exchanges/{exchange-id}/{transaction-id}
-        activate EWA
-        EWA->>VC: GET /workflows/{id}/status 
-        VC-->>EWA: return workflow result confirming successful status
-        EWA->>EWA: create VC
-        EWA-->>H: return VC
+      IService->>ISH: submit presentation processing result (possibly including VCs)
+    and query presentation status
+      R->>RSB: query presentation submissions 
+      RSB->>RSH: query outstanding presentations
+      RSB->>ISH: query presentation review status
+      alt presentation is processed
+        ISH-->>RSB: return review result (possibly including VP with VC)
+      else presentation not yet processed
+        ISH-->>RSB: return "mediation in progress" VP Request
       end
-      deactivate EWA
+      
     end
-    
-    H->>H: store VC 
+    RSB->>RSH: store VC
+    RSB-->>R: display issued credential to requester
+  else unmediated application processing
+    RSB->>ISH: submit credential application to issuer hub
+    activate ISH
+      ISH->>ISH: Verify presentation signatures and satisfaction of credential query
+      ISH-->>RSB: return review result 
+    deactivate ISH
+  end
+  end
 ```
-
-
-- Presentation Definition as means of requesting credentials https://identity.foundation/presentation-exchange/#presentation-definition
 
 ## Installation
 This repository is a monorepo that uses [Rush](https://rushjs.io/) with the PNPM package manager.
@@ -271,9 +270,8 @@ For a deep-dive into the motivation and methodology behind our technical solutio
 ## Relationship to other EWF components
 
 ### iam-client-lib
-[iam-client-lib](https://github.com/energywebfoundation/iam-client-lib/) provides SSI related functions such as interaction with EWF's Switchboard role credential definitions, credential request and issuance and connection to the iam-cache-server.
-However, it does not provide any functionality for key or DID management.
-Therefore, iam-client-lib can be used with the keys and DIDs managed by the wallet applications.
+[iam-client-lib](https://github.com/energywebfoundation/iam-client-lib/) provides SSI related functions such as interaction with EWF's Switchboard role credential definitions, credential request and issuance and connection to the ssi-hub.
+It could be used as a client library to this wallet.
 
 ### ssi-hub
 [ssi-hub](https://github.com/energywebfoundation/ssi-hub)'s persistence of issued credentials, requested credentials and DID relationships could be integrated with the code in this repository.
@@ -282,6 +280,19 @@ Therefore, iam-client-lib can be used with the keys and DIDs managed by the wall
 [ew-did-registry](https://github.com/energywebfoundation/ew-did-registry) Though some code should be integrated between ew-did-registry and this repository,
 it is currently useful to have the sample wallets in a separate application to avoid a circular dependency where `iam-client-lib` depends on `ssi/ew-did-registry` which depends on `iam-client-lib`.
 
+## Relevant SSI Ecosystem Entities
+### W3C Credentials Community Group
+The [W3C Credentials Community Group](https://w3c-ccg.github.io/) provides drafting and incubating Internet specifications for further standardization and prototyping and testing reference implementations.
+Several of these specifications are used to guide the development of the wallets in this repository.
+Though these specifications are not on the W3C standards track, adherance to them is valuable because:
+- It leverages the design and experience of a collaboration of experts in the SSI credentials ecosystem
+- It increases interoperability and the likelihood that apps/components could be swapped for other implementations
+
+#### Universal Wallet Interop Spec
+The [W3C Credentials Community Group](https://w3c-ccg.github.io/) [Universal Wallet Interop Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/) provides a model for how wallet data could be made interoperable between other wallet implementations.
+
+### DIF Wallet Security Group
+The [DIF Wallet Secruity Group](https://identity.foundation/working-groups/wallet-security.html) is helping defined SSI wallet best practices.
 
 ## Connect with Energy Web
 - [Twitter](https://twitter.com/energywebx)

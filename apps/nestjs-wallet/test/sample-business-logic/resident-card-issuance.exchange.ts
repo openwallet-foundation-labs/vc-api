@@ -6,7 +6,7 @@ import { Presentation } from '../../src/vc-api/exchanges/types/presentation';
 
 /**
  *
- * TODO: get and approve review
+ * TODO: get and approve presentation review
  * @param vp
  * @param vcApiApp
  * @returns
