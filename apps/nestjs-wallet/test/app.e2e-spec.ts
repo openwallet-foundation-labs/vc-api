@@ -2,14 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { v4 as uuidv4 } from 'uuid';
+import { createDID } from './utils';
 import { AppModule } from '../src/app.module';
-import { DIDDocument } from 'did-resolver';
 import { CredentialDto } from '../src/vc-api/dtos/credential.dto';
 import { IssueOptionsDto } from '../src/vc-api/dtos/issue-options.dto';
 import { ExchangeResponseDto } from '../src/vc-api/exchanges/dtos/exchange-response.dto';
 import { ExchangeDefinitionDto } from '../src/vc-api/exchanges/dtos/exchange-definition.dto';
 import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-query-type';
 import { VpRequestInteractServiceType } from '../src/vc-api/exchanges/types/vp-request-interact-service-type';
+import { issueCredential } from './sample-business-logic/resident-card-issuance.exchange';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -30,17 +31,17 @@ describe('App (e2e)', () => {
 
   describe('DID', () => {
     it('should create and retrieve a new did:ethr DID', async () => {
-      await createDID('ethr');
+      await createDID('ethr', app);
     });
 
     it('should create and retrieve a new did:key DID', async () => {
-      await createDID('key');
+      await createDID('key', app);
     });
   });
 
   describe('VcApi', () => {
     it('should issue using a generated did:key', async () => {
-      const didDoc = await createDID('key');
+      const didDoc = await createDID('key', app);
       const credential: CredentialDto = {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         id: 'http://example.org/credentials/3731',
@@ -61,24 +62,6 @@ describe('App (e2e)', () => {
       expect(postResponse.body).toBeDefined();
     });
   });
-
-  async function createDID(requestedMethod: string): Promise<DIDDocument> {
-    const postResponse = await request(app.getHttpServer())
-      .post('/did')
-      .send({ method: requestedMethod })
-      .expect(201);
-    expect(postResponse.body).toHaveProperty('id');
-    expect(postResponse.body).toHaveProperty('verificationMethod');
-    expect(postResponse.body['verificationMethod']).toHaveLength(1);
-    const newDID = postResponse.body.id;
-    const createdMethod = newDID.split(':')[1];
-    expect(createdMethod).toEqual(requestedMethod);
-
-    const getResponse = await request(app.getHttpServer()).get(`/did/${newDID}`).expect(200);
-    expect(getResponse.body).toHaveProperty('verificationMethod');
-    expect(postResponse.body['verificationMethod']).toMatchObject(getResponse.body['verificationMethod']);
-    return postResponse.body;
-  }
 
   describe('Credential Issuance and Presentation', () => {
     it('should get credential starting from an invitation and present this credential', async () => {
@@ -124,7 +107,7 @@ describe('App (e2e)', () => {
 
       // Create new DID and presentation to authentication as this DID
       // DID auth presentation: https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
-      const requesterDID = await createDID('key');
+      const requesterDID = await createDID('key', app);
       const options: IssueOptionsDto = {
         verificationMethod: requesterDID.verificationMethod[0].id,
         proofPurpose: 'authentication',
@@ -134,7 +117,8 @@ describe('App (e2e)', () => {
         .post(`${vcApiBaseUrl}/presentations/prove/authentication`)
         .send({ did: requesterDID.id, options })
         .expect(201);
-      expect(didAuthResponse.body).toBeDefined();
+      const didAuthVp = didAuthResponse.body;
+      expect(didAuthVp).toBeDefined();
 
       // Continue exchange by submitting presention
       // PUT /exchanges/{exchangeId}/{transactionId}
@@ -144,6 +128,11 @@ describe('App (e2e)', () => {
         .expect(200);
       expect(continueExchangeResponse.body.errors).toHaveLength(0);
       expect(continueExchangeResponse.body.vpRequest).toBeDefined();
+
+      // TODO: have the issuer get the review and approve. For now, just issue directly
+      const issueResult = await issueCredential(didAuthVp, app);
+      const issuedVc = issueResult.vp.verifiableCredential[0];
+      expect(issuedVc).toBeDefined();
 
       // Configure presentation exchange
       // POST /exchanges/configure
