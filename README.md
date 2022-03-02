@@ -4,7 +4,7 @@
 </p>
 
 
-# EWF and Elia Group Self-Sovereign-Identity (SSI) Wallet Apps
+# EWF and Elia Group Self-Sovereign-Identity (SSI) Wallet
 
 [![CI](https://github.com/energywebfoundation/ssi/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/energywebfoundation/ssi/actions/workflows/main.yml)
 
@@ -30,7 +30,7 @@ The rational for Spruce's use is that it:
 ### Rationale for NestJS
 - Main JS server framework used at EWF
 
-## Architecture
+## Component Diagram
 
 ![architecture](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/energywebfoundation/ssi/master/ssi-agent.component.puml)
 
