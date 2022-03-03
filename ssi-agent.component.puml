@@ -2,7 +2,7 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
 Container_Ext(business_logic, "Business Logic Client", "HTTP Client")
-Container_Ext(ssi_wallet_ui, "SSI", "HTTP Client")
+Container_Ext(ssi_wallet_ui, "SSI Wallet UI", "HTTP Client")
 
 Container_Boundary(nestjs_agent, "NestJs SSI Wallet") {
 
