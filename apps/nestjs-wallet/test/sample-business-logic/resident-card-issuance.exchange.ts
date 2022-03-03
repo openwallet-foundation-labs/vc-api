@@ -1,5 +1,4 @@
-import { INestApplication } from '@nestjs/common';
-import { createDID, issueVC, provePresentation } from '../utils';
+import { WalletClient } from '../wallet-client';
 import { VerifiablePresentationDto } from '../../src/vc-api/dtos/verifiable-presentation.dto';
 import { CredentialDto } from '../../src/vc-api/dtos/credential.dto';
 import { Presentation } from '../../src/vc-api/exchanges/types/presentation';
@@ -11,11 +10,11 @@ import { Presentation } from '../../src/vc-api/exchanges/types/presentation';
  * @param vcApiApp
  * @returns
  */
-export async function issueCredential(vp: VerifiablePresentationDto, vcApiApp: INestApplication) {
+export async function issueCredential(vp: VerifiablePresentationDto, walletClient: WalletClient) {
   if (!vp.holder) {
     return { errors: ['holder of vp not provided'] };
   }
-  const issuingDID = await createDID('key', vcApiApp);
+  const issuingDID = await walletClient.createDID('key');
   const credential = fillCredential(issuingDID.id, vp.holder);
   const verificationMethodURI = issuingDID?.verificationMethod[0]?.id;
   if (!verificationMethodURI) {
@@ -28,7 +27,7 @@ export async function issueCredential(vp: VerifiablePresentationDto, vcApiApp: I
     options,
     credential
   };
-  const vc = await issueVC(issueCredentialDto, vcApiApp);
+  const vc = await walletClient.issueVC(issueCredentialDto);
   const presentation: Presentation = {
     '@context': ['https://www.w3.org/2018/credentials/v1'],
     type: ['VerifiablePresentation'],
@@ -38,7 +37,7 @@ export async function issueCredential(vp: VerifiablePresentationDto, vcApiApp: I
     options,
     presentation
   };
-  const returnVp = await provePresentation(provePresentationDto, vcApiApp);
+  const returnVp = await walletClient.provePresentation(provePresentationDto);
   return {
     errors: [],
     vp: returnVp

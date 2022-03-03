@@ -53,9 +53,35 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/exchanges/configure": {
+    "/vc-api/presentations/prove/authentication": {
       "post": {
-        "operationId": "VcApiController_configureExchange",
+        "operationId": "VcApiController_proveAuthenticationPresentation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthenticateDto" } } }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/presentations/prove": {
+      "post": {
+        "operationId": "VcApiController_provePresentation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ProvePresentationDto" } }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/exchanges": {
+      "post": {
+        "operationId": "VcApiController_createExchange",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -94,43 +120,24 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/presentations/prove/authentication": {
-      "post": {
-        "operationId": "VcApiController_proveAuthenticationPresentation",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthenticateDto" } } }
-        },
-        "responses": { "201": { "description": "" } },
+    "/vc-api/exchanges/reviews": {
+      "get": {
+        "operationId": "VcApiController_getExchangeReviews",
+        "parameters": [
+          { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "" } },
         "tags": ["vc-api"]
       }
     },
-    "/elia-exchange/exchanges/{exchangeId}": {
-      "post": {
-        "operationId": "EliaExchangeController_initiateExchange",
-        "parameters": [
-          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } }
-        ],
-        "responses": { "201": { "description": "" } },
-        "tags": ["elia-exchange"]
-      }
-    },
-    "/elia-exchange/exchanges/{exchangeId}/{transactionId}": {
+    "/vc-api/exchanges/reviews/{transactionId}": {
       "put": {
-        "operationId": "EliaExchangeController_continueExchange",
+        "operationId": "VcApiController_getExchangeTransaction",
         "parameters": [
-          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
-          }
-        },
         "responses": { "200": { "description": "" } },
-        "tags": ["elia-exchange"]
+        "tags": ["vc-api"]
       }
     }
   },
@@ -146,9 +153,10 @@
     "schemas": {
       "CreateDidOptionsDto": { "type": "object", "properties": {} },
       "IssueCredentialDto": { "type": "object", "properties": {} },
+      "AuthenticateDto": { "type": "object", "properties": {} },
+      "ProvePresentationDto": { "type": "object", "properties": {} },
       "ExchangeDefinitionDto": { "type": "object", "properties": {} },
-      "VerifiablePresentationDto": { "type": "object", "properties": {} },
-      "AuthenticateDto": { "type": "object", "properties": {} }
+      "VerifiablePresentationDto": { "type": "object", "properties": {} }
     }
   }
 }
