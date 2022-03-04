@@ -98,7 +98,7 @@ export class VcApiController {
     @Param('transactionId') transactionId: string,
     @Body() presentation: VerifiablePresentationDto
   ): Promise<ExchangeResponseDto> {
-    return await this.exchangeService.handlePresentation(presentation, transactionId, exchangeId);
+    return await this.exchangeService.continueExchange(presentation, transactionId, exchangeId);
   }
 
   /**

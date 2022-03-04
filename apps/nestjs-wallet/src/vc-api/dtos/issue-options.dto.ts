@@ -1,3 +1,4 @@
+import { ProofPurpose } from '@sphereon/pex';
 import { IsString, IsObject, IsOptional } from 'class-validator';
 
 /**
@@ -23,7 +24,7 @@ export class IssueOptionsDto {
    */
   @IsString()
   @IsOptional()
-  proofPurpose?: string;
+  proofPurpose?: ProofPurpose;
 
   /**
    * The date and time of the proof (with a maximum accuracy in seconds). Default current system time.

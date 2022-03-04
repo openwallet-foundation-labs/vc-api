@@ -66,4 +66,18 @@ export class WalletClient {
     expect(vpRequest.query[0].type).toEqual('DIDAuth');
     return vpRequest;
   }
+
+  /**
+   * PUT /exchanges/{exchangeId}/{transactionId}
+   * @param exchangeContinuationEndpoint
+   * @param vp
+   */
+  async continueExchange(exchangeContinuationEndpoint: string, vp: VerifiablePresentationDto) {
+    const continueExchangeResponse = await request(this.#app.getHttpServer())
+      .put(exchangeContinuationEndpoint)
+      .send(vp)
+      .expect(200);
+    expect(continueExchangeResponse.body.errors).toHaveLength(0);
+    expect(continueExchangeResponse.body.vpRequest).toBeDefined();
+  }
 }

@@ -11,6 +11,7 @@ import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-que
 import { VpRequestInteractServiceType } from '../src/vc-api/exchanges/types/vp-request-interact-service-type';
 import { issueCredential } from './sample-business-logic/resident-card-issuance.exchange';
 import { VpRequestDto } from 'src/vc-api/exchanges/dtos/vp-request.dto';
+import { ProofPurpose } from '@sphereon/pex';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -104,7 +105,7 @@ describe('App (e2e)', () => {
       const holderVerificationMethod = holderDID.verificationMethod[0].id;
       const options: IssueOptionsDto = {
         verificationMethod: holderVerificationMethod,
-        proofPurpose: 'authentication',
+        proofPurpose: ProofPurpose.authentication,
         challenge: issuanceVpRequest.challenge
       };
       const didAuthResponse = await request(app.getHttpServer())
@@ -115,13 +116,7 @@ describe('App (e2e)', () => {
       expect(didAuthVp).toBeDefined();
 
       // Continue exchange by submitting presention
-      // PUT /exchanges/{exchangeId}/{transactionId}
-      const continueExchangeResponse = await request(app.getHttpServer())
-        .put(issuanceExchangeContinuationEndpoint)
-        .send(didAuthResponse.body)
-        .expect(200);
-      expect(continueExchangeResponse.body.errors).toHaveLength(0);
-      expect(continueExchangeResponse.body.vpRequest).toBeDefined();
+      await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp);
 
       // TODO: have the issuer get the review and approve. For now, just issue directly
       const issueResult = await issueCredential(didAuthVp, walletClient);
@@ -181,13 +176,15 @@ describe('App (e2e)', () => {
         verifiableCredential: [issuedVc]
       };
       const issuanceOptions: IssueOptionsDto = {
-        proofPurpose: 'assertionMethod',
+        proofPurpose: ProofPurpose.authentication,
         verificationMethod: holderVerificationMethod,
-        created: '2021-11-16T14:52:19.514Z'
+        created: '2021-11-16T14:52:19.514Z',
+        challenge: presentationVpRequest.challenge
       };
-      const vp = walletClient.provePresentation({ presentation, options: issuanceOptions });
+      const vp = await walletClient.provePresentation({ presentation, options: issuanceOptions });
 
-      // TODO: Holder submits presentation
+      // Holder submits presentation
+      await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp);
     });
   });
 });

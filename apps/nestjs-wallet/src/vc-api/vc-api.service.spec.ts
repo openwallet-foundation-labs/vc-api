@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { keyToDID, keyToVerificationMethod } from '@spruceid/didkit-wasm-node';
-import { TypeOrmSQLiteModule } from '../in-memory-db';
 import { VcApiService } from './vc-api.service';
 import { IssueOptionsDto } from './dtos/issue-options.dto';
 import { VerifyOptionsDto } from './dtos/verify-options.dto';
 import { DIDService } from '../did/did.service';
 import { KeyService } from '../key/key.service';
 import { Presentation } from './exchanges/types/presentation';
+import { ProofPurpose } from '@sphereon/pex';
 
 const key = {
   kty: 'OKP',
@@ -66,7 +66,7 @@ describe('VcApiService', () => {
       }
     };
     const issuanceOptions: IssueOptionsDto = {
-      proofPurpose: 'assertionMethod',
+      proofPurpose: ProofPurpose.assertionMethod,
       verificationMethod: verificationMethod,
       created: '2021-11-16T14:52:19.514Z'
     };
@@ -135,7 +135,7 @@ describe('VcApiService', () => {
       verifiableCredential: [vc]
     };
     const issuanceOptions: IssueOptionsDto = {
-      proofPurpose: 'assertionMethod',
+      proofPurpose: ProofPurpose.authentication,
       verificationMethod: verificationMethod,
       created: '2021-11-16T14:52:19.514Z'
     };
@@ -178,11 +178,11 @@ describe('VcApiService', () => {
       ],
       proof: {
         type: 'Ed25519Signature2018',
-        proofPurpose: 'assertionMethod',
+        proofPurpose: 'authentication',
         verificationMethod:
           'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF#z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF',
         created: '2021-11-16T14:52:19.514Z',
-        jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..RuGboEsIpXLG_zASMzmSIVReq93QEg6JznIdE5SpyZnYWDGGecBQiFostRBOdDjbf99vrd7oNEQt29qGSDt7CQ'
+        jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..AUjofG8_IeAyBL6m2ZPCMSJH2VnJ3UFmTtO6vbGgYPVVS9r745WN3IxQ5_86Ki6GjC1zxbTMqVDG-M6NOjrlCA'
       }
     };
     expect(vc['proof']['jws']).toBeDefined();
@@ -218,11 +218,57 @@ describe('VcApiService', () => {
     expect(result).toEqual(expectedResult);
   });
 
+  it('should be able to verify a presentation', async () => {
+    const verifyOptions: VerifyOptionsDto = {
+      proofPurpose: ProofPurpose.authentication,
+      verificationMethod:
+        'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF#z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF'
+    };
+    const vp = {
+      '@context': [
+        'https://www.w3.org/2018/credentials/v1',
+        'https://www.w3.org/2018/credentials/examples/v1'
+      ],
+      type: ['VerifiablePresentation'],
+      verifiableCredential: [
+        {
+          '@context': ['https://www.w3.org/2018/credentials/v1'],
+          id: 'http://example.org/credentials/3731',
+          type: ['VerifiableCredential'],
+          credentialSubject: {
+            id: 'did:example:d23dd687a7dc6787646f2eb98d0'
+          },
+          issuer: 'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF',
+          issuanceDate: '2020-08-19T21:41:50Z',
+          proof: {
+            type: 'Ed25519Signature2018',
+            proofPurpose: 'assertionMethod',
+            verificationMethod:
+              'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF#z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF',
+            created: '2021-11-16T14:52:19.514Z',
+            jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..9N2qqOBBcQkJv_tF1DObaVRovT8nbuDLV1VMFk5sEd_WNKCcdGsPzNoOqVAJI7rCmzgqCtN_dZtzKrtnPZioDg'
+          }
+        }
+      ],
+      proof: {
+        type: 'Ed25519Signature2018',
+        proofPurpose: 'authentication',
+        verificationMethod:
+          'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF#z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF',
+        created: '2021-11-16T14:52:19.514Z',
+        jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..AUjofG8_IeAyBL6m2ZPCMSJH2VnJ3UFmTtO6vbGgYPVVS9r745WN3IxQ5_86Ki6GjC1zxbTMqVDG-M6NOjrlCA'
+      }
+    };
+    const result = await service.verifyPresentation(vp, verifyOptions);
+    const expectedResult = { checks: ['proof'], warnings: [], errors: [] };
+    expect(result).toEqual(expectedResult);
+  });
+
   it('should be able to generate DIDAuth', async () => {
     const verificationMethod = await keyToVerificationMethod('key', JSON.stringify(key));
     const challenge = '2679f7f3-d9ff-4a7e-945c-0f30fb0765bd';
     const issuanceOptions: IssueOptionsDto = {
-      proofPurpose: 'authentication',
+      proofPurpose: ProofPurpose.authentication,
       verificationMethod: verificationMethod,
       created: '2021-11-16T14:52:19.514Z',
       challenge

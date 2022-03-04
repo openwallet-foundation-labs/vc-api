@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PEX, Status } from '@sphereon/pex';
+import { PEX, ProofPurpose, Status } from '@sphereon/pex';
 import { Repository } from 'typeorm';
 import { VcApiService } from '../vc-api.service';
 import { VerifiablePresentationDto } from '../dtos/verifiable-presentation.dto';
@@ -11,6 +11,7 @@ import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { TransactionEntity } from './entities/transaction.entity';
 import { VpRequestQueryType } from './types/vp-request-query-type';
 import { ConfigService } from '@nestjs/config';
+import { VerifyOptionsDto } from '../dtos/verify-options.dto';
 
 @Injectable()
 export class ExchangeService {
@@ -101,7 +102,7 @@ export class ExchangeService {
    * @param transactionId
    * @returns exchange response
    */
-  public async handlePresentation(
+  public async continueExchange(
     verifiablePresentation: VerifiablePresentationDto,
     transactionId: string,
     exchangeId: string
@@ -114,12 +115,15 @@ export class ExchangeService {
     }
     const transaction = transactionQuery.transaction;
     const vpRequest = transaction.vpRequest;
-    const result = await this.vcApiService.verifyPresentation(verifiablePresentation, {
-      challenge: vpRequest.challenge
-    });
-    if (!result.checks.includes('proof')) {
+    const verifyOptions: VerifyOptionsDto = {
+      challenge: vpRequest.challenge,
+      proofPurpose: ProofPurpose.authentication,
+      verificationMethod: verifiablePresentation.proof.verificationMethod as string //TODO: fix types here
+    };
+    const result = await this.vcApiService.verifyPresentation(verifiablePresentation, verifyOptions);
+    if (!result.checks.includes('proof') || result.errors.length > 0) {
       return {
-        errors: [`${transactionId}: verification of presentation proof not successful`]
+        errors: [`${transactionId}: verification of presentation proof not successful`, ...result.errors]
       };
     }
     const response = transaction.processPresentation(verifiablePresentation);
