@@ -1,7 +1,7 @@
 import { IsString, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { VerifiableCredentialDto } from './verifiable-credential.dto';
 import { IsStringOrStringArray } from './custom-class-validator/is-string-or-string-array';
-import { Presentation } from '../exchanges/types/presentation';
+import { Presentation } from '../../exchanges/types/presentation';
 
 /**
  * A JSON-LD Verifiable Presentation without a proof.

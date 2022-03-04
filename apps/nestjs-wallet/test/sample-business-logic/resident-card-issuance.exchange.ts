@@ -1,6 +1,6 @@
 import { WalletClient } from '../wallet-client';
-import { VerifiablePresentationDto } from '../../src/vc-api/dtos/verifiable-presentation.dto';
-import { CredentialDto } from '../../src/vc-api/dtos/credential.dto';
+import { VerifiablePresentationDto } from '../../src/vc-api/credentials/dtos/verifiable-presentation.dto';
+import { CredentialDto } from '../../src/vc-api/credentials/dtos/credential.dto';
 import { Presentation } from '../../src/vc-api/exchanges/types/presentation';
 
 /**

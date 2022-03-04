@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VcApiController } from './vc-api.controller';
-import { VcApiService } from './vc-api.service';
+import { CredentialsService } from './credentials/credentials.service';
 import { ExchangeService } from './exchanges/exchange.service';
 
 describe('VcApiController', () => {
@@ -11,7 +11,7 @@ describe('VcApiController', () => {
       controllers: [VcApiController],
       providers: [
         {
-          provide: VcApiService,
+          provide: CredentialsService,
           useValue: {}
         },
         {

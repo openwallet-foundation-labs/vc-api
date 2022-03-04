@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PEX, ProofPurpose, Status } from '@sphereon/pex';
 import { Repository } from 'typeorm';
-import { VcApiService } from '../vc-api.service';
-import { VerifiablePresentationDto } from '../dtos/verifiable-presentation.dto';
+import { CredentialsService } from '../credentials/credentials.service';
+import { VerifiablePresentationDto } from '../credentials/dtos/verifiable-presentation.dto';
 import { ExchangeEntity } from './entities/exchange.entity';
 import { ExchangeResponseDto } from './dtos/exchange-response.dto';
 import { VpRequestDto } from './dtos/vp-request.dto';
@@ -11,14 +11,14 @@ import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { TransactionEntity } from './entities/transaction.entity';
 import { VpRequestQueryType } from './types/vp-request-query-type';
 import { ConfigService } from '@nestjs/config';
-import { VerifyOptionsDto } from '../dtos/verify-options.dto';
+import { VerifyOptionsDto } from '../credentials/dtos/verify-options.dto';
 
 @Injectable()
 export class ExchangeService {
   #pex: PEX;
 
   constructor(
-    private vcApiService: VcApiService,
+    private vcApiService: CredentialsService,
     @InjectRepository(TransactionEntity)
     private transactionRepository: Repository<TransactionEntity>,
     @InjectRepository(ExchangeEntity)

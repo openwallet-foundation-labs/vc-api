@@ -1,14 +1,14 @@
 import { Body, Controller, Get, NotImplementedException, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { VcApiService } from './vc-api.service';
-import { IssueCredentialDto } from './dtos/issue-credential.dto';
-import { VerifiableCredentialDto } from './dtos/verifiable-credential.dto';
-import { AuthenticateDto } from './dtos/authenticate.dto';
-import { VerifiablePresentationDto } from './dtos/verifiable-presentation.dto';
+import { CredentialsService } from './credentials/credentials.service';
+import { IssueCredentialDto } from './credentials/dtos/issue-credential.dto';
+import { VerifiableCredentialDto } from './credentials/dtos/verifiable-credential.dto';
+import { AuthenticateDto } from './credentials/dtos/authenticate.dto';
+import { VerifiablePresentationDto } from './credentials/dtos/verifiable-presentation.dto';
 import { ExchangeService } from './exchanges/exchange.service';
 import { ExchangeResponseDto } from './exchanges/dtos/exchange-response.dto';
 import { ExchangeDefinitionDto } from './exchanges/dtos/exchange-definition.dto';
-import { ProvePresentationDto } from './dtos/prove-presentation.dto';
+import { ProvePresentationDto } from './credentials/dtos/prove-presentation.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -17,7 +17,7 @@ import { ProvePresentationDto } from './dtos/prove-presentation.dto';
 @ApiTags('vc-api')
 @Controller('vc-api')
 export class VcApiController {
-  constructor(private vcApiService: VcApiService, private exchangeService: ExchangeService) {}
+  constructor(private vcApiService: CredentialsService, private exchangeService: ExchangeService) {}
 
   /**
    * Issues a credential and returns it in the response body. Conforms to https://w3c-ccg.github.io/vc-api/issuer.html

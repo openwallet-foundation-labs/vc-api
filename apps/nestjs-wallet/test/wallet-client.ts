@@ -1,10 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import { DIDDocument } from 'did-resolver';
 import * as request from 'supertest';
-import { VerifiableCredentialDto } from '../src/vc-api/dtos/verifiable-credential.dto';
-import { IssueCredentialDto } from '../src/vc-api/dtos/issue-credential.dto';
-import { ProvePresentationDto } from '../src/vc-api/dtos/prove-presentation.dto';
-import { VerifiablePresentationDto } from '../src/vc-api/dtos/verifiable-presentation.dto';
+import { VerifiableCredentialDto } from '../src/vc-api/credentials/dtos/verifiable-credential.dto';
+import { IssueCredentialDto } from '../src/vc-api/credentials/dtos/issue-credential.dto';
+import { ProvePresentationDto } from '../src/vc-api/credentials/dtos/prove-presentation.dto';
+import { VerifiablePresentationDto } from '../src/vc-api/credentials/dtos/verifiable-presentation.dto';
 import { VpRequestDto } from '../src/vc-api/exchanges/dtos/vp-request.dto';
 import { ExchangeResponseDto } from '../src/vc-api/exchanges/dtos/exchange-response.dto';
 

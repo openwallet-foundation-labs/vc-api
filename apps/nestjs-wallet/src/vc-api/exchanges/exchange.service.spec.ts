@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmSQLiteModule } from '../../in-memory-db';
 import { Repository } from 'typeorm';
-import { VcApiService } from '../vc-api.service';
+import { CredentialsService } from '../credentials/credentials.service';
 import { ExchangeEntity } from './entities/exchange.entity';
 import { VpRequestEntity } from './entities/vp-request.entity';
 import { ExchangeService } from './exchange.service';
@@ -17,7 +17,7 @@ const baseUrl = 'https://test-exchange.com';
 
 describe('ExchangeService', () => {
   let service: ExchangeService;
-  let vcApiService: VcApiService;
+  let vcApiService: CredentialsService;
   let exchangeRepository: Repository<ExchangeEntity>;
   let vpRequestRepository: Repository<VpRequestEntity>;
 
@@ -35,7 +35,7 @@ describe('ExchangeService', () => {
       providers: [
         ExchangeService,
         {
-          provide: VcApiService,
+          provide: CredentialsService,
           useValue: {}
         },
         {
@@ -49,7 +49,7 @@ describe('ExchangeService', () => {
       ]
     }).compile();
 
-    vcApiService = module.get<VcApiService>(VcApiService);
+    vcApiService = module.get<CredentialsService>(CredentialsService);
     service = module.get<ExchangeService>(ExchangeService);
     exchangeRepository = module.get<Repository<ExchangeEntity>>(getRepositoryToken(ExchangeEntity));
     vpRequestRepository = module.get<Repository<VpRequestEntity>>(getRepositoryToken(VpRequestEntity));

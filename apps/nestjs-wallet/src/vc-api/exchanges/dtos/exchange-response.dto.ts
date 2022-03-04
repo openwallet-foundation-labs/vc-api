@@ -1,5 +1,5 @@
 import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
-import { VerifiablePresentationDto } from 'src/vc-api/dtos/verifiable-presentation.dto';
+import { VerifiablePresentationDto } from 'src/vc-api/credentials/dtos/verifiable-presentation.dto';
 import { VpRequestDto } from './vp-request.dto';
 
 /**

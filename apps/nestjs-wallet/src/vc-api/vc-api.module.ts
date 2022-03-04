@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DidModule } from '../did/did.module';
 import { KeyModule } from '../key/key.module';
 import { VcApiController } from './vc-api.controller';
-import { VcApiService } from './vc-api.service';
+import { CredentialsService } from './credentials/credentials.service';
 import { ExchangeService } from './exchanges/exchange.service';
 import { ExchangeEntity } from './exchanges/entities/exchange.entity';
 import { VpRequestEntity } from './exchanges/entities/vp-request.entity';
@@ -19,7 +19,7 @@ import { PresentationReviewEntity } from './exchanges/entities/presentation-revi
     ConfigModule
   ],
   controllers: [VcApiController],
-  providers: [VcApiService, ExchangeService],
-  exports: [VcApiService, ExchangeService]
+  providers: [CredentialsService, ExchangeService],
+  exports: [CredentialsService, ExchangeService]
 })
 export class VcApiModule {}

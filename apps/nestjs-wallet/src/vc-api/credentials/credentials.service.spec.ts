@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { keyToDID, keyToVerificationMethod } from '@spruceid/didkit-wasm-node';
-import { VcApiService } from './vc-api.service';
+import { CredentialsService } from './credentials.service';
 import { IssueOptionsDto } from './dtos/issue-options.dto';
 import { VerifyOptionsDto } from './dtos/verify-options.dto';
-import { DIDService } from '../did/did.service';
-import { KeyService } from '../key/key.service';
-import { Presentation } from './exchanges/types/presentation';
+import { DIDService } from '../../did/did.service';
+import { KeyService } from '../../key/key.service';
+import { Presentation } from '../exchanges/types/presentation';
 import { ProofPurpose } from '@sphereon/pex';
 
 const key = {
@@ -16,15 +16,15 @@ const key = {
 };
 const did = keyToDID('key', JSON.stringify(key));
 
-describe('VcApiService', () => {
-  let service: VcApiService;
+describe('CredentialsService', () => {
+  let service: CredentialsService;
   let didService: DIDService;
   let keyService: KeyService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        VcApiService,
+        CredentialsService,
         {
           provide: DIDService,
           useValue: {
@@ -42,7 +42,7 @@ describe('VcApiService', () => {
 
     didService = module.get<DIDService>(DIDService);
     keyService = module.get<KeyService>(KeyService);
-    service = module.get<VcApiService>(VcApiService);
+    service = module.get<CredentialsService>(CredentialsService);
   });
 
   afterEach(async () => {

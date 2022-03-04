@@ -7,11 +7,10 @@ import {
   DIDAuth
 } from '@spruceid/didkit-wasm-node';
 import { JWK } from 'jose';
-import { DIDService } from '../did/did.service';
-import { KeyService } from '../key/key.service';
+import { DIDService } from '../../did/did.service';
+import { KeyService } from '../../key/key.service';
 import { IssueOptionsDto } from './dtos/issue-options.dto';
 import { IssueCredentialDto } from './dtos/issue-credential.dto';
-import { PresentationDto } from './dtos/presentation.dto';
 import { VerifiableCredentialDto } from './dtos/verifiable-credential.dto';
 import { VerifiablePresentationDto } from './dtos/verifiable-presentation.dto';
 import { VerifyOptionsDto } from './dtos/verify-options.dto';
@@ -43,7 +42,7 @@ interface ISpruceVerifyOptions {
  * This encapsulates the use of Spruce DIDKit
  */
 @Injectable()
-export class VcApiService {
+export class CredentialsService {
   constructor(private didService: DIDService, private keyService: KeyService) {}
 
   async issueCredential(issueDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {
