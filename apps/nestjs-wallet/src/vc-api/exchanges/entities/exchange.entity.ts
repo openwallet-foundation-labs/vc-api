@@ -5,6 +5,7 @@ import { TransactionEntity } from './transaction.entity';
 import { VpRequestInteractServiceDefinition } from '../types/vp-request-interact-service-definition';
 import { VpRequestInteractServiceType } from '../types/vp-request-interact-service-type';
 import { VpRequestEntity } from './vp-request.entity';
+import { CallbackConfiguration } from '../types/callback-configuration';
 
 /**
  * A TypeOrm entity representing an exchange
@@ -42,6 +43,12 @@ export class ExchangeEntity {
   query: VpRequestQuery[];
 
   /**
+   * Location where vc-api will notify exchange issuer/verifier of exchange result
+   */
+  @Column('simple-json')
+  callback: CallbackConfiguration[];
+
+  /**
    * Create transaction associated with this exchange.
    *
    * Transactions are created by exchange (exchange is the aggregate root) because the exchange may want to enforce invariants such as
@@ -70,7 +77,7 @@ export class ExchangeEntity {
         service: interactServices
       }
     };
-    const transaction = new TransactionEntity(transactionId, this.exchangeId, vpRequest);
+    const transaction = new TransactionEntity(transactionId, this.exchangeId, vpRequest, this.callback);
     return transaction;
   }
 }

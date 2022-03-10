@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PEX, ProofPurpose, Status } from '@sphereon/pex';
 import { Repository } from 'typeorm';
@@ -23,7 +24,8 @@ export class ExchangeService {
     private transactionRepository: Repository<TransactionEntity>,
     @InjectRepository(ExchangeEntity)
     private exchangeRepository: Repository<ExchangeEntity>,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private httpService: HttpService
   ) {
     this.#pex = new PEX();
   }
@@ -58,7 +60,8 @@ export class ExchangeService {
       exchangeId: exchangeDefinitionDto.exchangeId,
       query: exchangeDefinitionDto.query,
       interactServiceDefinitions: exchangeDefinitionDto.interactServices,
-      isOneTime: exchangeDefinitionDto.isOneTime
+      isOneTime: exchangeDefinitionDto.isOneTime,
+      callback: exchangeDefinitionDto.callback
     });
     await this.exchangeRepository.save(exchange);
     return {
@@ -126,8 +129,19 @@ export class ExchangeService {
         errors: [`${transactionId}: verification of presentation proof not successful`, ...result.errors]
       };
     }
-    const response = transaction.processPresentation(verifiablePresentation);
+    const { response, callback } = transaction.processPresentation(verifiablePresentation);
     await this.transactionRepository.save(transaction);
+    callback?.forEach((callback) => {
+      try {
+        this.httpService.post(callback.url, response).subscribe({
+          // next: (v) => console.log(v),
+          // complete: console.info,
+          // error: console.error
+        });
+      } catch {
+        // TODO: log exception
+      }
+    });
     return response;
   }
 

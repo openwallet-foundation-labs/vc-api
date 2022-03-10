@@ -123,7 +123,11 @@ sequenceDiagram
 
   rect rgb(255, 243, 255)
   note right of R: submit presentation
-    RSB->>R: display required presentation data
+    RSB->>RSH: request VCs based on credential query
+    activate RSH
+    RSH-->>RSB: return VCs that could match credential query 
+    deactivate RSH
+    RSB->>R: display VP request with possible VCs
     R-->>RSB: enter required input and/or select credentials
     RSB->>R: request credential application (presentation) signature
     R-->>RSB: approve signature
@@ -155,6 +159,9 @@ sequenceDiagram
       RSB->>ISH: query presentation review status
       alt presentation is processed
         ISH-->>RSB: return review result (possibly including VP with VC)
+        opt
+          ISH->>ISH: execute configured notifications
+        end
       else presentation not yet processed
         ISH-->>RSB: return "mediation in progress" VP Request
       end
@@ -167,6 +174,9 @@ sequenceDiagram
     activate ISH
       ISH->>ISH: Verify presentation signatures and satisfaction of credential query
       ISH-->>RSB: return review result 
+      opt
+        ISH->>ISH: execute configured notifications
+      end
     deactivate ISH
   end
   end

@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import * as axios from 'axios';
 import * as request from 'supertest';
+import * as nock from 'nock';
 import { v4 as uuidv4 } from 'uuid';
 import { WalletClient } from './wallet-client';
 import { AppModule } from '../src/app.module';
@@ -16,6 +18,14 @@ import { ProofPurpose } from '@sphereon/pex';
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
 jest.setTimeout(300 * 1000);
+
+// If you are using jsdom, axios will default to using the XHR adapter which
+// can't be intercepted by nock. So, configure axios to use the node adapter.
+//
+// References:
+// https://github.com/nock/nock/issues/699#issuecomment-272708264
+// https://github.com/axios/axios/issues/305
+axios.default.defaults.adapter = require('axios/lib/adapters/http');
 
 describe('App (e2e)', () => {
   let app: INestApplication;
@@ -72,11 +82,12 @@ describe('App (e2e)', () => {
       // Configure credential issuance exchange
       // POST /exchanges
       const issuanceExchangeId = 'permanent-resident-card-issuance';
+      const issuanceQueryType = VpRequestQueryType.didAuth;
       const exchangeDefinition: ExchangeDefinitionDto = {
         exchangeId: issuanceExchangeId,
         query: [
           {
-            type: VpRequestQueryType.didAuth,
+            type: issuanceQueryType,
             credentialQuery: []
           }
         ],
@@ -85,7 +96,8 @@ describe('App (e2e)', () => {
             type: VpRequestInteractServiceType.mediatedPresentation
           }
         ],
-        isOneTime: false
+        isOneTime: false,
+        callback: []
       };
       await request(app.getHttpServer())
         .post(`${vcApiBaseUrl}/exchanges`)
@@ -95,7 +107,7 @@ describe('App (e2e)', () => {
       // Start issuance exchange
       // POST /exchanges/{exchangeId}
       const issuanceExchangeEndpoint = `${vcApiBaseUrl}/exchanges/${issuanceExchangeId}`;
-      const issuanceVpRequest = await walletClient.startExchange(issuanceExchangeEndpoint);
+      const issuanceVpRequest = await walletClient.startExchange(issuanceExchangeEndpoint, issuanceQueryType);
       const issuanceExchangeContinuationEndpoint = getContinuationEndpoint(issuanceVpRequest);
       expect(issuanceExchangeContinuationEndpoint).toContain(issuanceExchangeEndpoint);
 
@@ -116,7 +128,7 @@ describe('App (e2e)', () => {
       expect(didAuthVp).toBeDefined();
 
       // Continue exchange by submitting presention
-      await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp);
+      await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true);
 
       // TODO: have the issuer get the review and approve. For now, just issue directly
       const issueResult = await issueCredential(didAuthVp, walletClient);
@@ -126,12 +138,14 @@ describe('App (e2e)', () => {
       // Configure presentation exchange
       // POST /exchanges
       const presentationExchangeId = `b229a18f-db45-4b33-8d36-25d442467bab`;
-      //const presentationExchangeId = 'permanent-resident-card-presentation';
+      const callbackUrlBase = 'http://government-app-backend';
+      const callbackUrlPath = '/endpoint';
+      const presentationQueryType = VpRequestQueryType.presentationDefinition;
       const presentationExchangeDefinition: ExchangeDefinitionDto = {
         exchangeId: presentationExchangeId,
         query: [
           {
-            type: VpRequestQueryType.presentationDefinition,
+            type: presentationQueryType,
             credentialQuery: [
               {
                 id: uuidv4(),
@@ -151,8 +165,14 @@ describe('App (e2e)', () => {
             type: VpRequestInteractServiceType.unmediatedPresentation
           }
         ],
-        isOneTime: true
+        isOneTime: true,
+        callback: [
+          {
+            url: callbackUrlBase + ':80' + callbackUrlPath
+          }
+        ]
       };
+      const scope = nock(callbackUrlBase).post(callbackUrlPath).reply(201, { message: 'you did it!' });
       await request(app.getHttpServer())
         .post(`${vcApiBaseUrl}/exchanges`)
         .send(presentationExchangeDefinition)
@@ -160,10 +180,10 @@ describe('App (e2e)', () => {
 
       // Start presentation exchange
       // POST /exchanges/{exchangeId}
-      const exchangeEndpoint = `${vcApiBaseUrl}/exchanges/${issuanceExchangeId}`;
-      const presentationVpRequest = await walletClient.startExchange(exchangeEndpoint);
+      const exchangeEndpoint = `${vcApiBaseUrl}/exchanges/${presentationExchangeId}`;
+      const presentationVpRequest = await walletClient.startExchange(exchangeEndpoint, presentationQueryType);
       const presentationExchangeContinuationEndpoint = getContinuationEndpoint(presentationVpRequest);
-      expect(issuanceExchangeContinuationEndpoint).toContain(exchangeEndpoint);
+      expect(presentationExchangeContinuationEndpoint).toContain(exchangeEndpoint);
 
       // Holder should parse VP Request for correct credentials...
       // Assume that holder figures out which VC they need and can prep presentation
@@ -184,7 +204,8 @@ describe('App (e2e)', () => {
       const vp = await walletClient.provePresentation({ presentation, options: issuanceOptions });
 
       // Holder submits presentation
-      await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp);
+      await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp, false);
+      scope.done();
     });
   });
 });

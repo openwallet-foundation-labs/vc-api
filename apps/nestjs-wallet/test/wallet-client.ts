@@ -7,6 +7,7 @@ import { ProvePresentationDto } from '../src/vc-api/credentials/dtos/prove-prese
 import { VerifiablePresentationDto } from '../src/vc-api/credentials/dtos/verifiable-presentation.dto';
 import { VpRequestDto } from '../src/vc-api/exchanges/dtos/vp-request.dto';
 import { ExchangeResponseDto } from '../src/vc-api/exchanges/dtos/exchange-response.dto';
+import { VpRequestQueryType } from 'src/vc-api/exchanges/types/vp-request-query-type';
 
 /**
  * A wallet client for e2e tests
@@ -54,7 +55,10 @@ export class WalletClient {
     return postResponse.body;
   }
 
-  async startExchange(exchangeEndpoint: string): Promise<VpRequestDto> {
+  async startExchange(
+    exchangeEndpoint: string,
+    expectedQueryType: VpRequestQueryType
+  ): Promise<VpRequestDto> {
     const startWorkflowResponse = await request(this.#app.getHttpServer())
       .post(exchangeEndpoint)
       .expect(201);
@@ -63,7 +67,7 @@ export class WalletClient {
     const challenge = vpRequest.challenge;
     expect(challenge).toBeDefined();
     expect(vpRequest.query).toHaveLength(1);
-    expect(vpRequest.query[0].type).toEqual('DIDAuth');
+    expect(vpRequest.query[0].type).toEqual(expectedQueryType);
     return vpRequest;
   }
 
@@ -72,12 +76,18 @@ export class WalletClient {
    * @param exchangeContinuationEndpoint
    * @param vp
    */
-  async continueExchange(exchangeContinuationEndpoint: string, vp: VerifiablePresentationDto) {
+  async continueExchange(
+    exchangeContinuationEndpoint: string,
+    vp: VerifiablePresentationDto,
+    expectsVpRequest: boolean
+  ) {
     const continueExchangeResponse = await request(this.#app.getHttpServer())
       .put(exchangeContinuationEndpoint)
       .send(vp)
       .expect(200);
     expect(continueExchangeResponse.body.errors).toHaveLength(0);
-    expect(continueExchangeResponse.body.vpRequest).toBeDefined();
+    if (expectsVpRequest) {
+      expect(continueExchangeResponse.body.vpRequest).toBeDefined();
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { HttpModule } from '@nestjs/axios';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmSQLiteModule } from '../../in-memory-db';
 import { Repository } from 'typeorm';
@@ -30,7 +31,8 @@ describe('ExchangeService', () => {
           ExchangeEntity,
           TransactionEntity,
           PresentationReviewEntity
-        ])
+        ]),
+        HttpModule
       ],
       providers: [
         ExchangeService,
@@ -63,7 +65,7 @@ describe('ExchangeService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('create exchange', () => {
+  describe('createExchange', () => {
     it('should accept a presentation definition in an exchange definition', async () => {
       const presentationDefinition = {
         id: '57ca126c-acbf-4da4-8f79-447150e93128',
@@ -89,14 +91,15 @@ describe('ExchangeService', () => {
             baseUrl: 'https://example.org/'
           }
         ],
-        isOneTime: false
+        isOneTime: false,
+        callback: []
       };
       const result = await service.createExchange(exchangeDef);
       expect(result.errors).toHaveLength(0);
     });
   });
 
-  describe('start exchange', () => {
+  describe('startExchange', () => {
     it('should start exchange from an exchange definition', async () => {
       const exchangeId = 'test-exchange';
       const exchangeDef: ExchangeDefinitionDto = {
@@ -107,7 +110,8 @@ describe('ExchangeService', () => {
           }
         ],
         query: [],
-        isOneTime: false
+        isOneTime: false,
+        callback: []
       };
       await service.createExchange(exchangeDef);
       const exchangeResponse = await service.startExchange(exchangeId);

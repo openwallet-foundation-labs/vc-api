@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DidModule } from '../did/did.module';
@@ -16,7 +17,8 @@ import { PresentationReviewEntity } from './exchanges/entities/presentation-revi
     DidModule,
     KeyModule,
     TypeOrmModule.forFeature([VpRequestEntity, ExchangeEntity, TransactionEntity, PresentationReviewEntity]),
-    ConfigModule
+    ConfigModule,
+    HttpModule
   ],
   controllers: [VcApiController],
   providers: [CredentialsService, ExchangeService],
