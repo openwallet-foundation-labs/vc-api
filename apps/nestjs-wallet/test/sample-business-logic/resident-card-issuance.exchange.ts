@@ -7,12 +7,16 @@ import { VpRequestInteractServiceType } from '../../src/vc-api/exchanges/types/v
 import { VpRequestQueryType } from '../../src/vc-api/exchanges/types/vp-request-query-type';
 
 export class ResidenceCardIssuance {
-  exchangeId = 'permanent-resident-card-issuance';
+  #exchangeId = 'permanent-resident-card-issuance';
   queryType = VpRequestQueryType.didAuth;
+
+  getExchangeId(): string {
+    return this.#exchangeId;
+  }
 
   getExchangeDefinition(): ExchangeDefinitionDto {
     const exchangeDefinition: ExchangeDefinitionDto = {
-      exchangeId: this.exchangeId,
+      exchangeId: this.#exchangeId,
       query: [
         {
           type: this.queryType,

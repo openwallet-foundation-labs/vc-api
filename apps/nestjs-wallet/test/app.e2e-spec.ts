@@ -3,17 +3,14 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as axios from 'axios';
 import * as request from 'supertest';
 import * as nock from 'nock';
-import { v4 as uuidv4 } from 'uuid';
 import { WalletClient } from './wallet-client';
 import { AppModule } from '../src/app.module';
 import { CredentialDto } from '../src/vc-api/credentials/dtos/credential.dto';
 import { IssueOptionsDto } from '../src/vc-api/credentials/dtos/issue-options.dto';
-import { ExchangeDefinitionDto } from '../src/vc-api/exchanges/dtos/exchange-definition.dto';
-import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-query-type';
-import { VpRequestInteractServiceType } from '../src/vc-api/exchanges/types/vp-request-interact-service-type';
 import { ResidenceCardIssuance } from './sample-business-logic/resident-card-issuance.exchange';
 import { VpRequestDto } from 'src/vc-api/exchanges/dtos/vp-request.dto';
 import { ProofPurpose } from '@sphereon/pex';
+import { ResidenceCardPresentation } from './sample-business-logic/resident-card-presentation.exchange';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -89,7 +86,7 @@ describe('App (e2e)', () => {
 
       // Start issuance exchange
       // POST /exchanges/{exchangeId}
-      const issuanceExchangeEndpoint = `${vcApiBaseUrl}/exchanges/${exchange.exchangeId}`;
+      const issuanceExchangeEndpoint = `${vcApiBaseUrl}/exchanges/${exchange.getExchangeId()}`;
       const issuanceVpRequest = await walletClient.startExchange(
         issuanceExchangeEndpoint,
         exchange.queryType
@@ -123,51 +120,22 @@ describe('App (e2e)', () => {
 
       // Configure presentation exchange
       // POST /exchanges
-      const presentationExchangeId = `b229a18f-db45-4b33-8d36-25d442467bab`;
       const callbackUrlBase = 'http://government-app-backend';
       const callbackUrlPath = '/endpoint';
-      const presentationQueryType = VpRequestQueryType.presentationDefinition;
-      const presentationExchangeDefinition: ExchangeDefinitionDto = {
-        exchangeId: presentationExchangeId,
-        query: [
-          {
-            type: presentationQueryType,
-            credentialQuery: [
-              {
-                id: uuidv4(),
-                input_descriptors: [
-                  {
-                    id: 'permanent_resident_card',
-                    name: 'Permanent Resident Card',
-                    purpose: 'We can only allow permanent residents into the application'
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        interactServices: [
-          {
-            type: VpRequestInteractServiceType.unmediatedPresentation
-          }
-        ],
-        isOneTime: true,
-        callback: [
-          {
-            url: callbackUrlBase + ':80' + callbackUrlPath
-          }
-        ]
-      };
+      const presentationExchange = new ResidenceCardPresentation(`${callbackUrlBase}${callbackUrlPath}`);
       const scope = nock(callbackUrlBase).post(callbackUrlPath).reply(201, { message: 'you did it!' });
       await request(app.getHttpServer())
         .post(`${vcApiBaseUrl}/exchanges`)
-        .send(presentationExchangeDefinition)
+        .send(presentationExchange.getExchangeDefinition())
         .expect(201);
 
       // Start presentation exchange
       // POST /exchanges/{exchangeId}
-      const exchangeEndpoint = `${vcApiBaseUrl}/exchanges/${presentationExchangeId}`;
-      const presentationVpRequest = await walletClient.startExchange(exchangeEndpoint, presentationQueryType);
+      const exchangeEndpoint = `${vcApiBaseUrl}/exchanges/${presentationExchange.getExchangeId()}`;
+      const presentationVpRequest = await walletClient.startExchange(
+        exchangeEndpoint,
+        presentationExchange.queryType
+      );
       const presentationExchangeContinuationEndpoint = getContinuationEndpoint(presentationVpRequest);
       expect(presentationExchangeContinuationEndpoint).toContain(exchangeEndpoint);
 
