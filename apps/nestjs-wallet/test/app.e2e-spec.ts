@@ -11,7 +11,7 @@ import { IssueOptionsDto } from '../src/vc-api/credentials/dtos/issue-options.dt
 import { ExchangeDefinitionDto } from '../src/vc-api/exchanges/dtos/exchange-definition.dto';
 import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-query-type';
 import { VpRequestInteractServiceType } from '../src/vc-api/exchanges/types/vp-request-interact-service-type';
-import { issueCredential } from './sample-business-logic/resident-card-issuance.exchange';
+import { ResidenceCardIssuance } from './sample-business-logic/resident-card-issuance.exchange';
 import { VpRequestDto } from 'src/vc-api/exchanges/dtos/vp-request.dto';
 import { ProofPurpose } from '@sphereon/pex';
 
@@ -81,33 +81,19 @@ describe('App (e2e)', () => {
       const vcApiBaseUrl = '/vc-api';
       // Configure credential issuance exchange
       // POST /exchanges
-      const issuanceExchangeId = 'permanent-resident-card-issuance';
-      const issuanceQueryType = VpRequestQueryType.didAuth;
-      const exchangeDefinition: ExchangeDefinitionDto = {
-        exchangeId: issuanceExchangeId,
-        query: [
-          {
-            type: issuanceQueryType,
-            credentialQuery: []
-          }
-        ],
-        interactServices: [
-          {
-            type: VpRequestInteractServiceType.mediatedPresentation
-          }
-        ],
-        isOneTime: false,
-        callback: []
-      };
+      const exchange = new ResidenceCardIssuance();
       await request(app.getHttpServer())
         .post(`${vcApiBaseUrl}/exchanges`)
-        .send(exchangeDefinition)
+        .send(exchange.getExchangeDefinition())
         .expect(201);
 
       // Start issuance exchange
       // POST /exchanges/{exchangeId}
-      const issuanceExchangeEndpoint = `${vcApiBaseUrl}/exchanges/${issuanceExchangeId}`;
-      const issuanceVpRequest = await walletClient.startExchange(issuanceExchangeEndpoint, issuanceQueryType);
+      const issuanceExchangeEndpoint = `${vcApiBaseUrl}/exchanges/${exchange.exchangeId}`;
+      const issuanceVpRequest = await walletClient.startExchange(
+        issuanceExchangeEndpoint,
+        exchange.queryType
+      );
       const issuanceExchangeContinuationEndpoint = getContinuationEndpoint(issuanceVpRequest);
       expect(issuanceExchangeContinuationEndpoint).toContain(issuanceExchangeEndpoint);
 
@@ -131,7 +117,7 @@ describe('App (e2e)', () => {
       await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true);
 
       // TODO: have the issuer get the review and approve. For now, just issue directly
-      const issueResult = await issueCredential(didAuthVp, walletClient);
+      const issueResult = await exchange.issueCredential(didAuthVp, walletClient);
       const issuedVc = issueResult.vp.verifiableCredential[0];
       expect(issuedVc).toBeDefined();
 
