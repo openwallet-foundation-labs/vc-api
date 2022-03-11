@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as axios from 'axios';
 import * as request from 'supertest';
 import * as nock from 'nock';
 import { WalletClient } from './wallet-client';
@@ -15,14 +14,6 @@ import { ResidenceCardPresentation } from './sample-business-logic/resident-card
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
 jest.setTimeout(300 * 1000);
-
-// If you are using jsdom, axios will default to using the XHR adapter which
-// can't be intercepted by nock. So, configure axios to use the node adapter.
-//
-// References:
-// https://github.com/nock/nock/issues/699#issuecomment-272708264
-// https://github.com/axios/axios/issues/305
-axios.default.defaults.adapter = require('axios/lib/adapters/http');
 
 describe('App (e2e)', () => {
   let app: INestApplication;
