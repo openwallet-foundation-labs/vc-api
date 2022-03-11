@@ -55,14 +55,7 @@ export class ExchangeService {
       }
     });
 
-    // Persist the exchange
-    const exchange = this.exchangeRepository.create({
-      exchangeId: exchangeDefinitionDto.exchangeId,
-      query: exchangeDefinitionDto.query,
-      interactServiceDefinitions: exchangeDefinitionDto.interactServices,
-      isOneTime: exchangeDefinitionDto.isOneTime,
-      callback: exchangeDefinitionDto.callback
-    });
+    const exchange = new ExchangeEntity(exchangeDefinitionDto);
     await this.exchangeRepository.save(exchange);
     return {
       errors: []
@@ -89,8 +82,6 @@ export class ExchangeService {
     }
     const baseWithControllerPath = `${baseUrl}/vc-api`;
     const transaction = exchange.start(baseWithControllerPath);
-    // TODO: considering saving as a transaction
-    await this.exchangeRepository.save(exchange);
     await this.transactionRepository.save(transaction);
     return {
       errors: [],

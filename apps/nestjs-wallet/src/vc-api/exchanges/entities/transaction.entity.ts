@@ -27,7 +27,7 @@ export class TransactionEntity {
     this.transactionId = transactionId;
     this.exchangeId = exchangeId;
     this.vpRequest = vpRequest;
-    if (vpRequest?.interact?.service[0].type === VpRequestInteractServiceType.mediatedPresentation) {
+    if (vpRequest?.interact?.service[0]?.type === VpRequestInteractServiceType.mediatedPresentation) {
       this.presentationReview = {
         presentationReviewId: uuidv4(),
         reviewStatus: PresentationReviewStatus.pending
@@ -100,7 +100,7 @@ export class TransactionEntity {
             errors: [],
             vpRequest: {
               challenge: uuidv4(),
-              query: [{ type: VpRequestQueryType.didAuth }],
+              query: [{ type: VpRequestQueryType.didAuth, credentialQuery: [] }],
               interact: this.vpRequest.interact // Just ask the same endpoint again
             }
           },

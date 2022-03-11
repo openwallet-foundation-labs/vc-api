@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { VpRequestQuery } from '../types/vp-request-query';
 import { TransactionEntity } from './transaction.entity';
 import { VpRequestInteractServiceDefinition } from '../types/vp-request-interact-service-definition';
-import { VpRequestInteractServiceType } from '../types/vp-request-interact-service-type';
 import { VpRequestEntity } from './vp-request.entity';
 import { CallbackConfiguration } from '../types/callback-configuration';
+import { ExchangeDefinitionDto } from '../dtos/exchange-definition.dto';
 
 /**
  * A TypeOrm entity representing an exchange
@@ -19,14 +19,24 @@ import { CallbackConfiguration } from '../types/callback-configuration';
  */
 @Entity()
 export class ExchangeEntity {
+  constructor(exchangeDefinitionDto: ExchangeDefinitionDto) {
+    this.exchangeId = exchangeDefinitionDto?.exchangeId;
+    this.interactServiceDefinitions = exchangeDefinitionDto?.interactServices;
+    this.query = exchangeDefinitionDto?.query;
+    this.callback = exchangeDefinitionDto?.callback;
+    if (exchangeDefinitionDto?.isOneTime) {
+      this.oneTimeTransactionId = uuidv4();
+    }
+  }
+
   @Column('text', { primary: true })
   exchangeId: string;
 
   /**
-   * Marks whether or not the exchange only be used once
+   * The transaction id to be used if the exchange is a "one time" exchange
    */
-  @Column('boolean')
-  isOneTime: boolean;
+  @Column('text', { nullable: true })
+  oneTimeTransactionId?: string;
 
   @Column('simple-json')
   interactServiceDefinitions: VpRequestInteractServiceDefinition[];
@@ -58,9 +68,9 @@ export class ExchangeEntity {
    * @returns
    */
   public start(baseUrl?: string): TransactionEntity {
-    // Using the same transactionId as exchangeId for a one-time exchange.
+    // If exchange should only be used once, then return the pre-generated transactionId
     // Then, when trying to persist the transaction with the already started transactionId, the persistance will fail.
-    const transactionId = this.isOneTime ? this.exchangeId : uuidv4();
+    const transactionId = this.oneTimeTransactionId ?? uuidv4();
     const challenge = uuidv4();
     const interactServices = this.interactServiceDefinitions.map((serviceDef) => {
       const serviceEndpoint = `${baseUrl}/exchanges/${this.exchangeId}/${transactionId}`;
