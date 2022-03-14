@@ -25,8 +25,6 @@ First things first: Do **NOT** report security vulnerabilities in public issues!
 
 The issue tracker is the preferred channel for bug reports, features requests and submitting pull requests, but please respect the following restrictions:
 
- - Please do not use the issue tracker for personal support requests. Use our [Slack channel/whatever].
-
  - Please do not derail or troll issues. Keep the discussion on topic and respect the opinions of others.
 
 ## Your first contribution
@@ -63,8 +61,8 @@ Especially pay attention to the ["Having your code reviewed"](https://gitlab.com
 
 ## Copyright and Licensing
 
-All of your contributions will be made under [LICENSE].
+All of your contributions will be made under [LICENSE](./LICENSE).
 
-[Contributor's License Agreement if there is any]
+The Contributor's License Agreement can be found [here](https://cla-assistant.io/energywebfoundation/).
 
 ## FAQ
