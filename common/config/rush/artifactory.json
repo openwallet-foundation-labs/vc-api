@@ -1,7 +1,3 @@
-/**
- * This configuration file manages Rush integration with JFrog Artifactory services.
- * More documentation is available on the Rush website: https://rushjs.io
- */
 {
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/artifactory.schema.json",
 
