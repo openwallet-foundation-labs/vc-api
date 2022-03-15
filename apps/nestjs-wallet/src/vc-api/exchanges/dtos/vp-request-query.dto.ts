@@ -1,5 +1,8 @@
-import { IsArray, IsEnum } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsEnum, ValidateNested } from 'class-validator';
 import { VpRequestQueryType } from '../types/vp-request-query-type';
+import { VpRequestDidAuthQueryDto } from './vp-request-did-auth-query.dto';
+import { VpRequestPresentationDefinitionQueryDto } from './vp-request-presentation-defintion-query.dto';
 
 /**
  * https://w3c-ccg.github.io/vp-request-spec/#query-types
@@ -9,8 +12,18 @@ export class VpRequestQueryDto {
   type: VpRequestQueryType;
 
   /**
-   * TODO: Validate the queries. Maybe with a custom validator E.g. this.#pex.validateDefinition(workflowDefinition.presentationDefinition);
+   * https://github.com/typestack/class-validator/issues/566#issuecomment-605515267
    */
+  @ValidateNested({ each: true })
   @IsArray()
-  credentialQuery: any[];
+  @Type(() => VpRequestPresentationDefinitionQueryDto, {
+    discriminator: {
+      property: 'type',
+      subTypes: [
+        { value: VpRequestPresentationDefinitionQueryDto, name: VpRequestQueryType.presentationDefinition },
+        { value: VpRequestDidAuthQueryDto, name: VpRequestQueryType.didAuth }
+      ]
+    }
+  })
+  credentialQuery: Array<VpRequestPresentationDefinitionQueryDto | VpRequestDidAuthQueryDto>;
 }

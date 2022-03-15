@@ -5,8 +5,9 @@ import { Presentation } from '../../src/vc-api/exchanges/types/presentation';
 import { ExchangeDefinitionDto } from '../../src/vc-api/exchanges/dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from '../../src/vc-api/exchanges/types/vp-request-interact-service-type';
 import { VpRequestQueryType } from '../../src/vc-api/exchanges/types/vp-request-query-type';
+import { plainToClass } from 'class-transformer';
 
-export class ResidenceCardIssuance {
+export class ResidentCardIssuance {
   #exchangeId = 'permanent-resident-card-issuance';
   queryType = VpRequestQueryType.didAuth;
 
@@ -31,7 +32,7 @@ export class ResidenceCardIssuance {
       isOneTime: false,
       callback: []
     };
-    return exchangeDefinition;
+    return plainToClass(ExchangeDefinitionDto, exchangeDefinition);
   }
 
   /**

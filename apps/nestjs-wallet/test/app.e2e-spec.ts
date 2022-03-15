@@ -6,10 +6,10 @@ import { WalletClient } from './wallet-client';
 import { AppModule } from '../src/app.module';
 import { CredentialDto } from '../src/vc-api/credentials/dtos/credential.dto';
 import { IssueOptionsDto } from '../src/vc-api/credentials/dtos/issue-options.dto';
-import { ResidenceCardIssuance } from './sample-business-logic/resident-card-issuance.exchange';
+import { ResidentCardIssuance } from './sample-business-logic/resident-card-issuance.exchange';
 import { VpRequestDto } from 'src/vc-api/exchanges/dtos/vp-request.dto';
 import { ProofPurpose } from '@sphereon/pex';
-import { ResidenceCardPresentation } from './sample-business-logic/resident-card-presentation.exchange';
+import { ResidentCardPresentation } from './sample-business-logic/resident-card-presentation.exchange';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -69,7 +69,7 @@ describe('App (e2e)', () => {
       const vcApiBaseUrl = '/vc-api';
       // Configure credential issuance exchange
       // POST /exchanges
-      const exchange = new ResidenceCardIssuance();
+      const exchange = new ResidentCardIssuance();
       await request(app.getHttpServer())
         .post(`${vcApiBaseUrl}/exchanges`)
         .send(exchange.getExchangeDefinition())
@@ -111,14 +111,12 @@ describe('App (e2e)', () => {
 
       // Configure presentation exchange
       // POST /exchanges
-      const callbackUrlBase = 'http://government-app-backend';
+      const callbackUrlBase = 'http://example.com';
       const callbackUrlPath = '/endpoint';
-      const presentationExchange = new ResidenceCardPresentation(`${callbackUrlBase}${callbackUrlPath}`);
+      const presentationExchange = new ResidentCardPresentation(`${callbackUrlBase}${callbackUrlPath}`);
       const scope = nock(callbackUrlBase).post(callbackUrlPath).reply(201, { message: 'you did it!' });
-      await request(app.getHttpServer())
-        .post(`${vcApiBaseUrl}/exchanges`)
-        .send(presentationExchange.getExchangeDefinition())
-        .expect(201);
+      const exchangeDef = presentationExchange.getExchangeDefinition();
+      await request(app.getHttpServer()).post(`${vcApiBaseUrl}/exchanges`).send(exchangeDef).expect(201);
 
       // Start presentation exchange
       // POST /exchanges/{exchangeId}

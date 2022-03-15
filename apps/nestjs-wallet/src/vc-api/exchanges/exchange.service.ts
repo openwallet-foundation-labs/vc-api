@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PEX, ProofPurpose, Status } from '@sphereon/pex';
+import { ProofPurpose } from '@sphereon/pex';
 import { Repository } from 'typeorm';
 import { CredentialsService } from '../credentials/credentials.service';
 import { VerifiablePresentationDto } from '../credentials/dtos/verifiable-presentation.dto';
@@ -10,14 +10,11 @@ import { ExchangeResponseDto } from './dtos/exchange-response.dto';
 import { VpRequestDto } from './dtos/vp-request.dto';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { TransactionEntity } from './entities/transaction.entity';
-import { VpRequestQueryType } from './types/vp-request-query-type';
 import { ConfigService } from '@nestjs/config';
 import { VerifyOptionsDto } from '../credentials/dtos/verify-options.dto';
 
 @Injectable()
 export class ExchangeService {
-  #pex: PEX;
-
   constructor(
     private vcApiService: CredentialsService,
     @InjectRepository(TransactionEntity)
@@ -26,35 +23,9 @@ export class ExchangeService {
     private exchangeRepository: Repository<ExchangeEntity>,
     private configService: ConfigService,
     private httpService: HttpService
-  ) {
-    this.#pex = new PEX();
-  }
+  ) {}
 
   public async createExchange(exchangeDefinitionDto: ExchangeDefinitionDto) {
-    // Validate the queries. This should be done in a custom DTO validator
-    exchangeDefinitionDto.query.forEach((query) => {
-      if (query.type === VpRequestQueryType.presentationDefinition) {
-        query.credentialQuery.forEach((credentialQuery) => {
-          const validated = this.#pex.validateDefinition(credentialQuery);
-          if (Array.isArray(validated)) {
-            validated.forEach((checked) => {
-              if (checked.status === Status.ERROR || checked.status === Status.WARN) {
-                return {
-                  errors: ['an error from validated']
-                };
-              }
-            });
-          } else {
-            if (validated.status === Status.ERROR || validated.status === Status.WARN) {
-              return {
-                errors: ['an error from validated']
-              };
-            }
-          }
-        });
-      }
-    });
-
     const exchange = new ExchangeEntity(exchangeDefinitionDto);
     await this.exchangeRepository.save(exchange);
     return {

@@ -62,7 +62,7 @@ export class ExchangeEntity {
    * Create transaction associated with this exchange.
    *
    * Transactions are created by exchange (exchange is the aggregate root) because the exchange may want to enforce invariants such as
-   * "This exchange may only have a single transaction" (i.e. see isOneTime property)
+   * "This exchange may only have a single transaction" (i.e. see oneTimeTransactionId property)
    *
    * @param baseUrl The baseUrl to use for any interaction services
    * @returns

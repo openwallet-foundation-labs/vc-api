@@ -1,8 +1,9 @@
+import { plainToClass } from 'class-transformer';
 import { ExchangeDefinitionDto } from '../../src/vc-api/exchanges/dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from '../../src/vc-api/exchanges/types/vp-request-interact-service-type';
 import { VpRequestQueryType } from '../../src/vc-api/exchanges/types/vp-request-query-type';
 
-export class ResidenceCardPresentation {
+export class ResidentCardPresentation {
   #exchangeId = `b229a18f-db45-4b33-8d36-25d442467bab`;
   #callbackUrl: string;
   queryType = VpRequestQueryType.presentationDefinition;
@@ -23,14 +24,16 @@ export class ResidenceCardPresentation {
           type: this.queryType,
           credentialQuery: [
             {
-              id: '286bc1e0-f1bd-488a-a873-8d71be3c690e',
-              input_descriptors: [
-                {
-                  id: 'permanent_resident_card',
-                  name: 'Permanent Resident Card',
-                  purpose: 'We can only allow permanent residents into the application'
-                }
-              ]
+              presentationDefinition: {
+                id: '286bc1e0-f1bd-488a-a873-8d71be3c690e',
+                input_descriptors: [
+                  {
+                    id: 'permanent_resident_card',
+                    name: 'Permanent Resident Card',
+                    purpose: 'We can only allow permanent residents into the application'
+                  }
+                ]
+              }
             }
           ]
         }
@@ -47,6 +50,6 @@ export class ResidenceCardPresentation {
         }
       ]
     };
-    return exchangeDefinition;
+    return plainToClass(ExchangeDefinitionDto, exchangeDefinition);
   }
 }

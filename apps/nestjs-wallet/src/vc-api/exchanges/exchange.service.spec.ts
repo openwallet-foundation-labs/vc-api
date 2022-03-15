@@ -82,7 +82,7 @@ describe('ExchangeService', () => {
         query: [
           {
             type: VpRequestQueryType.presentationDefinition,
-            credentialQuery: [presentationDefinition]
+            credentialQuery: [{ presentationDefinition }]
           }
         ],
         interactServices: [
