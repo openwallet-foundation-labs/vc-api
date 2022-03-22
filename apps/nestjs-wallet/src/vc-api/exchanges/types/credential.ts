@@ -3,7 +3,7 @@
  * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
  */
 export interface Credential {
-  '@context': string[];
+  '@context': Array<string | Record<string, any>>;
 
   /**
    * The ID of the credential.

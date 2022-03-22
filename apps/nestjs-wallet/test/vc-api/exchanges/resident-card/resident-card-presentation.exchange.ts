@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer';
-import { ExchangeDefinitionDto } from '../../src/vc-api/exchanges/dtos/exchange-definition.dto';
-import { VpRequestInteractServiceType } from '../../src/vc-api/exchanges/types/vp-request-interact-service-type';
-import { VpRequestQueryType } from '../../src/vc-api/exchanges/types/vp-request-query-type';
+import { ExchangeDefinitionDto } from '../../../../src/vc-api/exchanges/dtos/exchange-definition.dto';
+import { VpRequestInteractServiceType } from '../../../../src/vc-api/exchanges/types/vp-request-interact-service-type';
+import { VpRequestQueryType } from '../../../../src/vc-api/exchanges/types/vp-request-query-type';
 
 export class ResidentCardPresentation {
   #exchangeId = `b229a18f-db45-4b33-8d36-25d442467bab`;

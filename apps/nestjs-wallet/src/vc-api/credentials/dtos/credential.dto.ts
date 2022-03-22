@@ -1,4 +1,4 @@
-import { IsString, IsDate, IsArray, IsObject, IsOptional } from 'class-validator';
+import { IsString, IsDate, IsArray, IsObject, IsOptional, IsJSON } from 'class-validator';
 
 /**
  * A JSON-LD Verifiable Credential without a proof.
@@ -9,8 +9,7 @@ export class CredentialDto {
    * The JSON-LD context of the credential.
    */
   @IsArray()
-  @IsString({ each: true })
-  '@context': string[];
+  '@context': Array<string | Record<string, any>>;
 
   /**
    * The ID of the credential.

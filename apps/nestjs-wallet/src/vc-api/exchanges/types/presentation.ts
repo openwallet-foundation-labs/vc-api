@@ -8,7 +8,7 @@ export interface Presentation {
   /**
    * The JSON-LD context of the presentation.
    */
-  '@context': string[];
+  '@context': Array<string | Record<string, any>>;
 
   /**
    * The ID of the presentation.

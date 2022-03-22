@@ -1,10 +1,10 @@
-import { WalletClient } from '../wallet-client';
-import { VerifiablePresentationDto } from '../../src/vc-api/credentials/dtos/verifiable-presentation.dto';
-import { CredentialDto } from '../../src/vc-api/credentials/dtos/credential.dto';
-import { Presentation } from '../../src/vc-api/exchanges/types/presentation';
-import { ExchangeDefinitionDto } from '../../src/vc-api/exchanges/dtos/exchange-definition.dto';
-import { VpRequestInteractServiceType } from '../../src/vc-api/exchanges/types/vp-request-interact-service-type';
-import { VpRequestQueryType } from '../../src/vc-api/exchanges/types/vp-request-query-type';
+import { WalletClient } from '../../../wallet-client';
+import { VerifiablePresentationDto } from '../../../../src/vc-api/credentials/dtos/verifiable-presentation.dto';
+import { CredentialDto } from '../../../../src/vc-api/credentials/dtos/credential.dto';
+import { Presentation } from '../../../../src/vc-api/exchanges/types/presentation';
+import { ExchangeDefinitionDto } from '../../../../src/vc-api/exchanges/dtos/exchange-definition.dto';
+import { VpRequestInteractServiceType } from '../../../../src/vc-api/exchanges/types/vp-request-interact-service-type';
+import { VpRequestQueryType } from '../../../../src/vc-api/exchanges/types/vp-request-query-type';
 import { plainToClass } from 'class-transformer';
 
 export class ResidentCardIssuance {
