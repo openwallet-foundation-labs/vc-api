@@ -3,6 +3,10 @@
  * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
  */
 export interface Credential {
+  // Needed to match @sphereon/pex type
+  // https://github.com/Sphereon-Opensource/pex/blob/a1f56d6baabf1b0e1e28a08d04ffc97d76863207/lib/types/SSI.types.ts#L87
+  [x: string]: unknown;
+
   '@context': Array<string | Record<string, any>>;
 
   /**

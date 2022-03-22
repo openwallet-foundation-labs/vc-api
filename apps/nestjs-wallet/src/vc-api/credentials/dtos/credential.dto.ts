@@ -5,6 +5,8 @@ import { IsString, IsDate, IsArray, IsObject, IsOptional, IsJSON } from 'class-v
  * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
  */
 export class CredentialDto {
+  [key: string]: unknown;
+
   /**
    * The JSON-LD context of the credential.
    */

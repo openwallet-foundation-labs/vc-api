@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { IPresentation, IPresentationDefinition, PEX } from '@sphereon/pex';
 import { ExchangeResponseDto } from '../dtos/exchange-response.dto';
 import { PresentationReviewStatus } from '../types/presentation-review-status';
 import { VerifiablePresentation } from '../types/verifiable-presentation';
@@ -75,6 +76,64 @@ export class TransactionEntity {
   @Column('simple-json')
   callback: CallbackConfiguration[];
 
+  private verifyVpRequestTypeDidAuth(presentation: VerifiablePresentation): string[] {
+    // https://w3c-ccg.github.io/vp-request-spec/#did-authentication-request
+    const errors: string[] = [];
+
+    if (!presentation.holder) {
+      errors.push('Presentation holder is required for didAuth query');
+    }
+
+    return errors;
+  }
+
+  private verifyVpRequestTypePresentationDefinition(
+    presentation: VerifiablePresentation,
+    credentialQuery: Array<{ presentationDefinition: IPresentationDefinition }>
+  ): string[] {
+    // https://identity.foundation/presentation-exchange/#presentation-definition
+    const errors: string[] = [];
+    const pex: PEX = new PEX();
+
+    credentialQuery.forEach(({ presentationDefinition }, index) => {
+      const { errors: partialErrors } = pex.evaluatePresentation(
+        presentationDefinition,
+        presentation as IPresentation
+      );
+
+      errors.push(
+        ...partialErrors.map(
+          (error) =>
+            `Presentation definition (${index + 1}) validation failed, reason: ${error.message || 'Unknown'}`
+        )
+      );
+    });
+
+    return errors;
+  }
+
+  private validatePresentation(presentation: VerifiablePresentation): string[] {
+    const commonErrors = [];
+    // Common checking
+    if (presentation.proof.challenge !== this.vpRequest.challenge) {
+      commonErrors.push('Challenge does not match');
+    }
+
+    // Type specific checking
+    const partialErrors = this.vpRequest.query.flatMap((vpQuery) => {
+      switch (vpQuery.type) {
+        case VpRequestQueryType.didAuth:
+          return this.verifyVpRequestTypeDidAuth(presentation);
+        case VpRequestQueryType.presentationDefinition:
+          return this.verifyVpRequestTypePresentationDefinition(presentation, vpQuery.credentialQuery);
+        default:
+          return ['Unknown request query type'];
+      }
+    });
+
+    return [...partialErrors, ...commonErrors];
+  }
+
   /**
    * Process a presentation submission.
    * Check the correctness of the presentation against the VP Request Credential Queries.
@@ -85,8 +144,16 @@ export class TransactionEntity {
     response: ExchangeResponseDto;
     callback: CallbackConfiguration[];
   } {
-    // TODO check that submitted presentation matches the vpRequest
-    // Checks could be similar to https://github.com/gataca-io/vui-core/blob/46352ccff298eb1d237e4072d982768d79001041/service/validatorServiceDIFPE.go#L54
+    const errors = this.validatePresentation(presentation);
+
+    if (errors.length > 0) {
+      return {
+        response: {
+          errors
+        },
+        callback: []
+      };
+    }
 
     const service = this.vpRequest.interact.service[0]; // TODO: Not sure how to handle multiple interaction services
     if (service.type == VpRequestInteractServiceType.mediatedPresentation) {
