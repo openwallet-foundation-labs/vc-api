@@ -44,7 +44,6 @@ export const rebeamExchangeSuite = () => {
     const issuanceOptions: IssueOptionsDto = {
       proofPurpose: ProofPurpose.authentication,
       verificationMethod: holderVerificationMethod,
-      created: '2021-11-16T14:52:19.514Z',
       challenge: presentationVpRequest.challenge
     };
     const vp = await walletClient.provePresentation({ presentation, options: issuanceOptions });

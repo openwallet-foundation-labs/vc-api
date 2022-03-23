@@ -216,6 +216,8 @@ $ cd apps/nestjs-wallet
 $ pnpm run start
 ```
 
+### Swagger/OpenAPI
+
 After starting the `nestjs-wallet` app, 
 the Swagger/OpenAPI test page can be see at `{appURL}/api` (`http://localhost:3000/api` if running locally)
 
