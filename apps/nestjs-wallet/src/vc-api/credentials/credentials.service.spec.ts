@@ -33,16 +33,23 @@ const credential: CredentialDto = {
       },
       ew: 'https://energyweb.org/ld-context-2022#',
       version: 'ew:version',
-      EWFRole: 'ew:EWFRole'
+      EWFRole: 'ew:EWFRole',
+      key: 'ew:key',
+      value: 'ew:value'
     }
   ],
   id: 'urn:uuid:7f94d397-3e70-4a43-945e-1a13069e636f',
   type: ['VerifiableCredential', 'EWFRole'],
   credentialSubject: {
     id: 'did:example:d23dd687a7dc6787646f2eb98d0',
-    issuerFields: [],
+    issuerFields: [
+      {
+        key: 'accountId',
+        value: 'energycustomerid1'
+      }
+    ],
     role: {
-      namespace: 'test.iam.ewc',
+      namespace: 'customer.roles.rebeam.apps.eliagroup.iam.ewc',
       version: '1'
     }
   },
@@ -57,7 +64,7 @@ const vc: VerifiableCredential = {
     verificationMethod:
       'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF#z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF',
     created: '2021-11-16T14:52:19.514Z',
-    jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..CTodsuvLnodd4nhlxHA39XA0BSfjf6p0rsMgApBmIMRz2MOBF2WnK_2Fd5RBJ-SxRmqvFqa-eJy1LWF74gDUBw'
+    jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..zgBHxtdwo17BK6EZCQik9Bxa_rLn-B2DgK3bkCVFZWQqlWb-W7goxPWBqidUrr2iufYoFdsdQwmoYBeu973YBA'
   }
 };
 const presentation: Presentation = {
@@ -73,7 +80,7 @@ const expectedVp = {
     verificationMethod:
       'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF#z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF',
     created: '2021-11-16T14:52:19.514Z',
-    jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..KMsV1E7TfwgK_GksVjR9ikMwrjbJE6WTE1Iwp2sHFFKzrMIQ1HzOznrl-h5W9QJ3DBM9PjRGtPYp9j7pn9x1Ag'
+    jws: 'eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..L2rRy-FyIvWm4gx9g3M6tcxoQQzy5yXG4rqpchMgORJzg4UXgUlOek4ldVVmOqxG2HvF-FTBBhq_KMFw9vBCDA'
   }
 };
 

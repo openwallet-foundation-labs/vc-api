@@ -58,16 +58,23 @@ export class RebeamSupplier {
           },
           ew: 'https://energyweb.org/ld-context-2022#',
           version: 'ew:version',
-          EWFRole: 'ew:EWFRole'
+          EWFRole: 'ew:EWFRole',
+          key: 'ew:key',
+          value: 'ew:value'
         }
       ],
       id: 'urn:uuid:7f94d397-3e70-4a43-945e-1a13069e636f',
       type: ['VerifiableCredential', 'EWFRole'],
       credentialSubject: {
         id: holderDID,
-        issuerFields: [],
+        issuerFields: [
+          {
+            key: 'accountId',
+            value: 'energycustomerid1'
+          }
+        ],
         role: {
-          namespace: 'test.iam.ewc',
+          namespace: 'customer.roles.rebeam.apps.eliagroup.iam.ewc',
           version: '1'
         }
       },
