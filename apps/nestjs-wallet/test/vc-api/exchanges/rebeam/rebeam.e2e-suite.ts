@@ -5,6 +5,7 @@ import { ProofPurpose } from '@sphereon/pex';
 import { RebeamCpoNode } from './rebeam-cpo-node';
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
 import { RebeamSupplier } from './rebeam-supplier';
+import { inspect } from 'util';
 
 export const rebeamExchangeSuite = () => {
   it('Rebeam presentation using ed25119 signatures', async () => {
@@ -51,5 +52,11 @@ export const rebeamExchangeSuite = () => {
     // Holder submits presentation
     await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp, false);
     scope.done();
+  });
+
+  it('should throw an error when presentation definition contain more then one `credentialQuery` item', async () => {
+    const presentationExchange = new RebeamCpoNode(``);
+    const exchangeDef = presentationExchange.getInvalidExchangeDefinition();
+    await request(app.getHttpServer()).post(`${vcApiBaseUrl}/exchanges`).send(exchangeDef).expect(400);
   });
 };

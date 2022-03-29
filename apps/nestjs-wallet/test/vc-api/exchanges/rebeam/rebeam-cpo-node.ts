@@ -70,4 +70,41 @@ export class RebeamCpoNode {
     };
     return plainToClass(ExchangeDefinitionDto, exchangeDefinition);
   }
+
+  getInvalidExchangeDefinition(): ExchangeDefinitionDto {
+    const exchangeDefinition: ExchangeDefinitionDto = {
+      exchangeId: this.#exchangeId,
+      query: [
+        {
+          type: this.queryType,
+          credentialQuery: [
+            {
+              presentationDefinition: {
+                id: '286bc1e0-f1bd-488a-a873-8d71be3c690e',
+                input_descriptors: [
+                  {
+                    id: 'energy_supplier_customer_contract'
+                  }
+                ]
+              }
+            },
+            {
+              presentationDefinition: {
+                id: '286bc1e0-f1bd-488a-a873-8d71be3c690c',
+                input_descriptors: [
+                  {
+                    id: 'energy_supplier_employer_contract'
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      interactServices: [],
+      isOneTime: true,
+      callback: []
+    };
+    return plainToClass(ExchangeDefinitionDto, exchangeDefinition);
+  }
 }

@@ -1,3 +1,4 @@
+import { IProof } from '@sphereon/pex';
 import { Credential } from './credential';
 
 /**
@@ -8,5 +9,5 @@ export interface VerifiableCredential extends Credential {
   /**
    * A JSON-LD Linked Data proof.
    */
-  proof: Record<string, unknown>;
+  proof: Record<string, unknown> | IProof;
 }

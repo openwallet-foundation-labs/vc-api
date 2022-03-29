@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsEnum, ValidateNested } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsEnum, ValidateNested } from 'class-validator';
 import { VpRequestQueryType } from '../types/vp-request-query-type';
 import { VpRequestDidAuthQueryDto } from './vp-request-did-auth-query.dto';
 import { VpRequestPresentationDefinitionQueryDto } from './vp-request-presentation-defintion-query.dto';
@@ -16,6 +16,8 @@ export class VpRequestQueryDto {
    */
   @ValidateNested({ each: true })
   @IsArray()
+  @ArrayMinSize(0)
+  @ArrayMaxSize(1)
   @Type(() => VpRequestPresentationDefinitionQueryDto, {
     discriminator: {
       property: 'type',
