@@ -1,0 +1,15 @@
+Dockerfile
+docker-compose.yml
+.dockerignore
+node_modules
+npm-debug.log
+.vscode
+.next
+.git
+.env
+dist
+# Rush temporary files
+common/deploy/
+common/temp/
+common/autoinstallers/*/.npmrc
+**/.rush/temp/
