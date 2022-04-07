@@ -84,16 +84,16 @@ jobs:
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
-      # - name: ArgoCD login
-      #   uses: clowdhaus/argo-cd-action/@v1.9.0
-      #   id: argocd_login
-      #   with:
-      #     command: login ${{ steps.env_vars.outputs.argocd_url }}
-      #     options: --insecure --password ${{ steps.env_vars.outputs.argocd_password }} --username ${{ steps.env_vars.outputs.argocd_username }}
+      - name: ArgoCD login
+        uses: clowdhaus/argo-cd-action/@v1.9.0
+        id: argocd_login
+        with:
+          command: login ${{ steps.env_vars.outputs.argocd_url }}
+          options: --insecure --password ${{ steps.env_vars.outputs.argocd_password }} --username ${{ steps.env_vars.outputs.argocd_username }}
 
-      # - name: ArgoCD overvrite values.yaml
-      #   uses: clowdhaus/argo-cd-action/@v1.9.0
-      #   id: argocd_image_tag_overwrite
-      #   with:
-      #     command: app set ssi
-      #     options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
+      - name: ArgoCD overvrite values.yaml
+        uses: clowdhaus/argo-cd-action/@v1.9.0
+        id: argocd_image_tag_overwrite
+        with:
+          command: app set ssi
+          options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
