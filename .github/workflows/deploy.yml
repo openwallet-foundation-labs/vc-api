@@ -2,7 +2,7 @@ name: Build and deploy
 
 on:
   push:
-    branches: ['DOI-1805_cd_ssi']
+    branches: ['master']
   workflow_dispatch:
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
         id: env_vars
         run: |
           echo "Running on branch ${{ github.ref }}"
-          if [ "${{ github.ref }}" = "refs/heads/DOI-1805_cd_ssi" ]; then
+          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
             echo "::set-output name=aws_access_key_id::${{ secrets.DEV_AWS_ACCESS_KEY_ID }}"
             echo "::set-output name=aws_secret_key::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}"
             echo "::set-output name=aws_region::${{ secrets.AWS_REGION }}"
@@ -52,7 +52,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          release_branches: DOI-1805_cd_ssi
+          release_branches: master
           custom_release_rules: major:major:Major Changes,minor:minor:Minor Changes,chore:patch:Chores
 
       - name: Create a GitHub release
@@ -95,5 +95,5 @@ jobs:
         uses: clowdhaus/argo-cd-action/@v1.9.0
         id: argocd_image_tag_overwrite
         with:
-          command: app set ssi
+          command: app set ssi-wallet
           options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
