@@ -13,12 +13,13 @@ import { TransactionEntity } from './entities/transaction.entity';
 import { VpRequestQueryType } from './types/vp-request-query-type';
 import { PresentationReviewEntity } from './entities/presentation-review.entity';
 import { ConfigService } from '@nestjs/config';
+import { PresentationSubmissionEntity } from './entities/presentation-submission.entity';
 
 const baseUrl = 'https://test-exchange.com';
 
 describe('ExchangeService', () => {
   let service: ExchangeService;
-  let vcApiService: CredentialsService;
+  let credentialsService: CredentialsService;
   let exchangeRepository: Repository<ExchangeEntity>;
   let vpRequestRepository: Repository<VpRequestEntity>;
 
@@ -30,7 +31,8 @@ describe('ExchangeService', () => {
           VpRequestEntity,
           ExchangeEntity,
           TransactionEntity,
-          PresentationReviewEntity
+          PresentationReviewEntity,
+          PresentationSubmissionEntity
         ]),
         HttpModule
       ],
@@ -51,7 +53,7 @@ describe('ExchangeService', () => {
       ]
     }).compile();
 
-    vcApiService = module.get<CredentialsService>(CredentialsService);
+    credentialsService = module.get<CredentialsService>(CredentialsService);
     service = module.get<ExchangeService>(ExchangeService);
     exchangeRepository = module.get<Repository<ExchangeEntity>>(getRepositoryToken(ExchangeEntity));
     vpRequestRepository = module.get<Repository<VpRequestEntity>>(getRepositoryToken(VpRequestEntity));
@@ -115,6 +117,37 @@ describe('ExchangeService', () => {
       };
       await service.createExchange(exchangeDef);
       const exchangeResponse = await service.startExchange(exchangeId);
+      expect(exchangeResponse.vpRequest.interact.service).toHaveLength(1);
+      expect(exchangeResponse.vpRequest.interact.service[0].serviceEndpoint).toContain(baseUrl);
+    });
+  });
+
+  describe('continueExchange', () => {
+    // TODO: Write after https://github.com/energywebfoundation/ssi/pull/46 as this will make it easier to test
+    it.skip('should send transaction dto if callback is configured', async () => {
+      const transactionId = 'test-tx';
+      // const exchangeDef: ExchangeDefinitionDto = {
+      //   exchangeId: exchangeId,
+      //   interactServices: [
+      //     {
+      //       type: VpRequestInteractServiceType.unmediatedPresentation
+      //     }
+      //   ],
+      //   query: [],
+      //   isOneTime: false,
+      //   callback: []
+      // };
+      const vp = {
+        '@context': [
+          'https://www.w3.org/2018/credentials/v1',
+          'https://www.w3.org/2018/credentials/examples/v1'
+        ],
+        type: ['VerifiablePresentation'],
+        verifiableCredential: [],
+        holder: 'did:key:z6MksBH4LMy8SoYFUNjDXtQ2Rq4dHnyuemowxXqzLpuB6nvc',
+        proof: {}
+      };
+      const exchangeResponse = await service.continueExchange(vp, transactionId);
       expect(exchangeResponse.vpRequest.interact.service).toHaveLength(1);
       expect(exchangeResponse.vpRequest.interact.service[0].serviceEndpoint).toContain(baseUrl);
     });

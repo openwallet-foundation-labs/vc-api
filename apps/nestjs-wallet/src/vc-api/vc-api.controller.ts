@@ -98,11 +98,11 @@ export class VcApiController {
     @Param('transactionId') transactionId: string,
     @Body() presentation: VerifiablePresentationDto
   ): Promise<ExchangeResponseDto> {
-    return await this.exchangeService.continueExchange(presentation, transactionId, exchangeId);
+    return await this.exchangeService.continueExchange(presentation, transactionId);
   }
 
   /**
-   * Get exchange transactions that require reviews
+   * Get exchange transaction by id
    * A NON-STANDARD endpoint currently.
    * Similar to https://identitycache.energyweb.org/api/#/Claims/ClaimController_getByIssuerDid
    *
@@ -111,8 +111,11 @@ export class VcApiController {
    * @param transactionId id of the exchange transaction
    * @returns
    */
-  @Get('/exchanges/reviews')
-  async getExchangeReviews(@Param('transactionId') transactionId: string) {
+  @Get('/exchanges/:exchangeId/:transactionId')
+  async getTransaction(
+    @Param('exchangeId') exchangeId: string,
+    @Param('transactionId') transactionId: string
+  ) {
     return new NotImplementedException();
   }
 
@@ -121,13 +124,13 @@ export class VcApiController {
    * A NON-STANDARD endpoint currently.
    * Similar to https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.controller.ts#L80
    *
-   * TODO: Perhaps reviews are not separate from transactions? Perhaps one updated the transaction directly
+   * TODO: Perhaps reviews are not separate from transactions? Perhaps one updates the transaction directly
    * TODO: Needs to have special authorization
    * @param exchangeId id of the exchange
    * @param transactionId id of the exchange transaction
    * @returns
    */
-  @Put('/exchanges/reviews/:transactionId')
+  @Put('/exchanges/:exchangeId/:transactionId/review')
   async getExchangeTransaction(@Param('transactionId') transactionId: string) {
     return new NotImplementedException();
   }

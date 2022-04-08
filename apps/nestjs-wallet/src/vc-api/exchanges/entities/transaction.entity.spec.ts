@@ -46,7 +46,8 @@ describe('TransactionEntity', () => {
       expect(callback[0].url).toEqual(callback_1);
       expect(response.errors).toHaveLength(0);
       expect(response.vpRequest).toBeUndefined();
-      expect(response.vp).toBeUndefined();
+      expect(response.vp).toBeUndefined(); // No issued credentials in the VP
+      expect(transaction.presentationSubmission.vp).toEqual(vp);
     });
   });
 

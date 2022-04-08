@@ -11,12 +11,19 @@ import { ExchangeEntity } from './exchanges/entities/exchange.entity';
 import { VpRequestEntity } from './exchanges/entities/vp-request.entity';
 import { TransactionEntity } from './exchanges/entities/transaction.entity';
 import { PresentationReviewEntity } from './exchanges/entities/presentation-review.entity';
+import { PresentationSubmissionEntity } from './exchanges/entities/presentation-submission.entity';
 
 @Module({
   imports: [
     DidModule,
     KeyModule,
-    TypeOrmModule.forFeature([VpRequestEntity, ExchangeEntity, TransactionEntity, PresentationReviewEntity]),
+    TypeOrmModule.forFeature([
+      VpRequestEntity,
+      ExchangeEntity,
+      TransactionEntity,
+      PresentationReviewEntity,
+      PresentationSubmissionEntity
+    ]),
     ConfigModule,
     HttpModule
   ],

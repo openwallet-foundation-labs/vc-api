@@ -9,6 +9,7 @@ import { VpRequestQueryType } from '../types/vp-request-query-type';
 import { PresentationReviewEntity } from './presentation-review.entity';
 import { VpRequestEntity } from './vp-request.entity';
 import { CallbackConfiguration } from '../types/callback-configuration';
+import { PresentationSubmissionEntity } from './presentation-submission.entity';
 
 /**
  * A TypeOrm entity representing an exchange transaction
@@ -55,23 +56,27 @@ export class TransactionEntity {
   /**
    */
   @OneToOne(() => PresentationReviewEntity, {
-    cascade: true
+    cascade: true,
+    nullable: true
   })
   @JoinColumn()
-  presentationReview: PresentationReviewEntity;
+  presentationReview?: PresentationReviewEntity;
 
   /**
-   * Assumes that each transaction is a part of an exchange execution
+   * Each transaction is a part of an exchange execution
    * https://w3c-ccg.github.io/vc-api/#exchange-examples
    */
   @Column('text')
   exchangeId: string;
 
   /**
-   * The Verifiable Presentation submitted in response to the VP Request
    */
-  @Column('simple-json', { nullable: true })
-  submittedVP?: VerifiablePresentation;
+  @OneToOne(() => PresentationSubmissionEntity, {
+    cascade: true,
+    nullable: true
+  })
+  @JoinColumn()
+  presentationSubmission: PresentationSubmissionEntity;
 
   @Column('simple-json')
   callback: CallbackConfiguration[];
@@ -159,8 +164,8 @@ export class TransactionEntity {
     if (service.type == VpRequestInteractServiceType.mediatedPresentation) {
       if (this.presentationReview.reviewStatus == PresentationReviewStatus.pending) {
         // In this case, this is the first submission to the exchange
-        if (!this.submittedVP) {
-          this.submittedVP = presentation;
+        if (!this.presentationSubmission) {
+          this.presentationSubmission = new PresentationSubmissionEntity(presentation);
         }
         return {
           response: {
@@ -194,6 +199,7 @@ export class TransactionEntity {
       }
     }
     if (service.type == VpRequestInteractServiceType.unmediatedPresentation) {
+      this.presentationSubmission = new PresentationSubmissionEntity(presentation);
       return {
         response: {
           errors: []

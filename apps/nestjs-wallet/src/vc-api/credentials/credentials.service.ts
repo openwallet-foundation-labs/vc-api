@@ -14,7 +14,7 @@ import { IssueCredentialDto } from './dtos/issue-credential.dto';
 import { VerifiableCredentialDto } from './dtos/verifiable-credential.dto';
 import { VerifiablePresentationDto } from './dtos/verifiable-presentation.dto';
 import { VerifyOptionsDto } from './dtos/verify-options.dto';
-import { VerifyProofResponseDto } from './dtos/verify-proof-response.dto';
+import { VerificationResultDto } from './dtos/verification-result.dto';
 import { AuthenticateDto } from './dtos/authenticate.dto';
 import { ProvePresentationDto } from './dtos/prove-presentation.dto';
 
@@ -60,7 +60,7 @@ export class CredentialsService {
   async verifyCredential(
     vc: VerifiableCredentialDto,
     options: VerifyOptionsDto
-  ): Promise<VerifyProofResponseDto> {
+  ): Promise<VerificationResultDto> {
     const verifyOptions: ISpruceVerifyOptions = options;
     return JSON.parse(await verifyCredential(JSON.stringify(vc), JSON.stringify(verifyOptions)));
   }
@@ -93,7 +93,7 @@ export class CredentialsService {
   async verifyPresentation(
     vp: VerifiablePresentationDto,
     options: VerifyOptionsDto
-  ): Promise<VerifyProofResponseDto> {
+  ): Promise<VerificationResultDto> {
     const verifyOptions: ISpruceVerifyOptions = options;
     return JSON.parse(await verifyPresentation(JSON.stringify(vp), JSON.stringify(verifyOptions)));
   }
