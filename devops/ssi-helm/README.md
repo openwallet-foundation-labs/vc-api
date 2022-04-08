@@ -15,17 +15,17 @@ A Helm chart for Kubernetes
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | fullnameOverride | string | `"ssi"` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"124847487737.dkr.ecr.us-west-2.amazonaws.com/esc"` |  |
+| image.repository | string | `"098061033856.dkr.ecr.us-west-2.amazonaws.com/ssi"` |  |
 | image.tag | string | `"latest"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.annotations."alb.ingress.kubernetes.io/actions.ssl-redirect" | string | `"{\"Type\": \"redirect\", \"RedirectConfig\": { \"Protocol\": \"HTTPS\", \"Port\": \"443\", \"StatusCode\": \"HTTP_301\"}}"` |  |
-| ingress.annotations."alb.ingress.kubernetes.io/certificate-arn" | string | `"arn:aws:acm:us-west-2:124847487737:certificate/5c78a675-f3a4-478b-aaed-c3655498bd86"` |  |
+| ingress.annotations."alb.ingress.kubernetes.io/certificate-arn" | string | `"arn:aws:acm:us-west-2:098061033856:certificate/c1a04ca1-a599-41a4-ba18-7187ca0831f0"` |  |
 | ingress.annotations."alb.ingress.kubernetes.io/listen-ports" | string | `"[{\"HTTP\": 80}, {\"HTTPS\":443}]"` |  |
 | ingress.annotations."alb.ingress.kubernetes.io/scheme" | string | `"internet-facing"` |  |
 | ingress.annotations."kubernetes.io/ingress.class" | string | `"alb"` |  |
 | ingress.className | string | `""` |  |
 | ingress.enabled | bool | `true` |  |
-| ingress.hosts[0].host | string | `"vc-api-sandbox.energyweb.org"` |  |
+| ingress.hosts[0].host | string | `"vc-api-dev.energyweb.org"` |  |
 | ingress.hosts[0].paths[0].backend.service.name | string | `"ssl-redirect"` |  |
 | ingress.hosts[0].paths[0].backend.service.port.name | string | `"use-annotation"` |  |
 | ingress.hosts[0].paths[0].path | string | `"/"` |  |
