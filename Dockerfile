@@ -14,6 +14,6 @@ COPY --from=base . .
 
 EXPOSE 3000
 
-WORKDIR /apps/nestjs-wallet
+WORKDIR /apps/vc-api
 
 CMD [ "pnpm", "run", "start" ]

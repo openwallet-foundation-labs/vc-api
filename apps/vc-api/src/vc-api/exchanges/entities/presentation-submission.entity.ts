@@ -1,4 +1,4 @@
-import { VerificationResult } from '../../../vc-api/credentials/types/verification-result';
+import { VerificationResult } from '../../credentials/types/verification-result';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { VerifiablePresentation } from '../types/verifiable-presentation';
 

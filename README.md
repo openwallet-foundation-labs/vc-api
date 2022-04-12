@@ -59,7 +59,7 @@ Not all of the endpoints available from the VC-API module are standard.
 
 ### DID Module
 
-The DID Module in the [nestjs-wallet](./apps/nestjs-wallet) offers the generation of DIDs and tracking the data resolvable in their DID documents.
+The DID Module in the [vc-api](./apps/vc-api) offers the generation of DIDs and tracking the data resolvable in their DID documents.
 
 #### DID Generation
 The DID generation logic is encapsulated in a [did](./libraries/did) library.
@@ -210,15 +210,15 @@ $ rush build
 ```
 
 ## Run
-To run the `nestjs-wallet` app
+To run the `vc-api` app
 ``` sh
-$ cd apps/nestjs-wallet
+$ cd apps/vc-api
 $ pnpm run start
 ```
 
 ### Swagger/OpenAPI
 
-After starting the `nestjs-wallet` app, 
+After starting the `vc-api` app, 
 the Swagger/OpenAPI test page can be see at `{appURL}/api` (`http://localhost:3000/api` if running locally)
 
 ## Testing
@@ -234,7 +234,7 @@ These can be run with separate commands if desired.
 
 First navigate to the app
 ``` sh
-$ cd apps/nestjs-wallet
+$ cd apps/vc-api
 ```
 
 Then, to run **unit** tests
