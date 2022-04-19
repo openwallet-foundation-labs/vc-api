@@ -135,20 +135,4 @@ export class VcApiController {
   ) {
     return new NotImplementedException();
   }
-
-  /**
-   * Update a review (or maybe a transaction needing a review)
-   * A NON-STANDARD endpoint currently.
-   * Similar to https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.controller.ts#L80
-   *
-   * TODO: Perhaps reviews are not separate from transactions? Perhaps one updates the transaction directly
-   * TODO: Needs to have special authorization
-   * @param exchangeId id of the exchange
-   * @param transactionId id of the exchange transaction
-   * @returns
-   */
-  @Put('/exchanges/:exchangeId/:transactionId/review')
-  async getExchangeTransaction(@Param('transactionId') transactionId: string) {
-    return new NotImplementedException();
-  }
 }
