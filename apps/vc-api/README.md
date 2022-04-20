@@ -1,38 +1,21 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# NestJs VC-API
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This [vc-api app](./apps/vc-api) is a NestJs implementation of the [W3C Credentials Community Group](https://w3c-ccg.github.io/) [VC API Specification](https://w3c-ccg.github.io/vc-api).
+[Nest](https://github.com/nestjs/nest) is a Typescript framework for server-side applications.
+
+## Tutorials
+
+See [tutorials](./docs/tutorials/).
 
 ## Installation
 
-```bash
-$ npm install
-```
+Install using the [rush commands](../../README.md#installation) described in the root README.
 
 ## Running the app
+
+Alternatively to `npm`, `pnpm` can be used for the commands below.
 
 ```bash
 # development
@@ -44,12 +27,18 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+### Swagger/OpenAPI
+
+After starting the `vc-api` app, 
+the Swagger/OpenAPI test page can be see at `{appURL}/api` (`http://localhost:3000/api` if running locally)
 
 ## Test
 
+Alternatively to `npm`, `pnpm` can be used for the commands below.
+
 ```bash
 # unit tests
-$ npm run test
+$ npm run test:unit
 
 # e2e tests
 $ npm run test:e2e
@@ -58,16 +47,38 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+### VC-API Module
+An implementation of the [W3C Credentials Community Group](https://w3c-ccg.github.io/) [VC API Specification](https://w3c-ccg.github.io/universal-wallet-interop-spec/).
+This spec provides a data model and HTTP protocols to issue, verify, present, and exchange verifiable credentials on the Web.
+The [W3C Credentials Community Group](https://w3c-ccg.github.io/) also publishes [use cases for VC API](https://w3c-ccg.github.io/vc-api-use-cases/index.html).
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Standard vs Custom Endpoints
 
-## Stay in touch
+Not all of the endpoints available from the VC-API app are standard.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| Purpose | Standard | Spec Link
+| --- | --- | --- |
+| Issue Credential | Yes | https://w3c-ccg.github.io/vc-api/#issue-credential
+| Prove Presentation | Yes | https://w3c-ccg.github.io/vc-api/#prove-presentation
+| Initiate Exchange | Yes | https://w3c-ccg.github.io/vc-api/#initiate-exchange
+| Continue Exchange | Yes | https://w3c-ccg.github.io/vc-api/#continue-exchange
+| Configure Exchange | No | 
+| Query Submissions | No |  
+| Submit Processing Result | No |
+
+### DID Module
+
+The DID Module in the [vc-api](./apps/vc-api) offers the generation of DIDs and tracking the data resolvable in their DID documents.
+
+### Key Module
+The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
+
+## Database
+Currently, the app uses an **in-memory DB** for now for app execution and tests.
+The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.
+The rationale for this for tests (rather than mocking the db) is that it speeds test writing time, elimates mocking boilerplate and possibly buggy DB mocks.
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the GNU General Public License v3.0 or later - see the [LICENSE](LICENSE) file for details
+NestJs is [MIT licensed](LICENSE).
