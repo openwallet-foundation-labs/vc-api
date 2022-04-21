@@ -117,7 +117,7 @@ Note down the `id` property. This is the suppliers's DID.
 ```
 
 After having created a new DID, the supplier can then issue a credential to the customer DID that was previously created.
-Typically, a supplier would confirm that the customer in question controls the DID first, however this step is currently omitted.
+The supplier may want to confirm that the customer in question controls the DID first, however this step is currently omitted.
 
 Navigate to the `Vc Api Controller issue Credential` request under the `vc-api` folder.
 Fill in, in the JSON below, the Customer DID as the `subject` id, the Supplier DID as the `issuer` id and the `verificationMethod.id` from the DID document of the Supplier as the `options.verificationMethod` from the DIDs that were generated in previous steps.
@@ -220,7 +220,7 @@ The response should have a `201` code and have a body similar to the json below.
 
 The CPO needs to configure the parameters of the credential exchange.
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
-In the json below, `exchangeId` is an id unique to this charging request, for example "111111".
+In the json below, `exchangeId` is an id unique to this charging request, for example a UUID.
 
 ```json
 {
@@ -281,12 +281,11 @@ This is not performed in this demo, but in an actual Rebeam charging flow a CPO 
 ```json
 {
   "outOfBandInvitation": {
-    "type": "https://example.com/out-of-band/vc-api-exchange"
+    "type": "https://example.com/out-of-band/vc-api-exchange",
     "body": {
       "url": "http://localhost:3000/vc-api/exchanges/<FILL WITH YOUR EXCHANGE ID>"
     }
-  },
-  "ocpiTokenUID": "some token UID"
+  }
 }
 ```
 
