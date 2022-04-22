@@ -26,6 +26,8 @@ import { ExchangeService } from './exchanges/exchange.service';
 import { ExchangeResponseDto } from './exchanges/dtos/exchange-response.dto';
 import { ExchangeDefinitionDto } from './exchanges/dtos/exchange-definition.dto';
 import { ProvePresentationDto } from './credentials/dtos/prove-presentation.dto';
+import { GetTransactionDto } from './exchanges/dtos/get-transaction.dto';
+import { TransactionDto } from './exchanges/dtos/transaction.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -133,6 +135,14 @@ export class VcApiController {
     @Param('exchangeId') exchangeId: string,
     @Param('transactionId') transactionId: string
   ) {
-    return new NotImplementedException();
+    const queryResult = await this.exchangeService.getExchangeTransaction(transactionId);
+    const transactionDto = queryResult.transaction
+      ? TransactionDto.toDto(queryResult.transaction)
+      : undefined;
+    const response: GetTransactionDto = {
+      errors: queryResult.errors,
+      transaction: transactionDto
+    };
+    return response;
   }
 }

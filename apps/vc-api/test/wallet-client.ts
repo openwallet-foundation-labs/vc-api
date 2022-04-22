@@ -24,7 +24,8 @@ import { ProvePresentationDto } from '../src/vc-api/credentials/dtos/prove-prese
 import { VerifiablePresentationDto } from '../src/vc-api/credentials/dtos/verifiable-presentation.dto';
 import { VpRequestDto } from '../src/vc-api/exchanges/dtos/vp-request.dto';
 import { ExchangeResponseDto } from '../src/vc-api/exchanges/dtos/exchange-response.dto';
-import { VpRequestQueryType } from 'src/vc-api/exchanges/types/vp-request-query-type';
+import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-query-type';
+import { TransactionDto } from '../src/vc-api/exchanges/dtos/transaction.dto';
 
 /**
  * A wallet client for e2e tests
@@ -106,5 +107,17 @@ export class WalletClient {
     if (expectsVpRequest) {
       expect(continueExchangeResponse.body.vpRequest).toBeDefined();
     }
+  }
+
+  /**
+   * GET /exchanges/{exchangeId}/{transactionId}
+   */
+  async getExchangeTransaction(exchangeId: string, transactionId: string) {
+    const continueExchangeResponse = await request(this.#app.getHttpServer())
+      .get(`/vc-api/exchanges/${exchangeId}/${transactionId}`)
+      .expect(200);
+    expect(continueExchangeResponse.body.errors).toHaveLength(0);
+    expect(continueExchangeResponse.body.transaction).toBeDefined();
+    return continueExchangeResponse.body.transaction as TransactionDto;
   }
 }

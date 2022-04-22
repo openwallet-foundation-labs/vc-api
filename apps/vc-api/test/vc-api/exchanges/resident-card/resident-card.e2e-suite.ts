@@ -33,14 +33,14 @@ export const residentCardExchangeSuite = () => {
       .send(exchange.getExchangeDefinition())
       .expect(201);
 
-    // Start issuance exchange
+    // As holder, start issuance exchange
     // POST /exchanges/{exchangeId}
     const issuanceExchangeEndpoint = `${vcApiBaseUrl}/exchanges/${exchange.getExchangeId()}`;
     const issuanceVpRequest = await walletClient.startExchange(issuanceExchangeEndpoint, exchange.queryType);
     const issuanceExchangeContinuationEndpoint = getContinuationEndpoint(issuanceVpRequest);
     expect(issuanceExchangeContinuationEndpoint).toContain(issuanceExchangeEndpoint);
 
-    // Create new DID and presentation to authentication as this DID
+    // As holder, create new DID and presentation to authentication as this DID
     // DID auth presentation: https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
     const holderDID = await walletClient.createDID('key');
     const holderVerificationMethod = holderDID.verificationMethod[0].id;
@@ -56,8 +56,13 @@ export const residentCardExchangeSuite = () => {
     const didAuthVp = didAuthResponse.body;
     expect(didAuthVp).toBeDefined();
 
-    // Continue exchange by submitting presention
+    // As holder, continue exchange by submitting did auth presention
     await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true);
+
+    // As the issuer, get the transaction
+    const urlComponents = issuanceExchangeContinuationEndpoint.split('/');
+    const transactionId = urlComponents.pop();
+    const transaction = await walletClient.getExchangeTransaction(exchange.getExchangeId(), transactionId);
 
     // TODO: have the issuer get the review and approve. For now, just issue directly
     const issueResult = await exchange.issueCredential(didAuthVp, walletClient);
