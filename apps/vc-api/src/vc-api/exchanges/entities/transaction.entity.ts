@@ -17,16 +17,15 @@
 
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { IPresentation, IPresentationDefinition, PEX } from '@sphereon/pex';
 import { ExchangeResponseDto } from '../dtos/exchange-response.dto';
 import { PresentationReviewStatus } from '../types/presentation-review-status';
 import { VerifiablePresentation } from '../types/verifiable-presentation';
 import { VpRequestInteractServiceType } from '../types/vp-request-interact-service-type';
-import { VpRequestQueryType } from '../types/vp-request-query-type';
 import { PresentationReviewEntity } from './presentation-review.entity';
 import { VpRequestEntity } from './vp-request.entity';
 import { CallbackConfiguration } from '../types/callback-configuration';
 import { PresentationSubmissionEntity } from './presentation-submission.entity';
+import { SubmissionVerifier } from '../types/submission-verifier';
 
 /**
  * A TypeOrm entity representing an exchange transaction
@@ -49,7 +48,7 @@ export class TransactionEntity {
     if (vpRequest?.interact?.service[0]?.type === VpRequestInteractServiceType.mediatedPresentation) {
       this.presentationReview = {
         presentationReviewId: uuidv4(),
-        reviewStatus: PresentationReviewStatus.pending
+        reviewStatus: PresentationReviewStatus.pendingSubmission
       };
     }
     this.callback = callback;
@@ -80,7 +79,7 @@ export class TransactionEntity {
   presentationReview?: PresentationReviewEntity;
 
   /**
-   * Each transaction is a part of an exchange execution
+   * Each transaction is a part of an exchange
    * https://w3c-ccg.github.io/vc-api/#exchange-examples
    */
   @Column('text')
@@ -93,80 +92,31 @@ export class TransactionEntity {
     nullable: true
   })
   @JoinColumn()
-  presentationSubmission: PresentationSubmissionEntity;
+  presentationSubmission?: PresentationSubmissionEntity;
 
   @Column('simple-json')
   callback: CallbackConfiguration[];
 
-  private verifyVpRequestTypeDidAuth(presentation: VerifiablePresentation): string[] {
-    // https://w3c-ccg.github.io/vp-request-spec/#did-authentication-request
-    const errors: string[] = [];
-
-    if (!presentation.holder) {
-      errors.push('Presentation holder is required for didAuth query');
-    }
-
-    return errors;
+  public approvePresentationSubmission(issuanceVp: VerifiablePresentation): void {
+    this.presentationReview.reviewStatus = PresentationReviewStatus.approved;
+    this.presentationReview.VP = issuanceVp;
   }
 
-  private verifyVpRequestTypePresentationDefinition(
-    presentation: VerifiablePresentation,
-    credentialQuery: Array<{ presentationDefinition: IPresentationDefinition }>
-  ): string[] {
-    // https://identity.foundation/presentation-exchange/#presentation-definition
-    const errors: string[] = [];
-    const pex: PEX = new PEX();
-
-    credentialQuery.forEach(({ presentationDefinition }, index) => {
-      const { errors: partialErrors } = pex.evaluatePresentation(
-        presentationDefinition,
-        presentation as IPresentation
-      );
-
-      errors.push(
-        ...partialErrors.map(
-          (error) =>
-            `Presentation definition (${index + 1}) validation failed, reason: ${error.message || 'Unknown'}`
-        )
-      );
-    });
-
-    return errors;
-  }
-
-  private validatePresentation(presentation: VerifiablePresentation): string[] {
-    const commonErrors = [];
-    // Common checking
-    if (presentation.proof.challenge !== this.vpRequest.challenge) {
-      commonErrors.push('Challenge does not match');
-    }
-
-    // Type specific checking
-    const partialErrors = this.vpRequest.query.flatMap((vpQuery) => {
-      switch (vpQuery.type) {
-        case VpRequestQueryType.didAuth:
-          return this.verifyVpRequestTypeDidAuth(presentation);
-        case VpRequestQueryType.presentationDefinition:
-          return this.verifyVpRequestTypePresentationDefinition(presentation, vpQuery.credentialQuery);
-        default:
-          return ['Unknown request query type'];
-      }
-    });
-
-    return [...partialErrors, ...commonErrors];
+  public rejectPresentationSubmission(): void {
+    this.presentationReview.reviewStatus = PresentationReviewStatus.rejected;
   }
 
   /**
    * Process a presentation submission.
-   * Check the correctness of the presentation against the VP Request Credential Queries.
-   * Does NOT check signatures.
    * @param presentation
+   * @param verifier
    */
-  public processPresentation(presentation: VerifiablePresentation): {
-    response: ExchangeResponseDto;
-    callback: CallbackConfiguration[];
-  } {
-    const errors = this.validatePresentation(presentation);
+  public async processPresentation(
+    presentation: VerifiablePresentation,
+    verifier: SubmissionVerifier
+  ): Promise<{ response: ExchangeResponseDto; callback: CallbackConfiguration[] }> {
+    const verificationResult = await verifier.verifyVpRequestSubmission(presentation, this.vpRequest);
+    const errors = verificationResult.errors;
 
     if (errors.length > 0) {
       return {
@@ -179,44 +129,39 @@ export class TransactionEntity {
 
     const service = this.vpRequest.interact.service[0]; // TODO: Not sure how to handle multiple interaction services
     if (service.type == VpRequestInteractServiceType.mediatedPresentation) {
-      if (this.presentationReview.reviewStatus == PresentationReviewStatus.pending) {
-        // In this case, this is the first submission to the exchange
+      if (this.presentationReview.reviewStatus == PresentationReviewStatus.pendingSubmission) {
+        // TODO: should we allow overwrite of a previous submitted submission?
         if (!this.presentationSubmission) {
-          this.presentationSubmission = new PresentationSubmissionEntity(presentation);
+          this.presentationSubmission = new PresentationSubmissionEntity(presentation, verificationResult);
         }
+        this.presentationReview.reviewStatus = PresentationReviewStatus.pendingReview;
         return {
           response: {
             errors: [],
             vpRequest: {
               challenge: uuidv4(),
-              query: [{ type: VpRequestQueryType.didAuth, credentialQuery: [] }],
-              interact: this.vpRequest.interact // Just ask the same endpoint again
+              query: [],
+              interact: this.vpRequest.interact // Holder should query the same endpoint again to check if it has been reviewed
             }
           },
           callback: []
         };
       }
-      if (this.presentationReview.reviewStatus == PresentationReviewStatus.approved) {
-        if (this.presentationReview.VP) {
-          return {
-            response: {
-              errors: [],
-              vp: this.presentationReview.VP
-            },
-            callback: []
-          };
-        } else {
-          return {
-            response: {
-              errors: []
-            },
-            callback: []
-          };
-        }
+      if (
+        this.presentationReview.reviewStatus == PresentationReviewStatus.approved ||
+        this.presentationReview.reviewStatus == PresentationReviewStatus.rejected
+      ) {
+        return {
+          response: {
+            errors: [],
+            vp: this.presentationReview?.VP
+          },
+          callback: []
+        };
       }
     }
     if (service.type == VpRequestInteractServiceType.unmediatedPresentation) {
-      this.presentationSubmission = new PresentationSubmissionEntity(presentation);
+      this.presentationSubmission = new PresentationSubmissionEntity(presentation, verificationResult);
       return {
         response: {
           errors: []

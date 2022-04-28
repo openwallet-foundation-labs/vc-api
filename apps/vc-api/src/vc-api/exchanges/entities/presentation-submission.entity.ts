@@ -27,13 +27,9 @@ import { VerifiablePresentation } from '../types/verifiable-presentation';
  */
 @Entity()
 export class PresentationSubmissionEntity {
-  constructor(vp: VerifiablePresentation) {
+  constructor(vp: VerifiablePresentation, verificationResult: VerificationResult) {
     this.vp = vp;
-    this.verificationResult = {
-      checks: [], // TODO: add correct checks (e.g. proof check from service)
-      warnings: [],
-      errors: []
-    };
+    this.verificationResult = verificationResult;
   }
 
   @PrimaryGeneratedColumn()

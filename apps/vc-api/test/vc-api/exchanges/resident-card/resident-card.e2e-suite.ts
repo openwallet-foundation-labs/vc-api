@@ -22,10 +22,14 @@ import { ResidentCardIssuance } from './resident-card-issuance.exchange';
 import { ProofPurpose } from '@sphereon/pex';
 import { ResidentCardPresentation } from './resident-card-presentation.exchange';
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
+import {
+  ReviewResult,
+  SubmissionReviewDto
+} from '../../../../src/vc-api/exchanges/dtos/submission-review.dto';
 
 export const residentCardExchangeSuite = () => {
   it('should support Resident Card issuance and presentation', async () => {
-    // Configure credential issuance exchange
+    // As issuer, configure credential issuance exchange
     // POST /exchanges
     const exchange = new ResidentCardIssuance();
     await request(app.getHttpServer())
@@ -57,16 +61,39 @@ export const residentCardExchangeSuite = () => {
     expect(didAuthVp).toBeDefined();
 
     // As holder, continue exchange by submitting did auth presention
-    await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true);
+    const firstContinuationResponse = await walletClient.continueExchange(
+      issuanceExchangeContinuationEndpoint,
+      didAuthVp,
+      true
+    );
+    const submissionCheckEndpoint = firstContinuationResponse.vpRequest.interact.service[0].serviceEndpoint;
 
     // As the issuer, get the transaction
+    // TODO TODO TODO!!! How does the issuer know the transactionId?
     const urlComponents = issuanceExchangeContinuationEndpoint.split('/');
     const transactionId = urlComponents.pop();
     const transaction = await walletClient.getExchangeTransaction(exchange.getExchangeId(), transactionId);
 
-    // TODO: have the issuer get the review and approve. For now, just issue directly
+    // As the issuer, check the result of the transaction verification
+    expect(transaction.presentationSubmission.verificationResult.checks).toContain('proof');
+    expect(transaction.presentationSubmission.verificationResult.errors).toHaveLength(0);
+
+    // As the issuer, create a presentation to provide the credential to the holder
     const issueResult = await exchange.issueCredential(didAuthVp, walletClient);
-    const issuedVc = issueResult.vp.verifiableCredential[0];
+    const issuedVP = issueResult.vp; // VP used to wrapped issued credentials
+    const submissionReview: SubmissionReviewDto = {
+      result: ReviewResult.approved,
+      vp: issuedVP
+    };
+    await walletClient.addSubmissionReview(exchange.getExchangeId(), transactionId, submissionReview);
+
+    // As the holder, check for a reviewed submission
+    const secondContinuationResponse = await walletClient.continueExchange(
+      issuanceExchangeContinuationEndpoint,
+      didAuthVp,
+      false
+    );
+    const issuedVc = secondContinuationResponse.vp.verifiableCredential[0];
     expect(issuedVc).toBeDefined();
 
     // Configure presentation exchange

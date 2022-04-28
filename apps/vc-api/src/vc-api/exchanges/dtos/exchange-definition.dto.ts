@@ -22,12 +22,18 @@ import { CallbackConfigurationDto } from './callback-configuration.dto';
 import { Type } from 'class-transformer';
 
 /**
- * A exchange definition
+ * In order to keep the VC-API implementation generic (not specific to any use-cases), exchanges are configured rather than coded into the application.
+ * This configuration is done at runtime via the use of Exchange Definitions.
  */
 export class ExchangeDefinitionDto {
   @IsString()
   exchangeId: string;
 
+  /**
+   * The Interact Service Definitions are related to the Interaction Types of the Verifiable Presentation Request (VPR) specification.
+   * However, as it is a configuration object, it not identical to a VPR interact services.
+   * It can be see as the input data that the application uses to generate VPR interact services during the exchanges.
+   */
   @ValidateNested()
   @IsArray()
   @Type(() => ExchangeInteractServiceDefinitionDto)
@@ -38,6 +44,9 @@ export class ExchangeDefinitionDto {
   @Type(() => VpRequestQueryDto)
   query: VpRequestQueryDto[];
 
+  /**
+   * Indicates whether or not
+   */
   @IsBoolean()
   isOneTime: boolean;
 

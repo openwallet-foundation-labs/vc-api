@@ -128,6 +128,22 @@
         "responses": { "200": { "description": "" } },
         "tags": ["vc-api"]
       }
+    },
+    "/vc-api/exchanges/{exchangeId}/{transactionId}/review": {
+      "post": {
+        "operationId": "VcApiController_addSubmissionReview",
+        "parameters": [
+          { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/SubmissionReviewDto" } }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
     }
   },
   "info": {
@@ -145,7 +161,8 @@
       "AuthenticateDto": { "type": "object", "properties": {} },
       "ProvePresentationDto": { "type": "object", "properties": {} },
       "ExchangeDefinitionDto": { "type": "object", "properties": {} },
-      "VerifiablePresentationDto": { "type": "object", "properties": {} }
+      "VerifiablePresentationDto": { "type": "object", "properties": {} },
+      "SubmissionReviewDto": { "type": "object", "properties": {} }
     }
   }
 }

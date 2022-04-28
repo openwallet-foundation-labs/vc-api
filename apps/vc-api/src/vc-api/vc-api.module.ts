@@ -29,6 +29,7 @@ import { VpRequestEntity } from './exchanges/entities/vp-request.entity';
 import { TransactionEntity } from './exchanges/entities/transaction.entity';
 import { PresentationReviewEntity } from './exchanges/entities/presentation-review.entity';
 import { PresentationSubmissionEntity } from './exchanges/entities/presentation-submission.entity';
+import { VpSubmissionVerifierService } from './exchanges/vp-submission-verifier.service';
 
 @Module({
   imports: [
@@ -45,7 +46,7 @@ import { PresentationSubmissionEntity } from './exchanges/entities/presentation-
     HttpModule
   ],
   controllers: [VcApiController],
-  providers: [CredentialsService, ExchangeService],
+  providers: [CredentialsService, ExchangeService, VpSubmissionVerifierService],
   exports: [CredentialsService, ExchangeService]
 })
 export class VcApiModule {}

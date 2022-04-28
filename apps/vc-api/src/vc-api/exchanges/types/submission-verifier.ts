@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { VerificationResult } from '../../credentials/types/verification-result';
+import { VpRequestEntity } from '../entities/vp-request.entity';
+import { VerifiablePresentation } from './verifiable-presentation';
+
 /**
- * The status of a presentation review
- * These statuses are NON-STANDARD
- *
- * Similar to {@link https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.types.ts#L7}
- *
- * Maybe similar to Aries Issue-Credential protocol {@link https://github.com/hyperledger/aries-rfcs/blob/main/features/0453-issue-credential-v2/README.md}
+ * Intended to represent a verifier of a VP Request Submission.
+ * TODO: Maybe shouldn't only be for VPR verification but allow for more generic types.
  */
-export enum PresentationReviewStatus {
-  pendingSubmission = 'pending_submission',
-  pendingReview = 'pending_review',
-  approved = 'approved',
-  rejected = 'rejected'
+export interface SubmissionVerifier {
+  verifyVpRequestSubmission: (
+    vp: VerifiablePresentation,
+    vpRequest: VpRequestEntity
+  ) => Promise<VerificationResult>;
 }

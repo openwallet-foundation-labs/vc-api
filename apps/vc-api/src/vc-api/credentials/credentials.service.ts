@@ -34,6 +34,7 @@ import { VerifyOptionsDto } from './dtos/verify-options.dto';
 import { VerificationResultDto } from './dtos/verification-result.dto';
 import { AuthenticateDto } from './dtos/authenticate.dto';
 import { ProvePresentationDto } from './dtos/prove-presentation.dto';
+import { CredentialVerifier } from './types/credential-verifier';
 
 /**
  * Credential issuance options that Spruce accepts
@@ -59,7 +60,7 @@ interface ISpruceVerifyOptions {
  * This encapsulates the use of Spruce DIDKit
  */
 @Injectable()
-export class CredentialsService {
+export class CredentialsService implements CredentialVerifier {
   constructor(private didService: DIDService, private keyService: KeyService) {}
 
   async issueCredential(issueDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {

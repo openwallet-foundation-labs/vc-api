@@ -9,6 +9,11 @@ This [vc-api app](./apps/vc-api) is a NestJs implementation of the [W3C Credenti
 
 See [tutorials](./docs/tutorials/).
 
+## Credentials Exchanges
+
+Credential exchanges are the processes by which credentials are moved between wallet/agent and issuer/verifer.
+For more information on these processes, see the [exchanges documentation](./docs/exchanges.md). 
+
 ## Installation
 
 Install using the [rush commands](../../README.md#installation) described in the root README.
@@ -64,7 +69,7 @@ Not all of the endpoints available from the VC-API app are standard.
 | Continue Exchange | Yes | https://w3c-ccg.github.io/vc-api/#continue-exchange
 | Configure Exchange | No | 
 | Query Submissions | No |  
-| Submit Processing Result | No |
+| Submit Submission Review | No |
 
 ### DID Module
 

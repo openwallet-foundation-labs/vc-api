@@ -28,6 +28,7 @@ import { ExchangeDefinitionDto } from './exchanges/dtos/exchange-definition.dto'
 import { ProvePresentationDto } from './credentials/dtos/prove-presentation.dto';
 import { GetTransactionDto } from './exchanges/dtos/get-transaction.dto';
 import { TransactionDto } from './exchanges/dtos/transaction.dto';
+import { SubmissionReviewDto } from './exchanges/dtos/submission-review.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -144,5 +145,24 @@ export class VcApiController {
       transaction: transactionDto
     };
     return response;
+  }
+
+  /**
+   * Update a transaction review
+   * A NON-STANDARD endpoint currently.
+   * Similar to https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.controller.ts#L80
+   *
+   * TODO: Perhaps reviews are not separate from transactions? Perhaps one updates the transaction directly
+   * TODO: Needs to have special authorization
+   * @param exchangeId id of the exchange
+   * @param transactionId id of the exchange transaction
+   * @returns
+   */
+  @Post('/exchanges/:exchangeId/:transactionId/review')
+  async addSubmissionReview(
+    @Param('transactionId') transactionId: string,
+    @Body() submissionReview: SubmissionReviewDto
+  ) {
+    return await this.exchangeService.addReview(transactionId, submissionReview);
   }
 }

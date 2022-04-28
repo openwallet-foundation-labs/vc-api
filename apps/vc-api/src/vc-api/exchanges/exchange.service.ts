@@ -18,9 +18,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProofPurpose } from '@sphereon/pex';
 import { Repository } from 'typeorm';
-import { CredentialsService } from '../credentials/credentials.service';
 import { VerifiablePresentationDto } from '../credentials/dtos/verifiable-presentation.dto';
 import { ExchangeEntity } from './entities/exchange.entity';
 import { ExchangeResponseDto } from './dtos/exchange-response.dto';
@@ -28,13 +26,14 @@ import { VpRequestDto } from './dtos/vp-request.dto';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { TransactionEntity } from './entities/transaction.entity';
 import { ConfigService } from '@nestjs/config';
-import { VerifyOptionsDto } from '../credentials/dtos/verify-options.dto';
 import { TransactionDto } from './dtos/transaction.dto';
+import { ReviewResult, SubmissionReviewDto } from './dtos/submission-review.dto';
+import { VpSubmissionVerifierService } from './vp-submission-verifier.service';
 
 @Injectable()
 export class ExchangeService {
   constructor(
-    private vcApiService: CredentialsService,
+    private vpSubmissionVerifierService: VpSubmissionVerifierService,
     @InjectRepository(TransactionEntity)
     private transactionRepository: Repository<TransactionEntity>,
     @InjectRepository(ExchangeEntity)
@@ -96,19 +95,10 @@ export class ExchangeService {
       };
     }
     const transaction = transactionQuery.transaction;
-    const vpRequest = transaction.vpRequest;
-    const verifyOptions: VerifyOptionsDto = {
-      challenge: vpRequest.challenge,
-      proofPurpose: ProofPurpose.authentication,
-      verificationMethod: verifiablePresentation.proof.verificationMethod as string //TODO: fix types here
-    };
-    const result = await this.vcApiService.verifyPresentation(verifiablePresentation, verifyOptions);
-    if (!result.checks.includes('proof') || result.errors.length > 0) {
-      return {
-        errors: [`${transactionId}: verification of presentation proof not successful`, ...result.errors]
-      };
-    }
-    const { response, callback } = transaction.processPresentation(verifiablePresentation);
+    const { response, callback } = await transaction.processPresentation(
+      verifiablePresentation,
+      this.vpSubmissionVerifierService
+    );
     await this.transactionRepository.save(transaction);
     callback?.forEach((callback) => {
       // TODO: check if toDto is working. Seems be keeping it as Entity type.
@@ -133,7 +123,7 @@ export class ExchangeService {
     transactionId: string
   ): Promise<{ errors: string[]; transaction?: TransactionEntity }> {
     const transaction = await this.transactionRepository.findOne(transactionId, {
-      relations: ['vpRequest', 'presentationReview']
+      relations: ['vpRequest', 'presentationReview', 'presentationSubmission']
     });
     if (!transaction) {
       return { errors: [`${transactionId}: no transaction found for this transaction id`] };
@@ -148,5 +138,27 @@ export class ExchangeService {
       return { errors: [`${transactionId}: no exchange found for this transaction id`] };
     }
     return { errors: [], transaction: transaction };
+  }
+
+  public async addReview(transactionId: string, reviewDto: SubmissionReviewDto) {
+    const transactionQuery = await this.getExchangeTransaction(transactionId);
+    if (transactionQuery.errors.length > 0 || !transactionQuery.transaction) {
+      return {
+        errors: transactionQuery.errors
+      };
+    }
+    const transaction = transactionQuery.transaction;
+    switch (reviewDto.result) {
+      case ReviewResult.approved:
+        transaction.approvePresentationSubmission(reviewDto.vp);
+        break;
+      case ReviewResult.rejected:
+        transaction.rejectPresentationSubmission();
+        break;
+    }
+    await this.transactionRepository.save(transaction);
+    return {
+      errors: []
+    };
   }
 }

@@ -26,6 +26,7 @@ import { VpRequestDto } from '../src/vc-api/exchanges/dtos/vp-request.dto';
 import { ExchangeResponseDto } from '../src/vc-api/exchanges/dtos/exchange-response.dto';
 import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-query-type';
 import { TransactionDto } from '../src/vc-api/exchanges/dtos/transaction.dto';
+import { SubmissionReviewDto } from '../src/vc-api/exchanges/dtos/submission-review.dto';
 
 /**
  * A wallet client for e2e tests
@@ -106,7 +107,10 @@ export class WalletClient {
     expect(continueExchangeResponse.body.errors).toHaveLength(0);
     if (expectsVpRequest) {
       expect(continueExchangeResponse.body.vpRequest).toBeDefined();
+    } else {
+      expect(continueExchangeResponse.body.vpRequest).toBeUndefined();
     }
+    return continueExchangeResponse.body as ExchangeResponseDto;
   }
 
   /**
@@ -119,5 +123,20 @@ export class WalletClient {
     expect(continueExchangeResponse.body.errors).toHaveLength(0);
     expect(continueExchangeResponse.body.transaction).toBeDefined();
     return continueExchangeResponse.body.transaction as TransactionDto;
+  }
+
+  /**
+   * POST /exchanges/{exchangeId}/{transactionId}/review
+   */
+  async addSubmissionReview(
+    exchangeId: string,
+    transactionId: string,
+    submissionReviewDto: SubmissionReviewDto
+  ) {
+    const continueExchangeResponse = await request(this.#app.getHttpServer())
+      .post(`/vc-api/exchanges/${exchangeId}/${transactionId}/review`)
+      .send(submissionReviewDto)
+      .expect(201);
+    return continueExchangeResponse?.body;
   }
 }

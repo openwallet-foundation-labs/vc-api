@@ -17,13 +17,14 @@
 
 import { ProofPurpose } from '@sphereon/pex';
 import { IsString, IsOptional } from 'class-validator';
+import { VerifyOptions } from '../types/verify-options';
 
 /**
  * Parameters for verifying a verifiable credential or a verifiable presentation
  * https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyCredential
  * https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyPresentation
  */
-export class VerifyOptionsDto {
+export class VerifyOptionsDto implements VerifyOptions {
   /**
    * The URI of the verificationMethod used for the proof. Default assertionMethod URI.
    */
