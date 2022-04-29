@@ -146,12 +146,7 @@
       }
     }
   },
-  "info": {
-    "title": "SSI Wallet API",
-    "description": "Sample SSI Wallet NestJs API",
-    "version": "0.1",
-    "contact": {}
-  },
+  "info": { "title": "VC-API", "description": "Sample VC-API", "version": "0.1", "contact": {} },
   "tags": [],
   "servers": [],
   "components": {
