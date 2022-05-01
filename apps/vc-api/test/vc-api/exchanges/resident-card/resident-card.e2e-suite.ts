@@ -69,7 +69,7 @@ export const residentCardExchangeSuite = () => {
     const submissionCheckEndpoint = firstContinuationResponse.vpRequest.interact.service[0].serviceEndpoint;
 
     // As the issuer, get the transaction
-    // TODO TODO TODO!!! How does the issuer know the transactionId?
+    // TODO TODO TODO!!! How does the issuer know the transactionId? -> Maybe can rely on notification
     const urlComponents = issuanceExchangeContinuationEndpoint.split('/');
     const transactionId = urlComponents.pop();
     const transaction = await walletClient.getExchangeTransaction(exchange.getExchangeId(), transactionId);

@@ -29,8 +29,8 @@ async function setupApp() {
 
 function setupSwaggerDocument(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle('SSI Wallet API')
-    .setDescription('Sample SSI Wallet NestJs API')
+    .setTitle('VC-API')
+    .setDescription('Sample VC-API')
     .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
