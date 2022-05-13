@@ -144,7 +144,7 @@ export class TransactionEntity {
               interact: this.vpRequest.interact // Holder should query the same endpoint again to check if it has been reviewed
             }
           },
-          callback: []
+          callback: this.callback
         };
       }
       if (

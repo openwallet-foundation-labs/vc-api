@@ -109,6 +109,15 @@ To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/ex
 
 For the [exchanges documentation](../exchanges.md#mediated-exchange-interactions) for information about mediated exchanges.
 
+In order to test the notification functionality, you can use the "Post Test Server".
+This is a free website which allows you to view sent HTTP POST requests.
+With this service, requests are "dumped" to a "toilet" for later review.
+Please only use this service for this tutorial (or other non-production applications).
+
+To use the "Post Test Server" service with this tuorial, create a new "toilet" from the website home page.
+Then, in the resulting page, copy the POST URL, including the domain, into the exchange definition below.
+Creating a new "toilet" is to help you be sure that you are looking at the requests you have created.
+
 ```json
 {
     "exchangeId": "resident-card-issuance",
@@ -121,6 +130,11 @@ For the [exchanges documentation](../exchanges.md#mediated-exchange-interactions
     "interactServices": [
       {
         "type": "MediatedHttpPresentationService2021"
+      }
+    ],
+    "callback": [
+      {
+        "url": "FILL YOUR TOILET POST URL, for example 'http://ptsv2.com/t/ebitx-1652373826/post'"
       }
     ]
 }

@@ -74,6 +74,7 @@ describe('TransactionEntity', () => {
         expect(transaction.presentationSubmission.verificationResult).toEqual(submissionVerificationResult);
         expect(transaction.presentationReview.reviewStatus).toEqual(PresentationReviewStatus.pendingReview);
         expect(transaction.presentationReview.VP).toEqual(undefined); // Issuer hasn't submitted a VP yet
+        expect(callback).toEqual(configuredCallback);
       });
     });
   });
