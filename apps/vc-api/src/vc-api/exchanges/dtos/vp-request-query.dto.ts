@@ -25,11 +25,18 @@ import { VpRequestPresentationDefinitionQueryDto } from './vp-request-presentati
  * https://w3c-ccg.github.io/vp-request-spec/#query-types
  */
 export class VpRequestQueryDto {
+  /**
+   * Query types as listed in the VP Request spec.
+   * https://w3c-ccg.github.io/vp-request-spec/#query-types
+   *
+   * The "PresentationDefinition" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7
+   */
   @IsEnum(VpRequestQueryType)
   type: VpRequestQueryType;
 
   /**
-   * https://github.com/typestack/class-validator/issues/566#issuecomment-605515267
+   * The credential query.
+   * It should correspond to the query type.
    */
   @ValidateNested({ each: true })
   @IsArray()

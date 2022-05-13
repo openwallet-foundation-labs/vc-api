@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsArray, IsBoolean, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsString, ValidateNested } from 'class-validator';
 import { VpRequestQueryDto } from './vp-request-query.dto';
 import { ExchangeInteractServiceDefinitionDto } from './exchange-interact-service-definition.dto';
 import { CallbackConfigurationDto } from './callback-configuration.dto';
@@ -26,6 +26,9 @@ import { Type } from 'class-transformer';
  * This configuration is done at runtime via the use of Exchange Definitions.
  */
 export class ExchangeDefinitionDto {
+  /**
+   * The id of the exchange. It must be unique in the context of each VC API instance.
+   */
   @IsString()
   exchangeId: string;
 
@@ -45,11 +48,20 @@ export class ExchangeDefinitionDto {
   query: VpRequestQueryDto[];
 
   /**
-   * Indicates whether or not
+   * Indicates whether or not the exchange should only be used once.
+   *
+   * If wanting to ensure that the exchange will only be used once, this should be true.
+   * This could be useful to, for example, associate the exchange is a specific instance of a business process.
+   *
+   * If wanting to generated an exchange endpoint that can be reused, this should be false.
+   * This could be useful to, for example, generate an exchange url that be put on a QR code sticker and distributed
    */
   @IsBoolean()
   isOneTime: boolean;
 
+  /**
+   * An array of "callbacks" that will be used by VC API to send notifications on the status/result of the exchange.
+   */
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => CallbackConfigurationDto)

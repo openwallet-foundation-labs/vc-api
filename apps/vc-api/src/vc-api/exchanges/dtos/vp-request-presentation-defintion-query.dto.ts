@@ -22,6 +22,10 @@ import { IsPresentationDefinitionCredentialQuery } from './custom-validators/pre
  * https://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904
  */
 export class VpRequestPresentationDefinitionQueryDto {
+  /**
+   * An object conforming to the Presentation Definition specification
+   * https://identity.foundation/presentation-exchange/#presentation-definition
+   */
   @IsPresentationDefinitionCredentialQuery()
   presentationDefinition: IPresentationDefinition;
 }

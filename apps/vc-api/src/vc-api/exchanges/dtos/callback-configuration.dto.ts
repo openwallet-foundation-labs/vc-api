@@ -23,7 +23,9 @@ import { CallbackConfiguration } from '../types/callback-configuration';
  */
 export class CallbackConfigurationDto implements CallbackConfiguration {
   /**
-   * URL at a callback notification will be sent after the exchange has completed.
+   * URL at a callback notification will be sent:
+   * - when a VP is submitted to a "mediated" exchange
+   * - after the exchange has completed
    *
    * `require_tld: false` to allow localhost, see https://github.com/validatorjs/validator.js/issues/754
    */
