@@ -102,3 +102,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+appValues:
+  baseUrl: https://vc-api-dev.energyweb.org
+
