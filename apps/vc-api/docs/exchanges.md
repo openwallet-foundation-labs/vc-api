@@ -140,3 +140,19 @@ In order to keep the VC-API implementation generic (not specific to any use-case
 This configuration is done at runtime via the use of Exchange Definitions.
 
 For details on the structure and properties of an exchange definition, see the [Exchange Definition Data Transfer Object documentation](../src/vc-api/exchanges/dtos/exchange-definition.dto.ts) 
+
+### Exchange Definition for Issuance
+
+For issuance, a [Mediated Exchange](./exchanges.md#mediated-exchange-interactions) is required.
+This is because the issued VC will often depend data supplied by the credential requester (the eventual "holder").
+For example, the subject id of the credential may be a DID confirmed by a "DIDAuth" process
+or the VC may contain a "trust level" attribute based on the data provided in a VP by the holder.
+
+An example exchange definition for issuance can be seen in the [Resident Card tutorial](./tutorials/resident-card-tutorial.md#authority-portal-configure-the-credential-issuance-exchange).
+
+### Exchange Definition For Presentation
+
+For credential presentations, either a [Mediated Exchange](./exchanges.md#mediated-exchange-interactions)
+or an [Unmediated Exchange](./exchanges.md#unmediated-exchange-interactions) can be used.
+
+An example exchange definition of an unmediated exchange for presentation can be seen in the [Resident Card tutorial](./tutorials/resident-card-tutorial.md#verifier-configure-credential-exchange).
