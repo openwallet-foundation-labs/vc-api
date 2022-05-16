@@ -716,6 +716,10 @@ The Verifier needs to configure the parameters of the credential exchange.
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
 In the json below, `exchangeId` is an id unique to this exchange, for example a UUID.
 
+Note the constraint on the `$.type` path of the credential.
+This is used to require that the presented credential be of type "PermanentResidentCard".
+For more information on credential constraints, see the [Presentation Exchange specification](https://identity.foundation/presentation-exchange).
+
 ```json
 {
    "exchangeId":"<SOME UNIQUE ID>",
@@ -730,7 +734,23 @@ In the json below, `exchangeId` is an id unique to this exchange, for example a 
                         {
                           "id":"permanent_resident_card",
                           "name":"Permanent Resident Card",
-                          "purpose":"We can only allow permanent residents into the application"
+                          "purpose":"We can only allow permanent residents into the application",
+                          "constraints": {
+                            "fields":[
+                              {
+                                "path":[
+                                  "$.type"
+                                ],
+                                "filter":{
+                                  "type":"array",
+                                  "contains":{
+                                    "type":"string",
+                                    "const":"PermanentResidentCard"
+                                  }
+                                }
+                              }
+                            ]
+                          }
                         }
                     ]
                 }

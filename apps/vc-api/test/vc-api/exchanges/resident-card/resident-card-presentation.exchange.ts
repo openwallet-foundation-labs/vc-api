@@ -47,7 +47,21 @@ export class ResidentCardPresentation {
                   {
                     id: 'permanent_resident_card',
                     name: 'Permanent Resident Card',
-                    purpose: 'We can only allow permanent residents into the application'
+                    purpose: 'We can only allow permanent residents into the application',
+                    constraints: {
+                      fields: [
+                        {
+                          path: ['$.type'],
+                          filter: {
+                            type: 'array',
+                            contains: {
+                              type: 'string',
+                              const: 'PermanentResidentCard'
+                            }
+                          }
+                        }
+                      ]
+                    }
                   }
                 ]
               }
