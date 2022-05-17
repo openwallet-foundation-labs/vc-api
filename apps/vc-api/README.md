@@ -9,10 +9,15 @@ This [vc-api app](./apps/vc-api) is a NestJs implementation of the [W3C Credenti
 
 See [tutorials](./docs/tutorials/).
 
-## Credentials Exchanges
+## Credential Exchanges
 
 Credential exchanges are the processes by which credentials are moved between wallet/agent and issuer/verifer.
 For more information on these processes, see the [exchanges documentation](./docs/exchanges.md). 
+
+## Credential JSON-LD Contexts
+
+The Verifiable Credentials specification uses contexts to ensure that the meanings of terms in a credential are shared by all parties.
+For more information about this, see the [context documentation](./docs/contexts.md).
 
 ## Installation
 
