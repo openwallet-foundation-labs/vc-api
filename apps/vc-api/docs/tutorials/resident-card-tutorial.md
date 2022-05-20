@@ -155,7 +155,7 @@ Note that the `exchangeId` from the exchange creation is to be used as the last 
         "type": "https://energyweb.org/out-of-band-invitation/vc-api-exchange",
         "body": { 
             "credentialTypeAvailable": "PermanentResidentCard",
-            "url": "http://localhost:3000/elia-exchange/exchanges/resident-card-issuance" 
+            "url": "http://localhost:3000/vc-api/exchanges/resident-card-issuance" 
         }
     }
 } 
