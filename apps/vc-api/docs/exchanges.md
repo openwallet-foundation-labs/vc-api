@@ -139,7 +139,9 @@ In order to keep the VC-API implementation generic (not specific to any use-case
 
 This configuration is done at runtime via the use of Exchange Definitions.
 
-For details on the structure and properties of an exchange definition, see the [Exchange Definition Data Transfer Object documentation](../src/vc-api/exchanges/dtos/exchange-definition.dto.ts) 
+For details on the structure and properties of an exchange definition, see the [Exchange Definition Data Transfer Object documentation](../src/vc-api/exchanges/dtos/exchange-definition.dto.ts).
+
+Exhange Definitions are currently non-standard and custom to this VC-API implementation.
 
 ### Exchange Definition for Issuance
 

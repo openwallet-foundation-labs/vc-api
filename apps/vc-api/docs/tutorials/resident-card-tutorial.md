@@ -104,7 +104,7 @@ Then, from the Postman app, import [the open-api json](./open-api.json) and [the
 
 #### [Authority portal] Configure the credential issuance exchange
 
-The authority portal needs to configure the parameters of the parameters of the permanent resident card issuance exchange.
+The authority portal needs to configure the parameters of the permanent resident card issuance exchange by sending an [Exchange Definition](../exchanges.md#exchange-definitions).
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
 
 For the [exchanges documentation](../exchanges.md#mediated-exchange-interactions) for information about mediated exchanges.
@@ -136,7 +136,8 @@ Creating a new "toilet" is to help you be sure that you are looking at the reque
       {
         "url": "FILL YOUR TOILET POST URL, for example 'http://ptsv2.com/t/ebitx-1652373826/post'"
       }
-    ]
+    ],
+   "isOneTime":true
 }
 ```
 
@@ -712,7 +713,7 @@ The response should be similar to the following, where the `vp` contains the iss
 
 #### [Verifier] Configure Credential Exchange
 
-The Verifier needs to configure the parameters of the credential exchange.
+The Verifier needs to configure the parameters of the credential exchange by sending an [Exchange Definition](../exchanges.md#exchange-definitions).
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
 In the json below, `exchangeId` is an id unique to this exchange, for example a UUID.
 
