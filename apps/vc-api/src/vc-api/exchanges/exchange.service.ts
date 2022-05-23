@@ -19,6 +19,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { inspect } from 'util';
 import { VerifiablePresentationDto } from '../credentials/dtos/verifiable-presentation.dto';
 import { ExchangeEntity } from './entities/exchange.entity';
 import { ExchangeResponseDto } from './dtos/exchange-response.dto';
@@ -104,8 +105,8 @@ export class ExchangeService {
       // TODO: check if toDto is working. Seems be keeping it as Entity type.
       const body = TransactionDto.toDto(transaction);
       this.httpService.post(callback.url, body).subscribe({
-        next: (v) => Logger.log(JSON.stringify(v)),
-        error: (e) => Logger.error(e)
+        next: (v) => Logger.log(inspect(v)), // inspect used to replace circular references https://stackoverflow.com/a/18354289
+        error: (e) => Logger.error(inspect(e))
       });
     });
     return response;

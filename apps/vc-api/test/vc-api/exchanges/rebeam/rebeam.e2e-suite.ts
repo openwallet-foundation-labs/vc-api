@@ -22,7 +22,6 @@ import { ProofPurpose } from '@sphereon/pex';
 import { RebeamCpoNode } from './rebeam-cpo-node';
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
 import { RebeamSupplier } from './rebeam-supplier';
-import { inspect } from 'util';
 
 export const rebeamExchangeSuite = () => {
   it('Rebeam presentation using ed25119 signatures', async () => {
