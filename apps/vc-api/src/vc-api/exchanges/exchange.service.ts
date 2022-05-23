@@ -104,7 +104,7 @@ export class ExchangeService {
       // TODO: check if toDto is working. Seems be keeping it as Entity type.
       const body = TransactionDto.toDto(transaction);
       this.httpService.post(callback.url, body).subscribe({
-        next: (v) => Logger.log(v),
+        next: (v) => Logger.log(JSON.stringify(v)),
         error: (e) => Logger.error(e)
       });
     });
