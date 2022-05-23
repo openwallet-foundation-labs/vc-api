@@ -67,26 +67,22 @@ From a technical point of view, in this tutorial, we have access to the server A
 
 ### Technical workflows
 
-#### Issuance workflow
+#### 1. Issuance workflow
 The technical issuance workflow is as follows:
-- [Authority portal action] Configure a DID authentication exchange for the customer
-- [Authority portal action] Transmit an exchange invitation to the citizen as a QR code or a deep link
-- [Resident action] Request a credential using the request URL and obtain a [VP Request](https://w3c-ccg.github.io/vp-request-spec/) in return
-- [Resident action] Create a DID for the resident using the "did:key" DID method
-- [Resident action] Create an authentication proof (as a verfiable presentation) for the new DID
-- [Resident action] Send the authentication proof to the authority portal exchange endpoint
-- [Authority portal action] Create a DID for the authority portal using the "did:key" DID method
-- [Authority portal action] Issue a "PermanentResidentCard" credential to the resident's DID
-- [Authority portal action] Prove a presentation which contains the new "PermanentResidentCard" credential
-- [Authority portal action] Add a review of the authentication proof which contains the "PermanentResidentCard" presentation
-- [Resident action] Contact the exchange endpoint again to receive the presentation containing the "PermanentResidentCard" credential
+- [1.1 [Authority portal] Configure the credential issuance exchange](#11-authority-portal-configure-the-credential-issuance-exchange)
+- [1.2 [Authority portal] Provide an exchange invitation to the citizen](#12-authority-portal-provide-an-exchange-invitation-to-the-citizen)
+- [1.3 [Resident] Initiate issuance exchange using the request URL](#13-resident-initiate-issuance-exchange-using-the-request-url)
+- [1.4 [Resident] Create a DID authentication proof](#14-resident-create-a-did-authentication-proof)
+- [1.5 [Resident] Continue exchange by submitting the DID Auth proof](#15-resident-continue-exchange-by-submitting-the-did-auth-proof)
+- [1.6 [Authority portal] Issue "resident card" credential and add a review](#16-authority-portal-issue-resident-card-credential-and-add-a-review)
+- [1.7 [Resident] Continue the exchange and obtain the credentials](#17-resident-continue-the-exchange-and-obtain-the-credentials)
 
-#### Presentation workflow
-- [Authority portal action] Configure a credential exchange which requests the "PermanentResidentCard" credential 
-- [Authority portal action] Transmit an exchange invitation to the resident as a QR code or a deep link
-- [Resident action] Initiate the exchange and obtain a [Verifiable Presentation Request](https://w3c-ccg.github.io/vp-request-spec/) in return
-- [Resident action] Create a Verifiable Presentation which contains the "PermanentResidentCard" credential 
-- [Resident action] Send the Verifiable Presentation to the authority portal
+#### 2. Presentation workflow
+- [2.1 [Verifier] Configure Credential Exchange](#21-verifier-configure-credential-exchange)
+- [2.2 [Verifier] Provide an exchange invitation to the resident](22-verifier-provide-an-exchange-invitation-to-the-resident)
+- [2.3 [Resident] Present required credentials](23-resident-present-required-credentials)
+- [2.4 [Resident] Create the required presentation](24-resident-create-the-required-presentation)
+- [2.5 [Resident] Continue the exchange](25-resident-continue-the-exchange)
 
 ## Overview and Objective
 
@@ -94,15 +90,15 @@ The objective of this tutorial is walk through a simple credential issuance and 
 A diagram of this flow is available in the root README.
 
 ## Steps
-### Setup the Postman Collection
+### 0. Setup the Postman Collection
 
 First, download and install [Postman](https://www.postman.com/downloads/).
 
 Then, from the Postman app, import [the open-api json](./open-api.json) and [the environment](./ewf-ssi-wallet.postman_environment.json) for the Nest.js wallet. Instructions on how to import into Postman can be found [here](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman).
 
-### Permanent Resident Card issuance
+### 1. Permanent Resident Card issuance
 
-#### [Authority portal] Configure the credential issuance exchange
+#### 1.1 [Authority portal] Configure the credential issuance exchange
 
 The authority portal needs to configure the parameters of the permanent resident card issuance exchange by sending an [Exchange Definition](../exchanges.md#exchange-definitions).
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
@@ -143,7 +139,7 @@ Creating a new "toilet" is to help you be sure that you are looking at the reque
 
 The response should have a `201 Created` status code. 
 
-### [Authority portal] Provide an exchange invitation to the citizen
+#### 1.2 [Authority portal] Provide an exchange invitation to the citizen
 
 The authority portal can communicate to the citizen that they can initiate request for a "PermanentResidentCard" credential by
 providing them the json object below.
@@ -162,7 +158,7 @@ Note that the `exchangeId` from the exchange creation is to be used as the last 
 } 
 ```
 
-### [Resident] Initiate issuance exchange using the request URL
+#### 1.3 [Resident] Initiate issuance exchange using the request URL
 
 Initiate a request for a PermanentResidentCard by POSTing to the `url` directly in Postman or by navigating to the `Vc Api Controller initiate Exchange` request in the collection.
 If using the collection request, fill in the `exchangeid` param to be `resident-card-issuance`.
@@ -199,7 +195,7 @@ This means that we must authenticate as our chosen DID in order to obtain the cr
 Also note the `service` in the `interact` section of the VP Request.
 This is providing the location at which we can continue the credential exchange once we have met the `query` requirements.
       
-### [Resident] Create a DID authentication proof
+#### 1.4 [Resident] Create a DID authentication proof
 
 Let's create a new DID for which the citizen can prove control.
 This DID will be the Subject identifier of the Resident Card credential.
@@ -276,7 +272,7 @@ Send the request. The response should be a verifiable presentation, similar to t
 }
 ```
 
-### Continue exchange by submitting the DID Auth proof
+#### 1.5 [Resident] Continue exchange by submitting the DID Auth proof
 
 Continue the exchange using the DIDAuth presentation.
 To do this, open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange id}/{transaction id}` folder.
@@ -304,7 +300,7 @@ This response indicates that the client attempt to continue the exchange again (
 }
 ```
 
-#### [Authority portal] Issue "resident card" credential and add a review
+#### 1.6 [Authority portal] Issue "resident card" credential and add a review
 
 In a deployed environment, the authority portal would operate a service which could be notified of the submitted DID Auth presentation.
 However, in our case, we can continue with the issuance flow with the authority portal having implicit knowledge of the submitted presentation. 
@@ -641,7 +637,7 @@ Fill the json below appropriately and send as the body:
 
 The result should be a `201` status code with an empty `errors` array.
 
-#### [Resident] Continue the exchange and obtain the credentials
+#### 1.7 [Resident] Continue the exchange and obtain the credentials
 
 As the review is submitted, the resident can continue the exchange to receive the credential.
 
@@ -709,9 +705,9 @@ The response should be similar to the following, where the `vp` contains the iss
 }
 ```
 
-### Permanent Resident Card verification
+### 2. Permanent Resident Card verification
 
-#### [Verifier] Configure Credential Exchange
+#### 2.1 [Verifier] Configure Credential Exchange
 
 The Verifier needs to configure the parameters of the credential exchange by sending an [Exchange Definition](../exchanges.md#exchange-definitions).
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
@@ -771,7 +767,7 @@ For more information on credential constraints, see the [Presentation Exchange s
 
 The response should have a `201` code and have an empty errors array.
 
-#### [Verifier] Provide an exchange invitation to the resident
+#### 2.2 [Verifier] Provide an exchange invitation to the resident
 
 Having configured the exchange, the Verifier must then ask the resident to present the required credentials.
 
@@ -786,7 +782,7 @@ Having configured the exchange, the Verifier must then ask the resident to prese
 }
 ```
 
-#### [Resident] Present required credentials
+#### 2.3 [Resident] Present required credentials
 
 Initiate the credential exchange by POSTing to the `url` directly in Postman or by navigating to the `Vc Api Controller initiate Exchange` request in the collection.
 If using the collection request, fill in the `exchangeId` param to be the value used for the exchange Id by the Verifier.
@@ -836,7 +832,7 @@ This means that the holder must provide credentials which satisfy the `presentat
 Also note the `service` in the `interact` section of the VP Request.
 This is providing the location at which we can continue the credential request flow once we have met the `query` requirements.
       
-### [Resident] Create the required presentation
+#### 2.4 [Resident] Create the required presentation
 
 Then, open the `Vc Api Controller prove Presentation` request under the `vc-api/presentations/prove` folder.
 In the request body, use the following json, filled with your own values.
@@ -989,7 +985,7 @@ Send the request. The response should be a verifiable presentation, similar to t
 }
 ```
 
-### [Resident] Continue the exchange
+#### 2.5 [Resident] Continue the exchange
 
 Continue the exchange by sending the VP in response to the VP Request that was previously received.
 
