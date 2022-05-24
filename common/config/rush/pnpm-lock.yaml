@@ -16,6 +16,7 @@ specifiers:
   '@rush-temp/w3c-ccg-webkms': file:./projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': ~2.3.2
   '@sphereon/pex': ~1.0.2
+  '@sphereon/pex-models': ~1.1.0
   '@spruceid/didkit-wasm-node': ~0.1.6
   '@trust/keyto': ^1.0.1
   '@types/express': ^4.17.13
@@ -36,7 +37,6 @@ specifiers:
   ethr-did-resolver: ~5.0.2
   jest: 27.0.6
   jose: ^4.1.5
-  nock: ~13.2.4
   prettier: ^2.3.2
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
@@ -67,6 +67,7 @@ dependencies:
   '@rush-temp/w3c-ccg-webkms': file:projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
   '@sphereon/pex': 1.0.2
+  '@sphereon/pex-models': 1.1.0
   '@spruceid/didkit-wasm-node': 0.1.6
   '@trust/keyto': 1.0.1
   '@types/express': 4.17.13
@@ -87,7 +88,6 @@ dependencies:
   ethr-did-resolver: 5.0.2
   jest: 27.0.6_ts-node@10.7.0
   jose: 4.1.5
-  nock: 13.2.4
   prettier: 2.4.1
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
@@ -8168,7 +8168,7 @@ packages:
     dev: false
 
   file:projects/ssi-vc-api.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-85bs55d6nZh3c22e+UuUHOKgBVBWGYGnTSVcATm48nCUAkGsryEqoW81HcW4FO4kO3ARbcbmIdwMXqXHNjnVkw==, tarball: file:projects/ssi-vc-api.tgz}
+    resolution: {integrity: sha512-MMrdTOdLvwmXyFXIPNuD6ZmUGh/jVKpPW30H1XV43V/9XcutV22mI2KPAkkv3Pi5zD+fxUfOqFgmd6P6BWITTQ==, tarball: file:projects/ssi-vc-api.tgz}
     id: file:projects/ssi-vc-api.tgz
     name: '@rush-temp/ssi-vc-api'
     version: 0.0.0
@@ -8185,6 +8185,7 @@ packages:
       '@nestjs/testing': 8.1.2_830699a7a1bc4b367722dd63c0377123
       '@nestjs/typeorm': 8.0.2_12346420c5d0822584d78b786936ea28
       '@sphereon/pex': 1.0.2
+      '@sphereon/pex-models': 1.1.0
       '@spruceid/didkit-wasm': 0.1.9
       '@spruceid/didkit-wasm-node': 0.1.6
       '@types/express': 4.17.13

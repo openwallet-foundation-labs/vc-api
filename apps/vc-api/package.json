@@ -67,7 +67,8 @@
     "ts-node": "^10.7.0",
     "tsconfig-paths": "^3.10.1",
     "typescript": "^4.3.5",
-    "nock": "~13.2.4"
+    "nock": "~13.2.4",
+    "@sphereon/pex-models": "~1.1.0"
   },
   "jest": {
     "moduleFileExtensions": [

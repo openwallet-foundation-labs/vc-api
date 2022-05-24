@@ -27,6 +27,8 @@ import { ExchangeResponseDto } from '../src/vc-api/exchanges/dtos/exchange-respo
 import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-query-type';
 import { TransactionDto } from '../src/vc-api/exchanges/dtos/transaction.dto';
 import { SubmissionReviewDto } from '../src/vc-api/exchanges/dtos/submission-review.dto';
+import { IPresentationDefinition } from '@sphereon/pex';
+import { PresentationDto } from 'src/vc-api/credentials/dtos/presentation.dto';
 
 /**
  * A wallet client for e2e tests
@@ -62,6 +64,17 @@ export class WalletClient {
     const postResponse = await request(this.#app.getHttpServer())
       .post('/vc-api/credentials/issue')
       .send(issueCredentialDto)
+      .expect(201);
+    return postResponse.body;
+  }
+
+  async presentationFrom(
+    presentationDefinition: IPresentationDefinition,
+    credentials: VerifiableCredentialDto[]
+  ): Promise<PresentationDto> {
+    const postResponse = await request(this.#app.getHttpServer())
+      .post('/vc-api/presentations/from')
+      .send({ presentationDefinition, credentials })
       .expect(201);
     return postResponse.body;
   }

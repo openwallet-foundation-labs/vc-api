@@ -113,17 +113,24 @@ export class VpSubmissionVerifierService implements SubmissionVerifier {
     const pex: PEX = new PEX();
 
     credentialQuery.forEach(({ presentationDefinition }, index) => {
-      const { errors: partialErrors } = pex.evaluatePresentation(
-        presentationDefinition,
-        presentation as IPresentation
-      );
+      const {
+        value: { descriptor_map },
+        errors: partialErrors
+      } = pex.evaluatePresentation(presentationDefinition, presentation as IPresentation);
 
-      errors.push(
-        ...partialErrors.map(
-          (error) =>
-            `Presentation definition (${index + 1}) validation failed, reason: ${error.message || 'Unknown'}`
-        )
-      );
+      const inputDescriptors = presentationDefinition.input_descriptors.map(({ id }) => id);
+      const mappedDescriptors = descriptor_map.map(({ id }) => id);
+      // Ignore errors if all input descriptors are satisfied https://github.com/Sphereon-Opensource/pex/issues/91
+      if (!inputDescriptors.every((id) => mappedDescriptors.includes(id))) {
+        errors.push(
+          ...partialErrors.map(
+            (error) =>
+              `Presentation definition (${index + 1}) validation failed, reason: ${
+                error.message || 'Unknown'
+              }`
+          )
+        );
+      }
     });
 
     return errors;

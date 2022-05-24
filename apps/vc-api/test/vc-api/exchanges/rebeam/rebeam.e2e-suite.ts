@@ -22,6 +22,7 @@ import { ProofPurpose } from '@sphereon/pex';
 import { RebeamCpoNode } from './rebeam-cpo-node';
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
 import { RebeamSupplier } from './rebeam-supplier';
+import { chargingDataCredential, presentationDefinition } from '../../credential.service.spec.data';
 
 export const rebeamExchangeSuite = () => {
   it('Rebeam presentation using ed25119 signatures', async () => {
@@ -30,7 +31,11 @@ export const rebeamExchangeSuite = () => {
 
     // SUPPLIER: Issue "rebeam-customer" credential
     const supplier = new RebeamSupplier();
-    const issuanceVp = await supplier.issueCredential(holderDID, walletClient);
+    const energyContractVp = await supplier.issueCredential(holderDID, walletClient);
+    const chargingDataVerifiableCredential = await walletClient.issueVC({
+      credential: chargingDataCredential,
+      options: { proofPurpose: ProofPurpose.authentication, verificationMethod: holderVerificationMethod }
+    });
 
     // CPO-NODE: Configure presentation exchange
     const callbackUrlBase = 'http://example.com';
@@ -49,15 +54,11 @@ export const rebeamExchangeSuite = () => {
     const presentationExchangeContinuationEndpoint = getContinuationEndpoint(presentationVpRequest);
     expect(presentationExchangeContinuationEndpoint).toContain(exchangeEndpoint);
 
-    const presentation = {
-      '@context': [
-        'https://www.w3.org/2018/credentials/v1',
-        'https://www.w3.org/2018/credentials/examples/v1'
-      ],
-      type: ['VerifiablePresentation'],
-      verifiableCredential: [issuanceVp.vp.verifiableCredential[0]],
-      holder: holderDID.id
-    };
+    const presentation = await walletClient.presentationFrom(presentationDefinition, [
+      energyContractVp.vp.verifiableCredential[0],
+      chargingDataVerifiableCredential
+    ]);
+
     const issuanceOptions: IssueOptionsDto = {
       proofPurpose: ProofPurpose.authentication,
       verificationMethod: holderVerificationMethod,

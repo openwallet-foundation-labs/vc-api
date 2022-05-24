@@ -35,6 +35,8 @@ import { VerificationResultDto } from './dtos/verification-result.dto';
 import { AuthenticateDto } from './dtos/authenticate.dto';
 import { ProvePresentationDto } from './dtos/prove-presentation.dto';
 import { CredentialVerifier } from './types/credential-verifier';
+import { PresentationDto } from './dtos/presentation.dto';
+import { IPresentationDefinition, IVerifiableCredential, PEX, Status } from '@sphereon/pex';
 
 /**
  * Credential issuance options that Spruce accepts
@@ -81,6 +83,43 @@ export class CredentialsService implements CredentialVerifier {
   ): Promise<VerificationResultDto> {
     const verifyOptions: ISpruceVerifyOptions = options;
     return JSON.parse(await verifyCredential(JSON.stringify(vc), JSON.stringify(verifyOptions)));
+  }
+
+  /**
+   * Assembles presentation from provided credentials according to definition
+   */
+  presentationFrom(
+    presentationDefinition: IPresentationDefinition,
+    credentials: VerifiableCredentialDto[]
+  ): PresentationDto {
+    const pex = new PEX();
+    // presentation should be created from selected credentials https://github.com/Sphereon-Opensource/pex/issues/91#issuecomment-1115940908
+    const { verifiableCredential, areRequiredCredentialsPresent } = pex.selectFrom(
+      presentationDefinition,
+      credentials as IVerifiableCredential[]
+    );
+    if (areRequiredCredentialsPresent !== Status.INFO) {
+      throw new Error('Credentials do not satisfy defintion');
+    }
+    const presentation = pex.presentationFrom(presentationDefinition, verifiableCredential);
+
+    // embed submission context to workaround failing to load context 'https://identity.foundation/presentation-exchange/submission/v1'
+    const submissionContext = {
+      PresentationSubmission: {
+        '@id': 'https://identity.foundation/presentation-exchange/#presentation-submission',
+        '@context': {
+          '@version': '1.1',
+          presentation_submission: {
+            '@id': 'https://identity.foundation/presentation-exchange/#presentation-submission',
+            '@type': '@json'
+          }
+        }
+      }
+    };
+    const submissionContextUri = 'https://identity.foundation/presentation-exchange/submission/v1';
+    presentation['@context'] = presentation['@context'].filter((c) => c !== submissionContextUri);
+    presentation['@context'].push(submissionContext as any);
+    return presentation as PresentationDto;
   }
 
   async provePresentation(provePresentationDto: ProvePresentationDto): Promise<VerifiablePresentationDto> {

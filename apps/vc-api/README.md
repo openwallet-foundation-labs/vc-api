@@ -75,6 +75,7 @@ Not all of the endpoints available from the VC-API app are standard.
 | Configure Exchange | No | 
 | Query Submissions | No |  
 | Submit Submission Review | No |
+| Create presentation from credenitals | No |
 
 ### DID Module
 
