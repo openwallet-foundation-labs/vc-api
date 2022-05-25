@@ -101,9 +101,22 @@ Then, from the Postman app, import [the open-api json](./open-api.json) and [the
 #### 1.1 [Authority portal] Configure the credential issuance exchange
 
 The authority portal needs to configure the parameters of the permanent resident card issuance exchange by sending an [Exchange Definition](../exchanges.md#exchange-definitions).
-To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
+To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send the request described below.
 
-For the [exchanges documentation](../exchanges.md#mediated-exchange-interactions) for information about mediated exchanges.
+**Request URL**
+
+`{VC API base url}/vc-api/exchanges`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+Fill in the `exchangeId` with a unique id, such as a [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier).
+
+Note the `interactService` `type` of `MediatedHttpPresentationService2021`.
+See the [exchanges documentation](../exchanges.md#mediated-exchange-interactions) for information about mediated exchanges.
 
 In order to test the notification functionality, you can use the "Post Test Server".
 This is a free website which allows you to view sent HTTP POST requests.
@@ -112,11 +125,11 @@ Please only use this service for this tutorial (or other non-production applicat
 
 To use the "Post Test Server" service with this tuorial, create a new "toilet" from the website home page.
 Then, in the resulting page, copy the POST URL, including the domain, into the exchange definition below.
-Creating a new "toilet" is to help you be sure that you are looking at the requests you have created.
+Creating a new "toilet" is to help you be sure that you are looking at the requests you (and not others) have created.
 
 ```json
 {
-    "exchangeId": "resident-card-issuance",
+    "exchangeId": "<FILL WITH SOME UNIQUE ID>",
     "query": [
       {
         "type": "DIDAuth",
@@ -133,11 +146,20 @@ Creating a new "toilet" is to help you be sure that you are looking at the reque
         "url": "FILL YOUR TOILET POST URL, for example 'http://ptsv2.com/t/ebitx-1652373826/post'"
       }
     ],
-   "isOneTime":true
+    "isOneTime":true
+}
+```
+**Sample Expected Response Body**
+
+```json
+{
+    "errors": []
 }
 ```
 
-The response should have a `201 Created` status code. 
+**Expected Response HTTP Status Code**
+
+`201 Created`
 
 #### 1.2 [Authority portal] Provide an exchange invitation to the citizen
 
@@ -152,7 +174,7 @@ Note that the `exchangeId` from the exchange creation is to be used as the last 
         "type": "https://energyweb.org/out-of-band-invitation/vc-api-exchange",
         "body": { 
             "credentialTypeAvailable": "PermanentResidentCard",
-            "url": "http://localhost:3000/vc-api/exchanges/resident-card-issuance" 
+            "url": "http://localhost:3000/vc-api/exchanges/{THE EXCHANGE ID FROM THE PREVIOUS STEP}" 
         }
     }
 } 
@@ -163,7 +185,31 @@ Note that the `exchangeId` from the exchange creation is to be used as the last 
 Initiate a request for a PermanentResidentCard by POSTing to the `url` directly in Postman or by navigating to the `Vc Api Controller initiate Exchange` request in the collection.
 If using the collection request, fill in the `exchangeid` param to be `resident-card-issuance`.
 
-Send the request. A similar json should be returned in the response body:
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/vc-api/exchanges/{EXCHANGE ID FROM STEP 1.1}`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+*empty*
+
+**Sample Expected Response Body**
+
+The response contains a VP Request, which is a specification defined here: https://w3c-ccg.github.io/vp-request-spec/.
+You can see that the VP Request's `query` section contains a `DIDAuth` query.
+This means that we must authenticate as our chosen DID in order to obtain the credential that we requested.
+
+The `challenge` value and the final fragment of the `serviceEndpoint`, which is the `transaction id`, should be different from the sample below.
+
+Also note the `service` in the `interact` section of the VP Request.
+This is providing the location at which we can continue the credential exchange once we have met the `query` requirements.
+
 ```json
 {
     "errors": [],
@@ -186,28 +232,39 @@ Send the request. A similar json should be returned in the response body:
     }
 }
 ```
-The `challenge` value and the final fragment of the `serviceEndpoint`, which is the `transaction id`, should be different.
 
-The response contains a VP Request, which is a specification defined here: https://w3c-ccg.github.io/vp-request-spec/.
-You can see that the VP Request's `query` section contains a `DIDAuth` query.
-This means that we must authenticate as our chosen DID in order to obtain the credential that we requested.
+**Expected Response HTTP Status Code**
 
-Also note the `service` in the `interact` section of the VP Request.
-This is providing the location at which we can continue the credential exchange once we have met the `query` requirements.
-      
-#### 1.4 [Resident] Create a DID authentication proof
+`201 Created`
+
+#### 1.4 [Resident] Create a DID
 
 Let's create a new DID for which the citizen can prove control.
 This DID will be the Subject identifier of the Resident Card credential.
 
 Navigate to the `DID Controller create` request under the `did` folder.
-Ensure the request body is as shown and send.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/did`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
 ```json
 {
     "method": "key"
 }
 ```
-This should give a response similar to this one, with a different `did`.
+
+**Sample Expected Response Body**
+
+Response body should be similar to the one below but with a different `did`.
 ```json
 {
     "id": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
@@ -227,8 +284,29 @@ This should give a response similar to this one, with a different `did`.
 }
 ```
 
-Then, open the `Vc Api Controller prove Authentication Presentation` request under the `vc-api` folder.
-In the request body, use the following json, filled with your own values.
+**Expected Response HTTP Status Code**
+
+`201 Created`
+
+#### 1.5 [Resident] Create a DID authentication proof
+
+In order to prove control over the DID created in the previous step, create a DID Authentication proof.
+
+Open the `Vc Api Controller prove Authentication Presentation` request under the `vc-api` folder.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/vc-api/presentations/prove/authentication`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+Fill the json below with your own values.
 The `challenge` should be value received from the VP Request in the previous step.
 
 ```json
@@ -242,6 +320,7 @@ The `challenge` should be value received from the VP Request in the previous ste
 }
 ```
 
+An example filed body is shown below.
 ```json
 {
     "did": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
@@ -253,7 +332,9 @@ The `challenge` should be value received from the VP Request in the previous ste
 }
 ```
 
-Send the request. The response should be a verifiable presentation, similar to the one below.
+**Sample Expected Response Body**
+
+The response should be a verifiable presentation, similar to the one below.
 ```json
 {
     "@context": [
@@ -272,16 +353,34 @@ Send the request. The response should be a verifiable presentation, similar to t
 }
 ```
 
-#### 1.5 [Resident] Continue exchange by submitting the DID Auth proof
+**Expected Response HTTP Status Code**
+
+`201 Created`
+
+#### 1.6 [Resident] Continue exchange by submitting the DID Auth proof
 
 Continue the exchange using the DIDAuth presentation.
 To do this, open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange id}/{transaction id}` folder.
 In the request params, use the `transactionId` from the `serviceEndpoint` in the VP Request and `exchangeId` as `resident-card-issuance`.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/vc-api/exchanges/{EXCHANGE ID}/{TRANSACTION ID}`
+
+**HTTP Verb**
+
+`PUT`
+
+**Request Body**
+
 In the request body, copy the VP that was obtained from the previous step.
-Send the request.
+
+**Sample Expected Response Body**
+
 The response should be similar to as shown below.
 This response indicates that the client attempt to continue the exchange again (after some interval), using the service endpoint.
-
 ```json
 {
     "errors": [],
@@ -292,7 +391,7 @@ This response indicates that the client attempt to continue the exchange again (
             "service": [
                 {
                     "type": "MediatedHttpPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/vc-api/exchanges/resident-card-issuance/27ce6175-bab7-4a1b-84b2-87cf87ad9163"
+                    "serviceEndpoint": "http://localhost:3000/vc-api/exchanges/{EXCHANGE ID}/27ce6175-bab7-4a1b-84b2-87cf87ad9163"
                 }
             ]
         }
@@ -300,24 +399,42 @@ This response indicates that the client attempt to continue the exchange again (
 }
 ```
 
-#### 1.6 [Authority portal] Issue "resident card" credential and add a review
+**Expected Response HTTP Status Code**
 
-In a deployed environment, the authority portal would operate a service which could be notified of the submitted DID Auth presentation.
-However, in our case, we can continue with the issuance flow with the authority portal having implicit knowledge of the submitted presentation. 
+`200 OK`
+
+#### 1.7 [Authority portal] Check for notification of submitted presentation
+
+Check the "toilet" configured as the callback when configuring the exchange definition.
+There should be a notification of a submitted presentation for the authority portal to review.
 
 The authority portal can rely on VC-API's verification of the credential proofs and conformance to the credential query.
 The authority portal can then proceed with reviewing the presentation and issuing the "resident card" credential.
-First, the authority portal needs a DID from which they can issue a credential.
 
+#### 1.7 [Authority portal] Create issuer DID
+The authority portal needs a DID from which they can issue a credential.
 Again, navigate to the `DID Controller create` request under the `did` folder.
-Ensure the request body is as shown and send.
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/did`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
 ```json
 {
     "method": "key"
 }
 ```
 
-Again, this should give a response similar to this one, with a different `did`.
+**Sample Expected Response Body**
+
+This should give a response similar to this one, with a different `did`.
 Note down the `id` property. This is the authority portals's DID.
 
 ```json
@@ -339,11 +456,28 @@ Note down the `id` property. This is the authority portals's DID.
 }
 ```
 
-After having created a new DID, the authority portal can then issue a credential to the resident DID that was previously created.
-The authority portal may want to confirm that the resident in question controls the DID first, however this step is currently omitted.
+**Expected Response HTTP Status Code**
 
+`201 Created`
+
+#### 1.7 [Authority portal] Issue "resident card" credential and add a review
+
+After having created a new DID, the authority portal can then issue a credential to the resident DID that was previously created.
 Navigate to the `Vc Api Controller issue Credential` request under the `vc-api` folder.
-Fill in, in the JSON below, the resident DID as the `subject` id, the authority portal DID as the `issuer` id and the `verificationMethod.id` from the DID document of the authority portal as the `options.verificationMethod` from the DIDs that were generated in previous steps.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/credentials/issue`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+Fill in, in the JSON below, the resident DID as the `subject` id and the authority portal DID as the `issuer` from the DIDs that were generated in previous steps.
 
 ```json
 {
@@ -379,14 +513,13 @@ Fill in, in the JSON below, the resident DID as the `subject` id, the authority 
       }
     },
     "options": {
-        "verificationMethod": "<FILL AUTHORITY VERIFICATION METHOD>",
-        "proofPurpose": "assertionMethod"
     }
 }
 ```
 
-Once the DIDs are filled in, send the request.
-The response should have a `201` code and have a body similar to the json below.
+**Sample Expected Response Body**
+
+The resonse is an issued Verifiable Credential, similar to the one shown below.
 
 ```json
 {
@@ -429,8 +562,22 @@ The response should have a `201` code and have a body similar to the json below.
 }
 ```
 
+#### 1.7 [Authority portal] Wrap the issued VC in a VP
+
 The authority portal should then prove a presentation in order to present the credential to the resident.
 Open the `Vc Api Controller prove Presentation` request under the `vc-api` folder.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/vc-api/presentations/prove`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
 
 Fill the body with json below, replacing the "FILL" values appropriately.
 
@@ -504,7 +651,9 @@ For example, the body with the filled values would look like:
 }
 ```
 
-This should return a verifiable presentation similar to this one:
+**Sample Expected Response Body**
+
+The response body should return a verifiable presentation similar to this one:
 ```json
 {
     "@context": [
@@ -562,10 +711,28 @@ This should return a verifiable presentation similar to this one:
 }
 ```
 
+**Expected Response HTTP Status Code**
+
+`201 Created`
+
+#### 1.7 [Authority portal] Add a review to the in-progress exchange
+
 With a verifiable presentation in hand, the authority portal can add a review to the in-progress exchange.
 Open the `Vc Api Controller add Submission Review` request under the `vc-api/exchanges/{exchange id}/{transaction id}` folder.
 
+Send the request as described below.
+
+**Request URL**
+
 Use the same `exchangeId` and `transactionId` as the path variables as in the "Continue Exchange" step.
+
+`{VC API base url}/vc-api/exchanges/{exchange id}/{transaction id}/review`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
 
 Fill the json below appropriately and send as the body:
 ```json
@@ -635,7 +802,17 @@ Fill the json below appropriately and send as the body:
 }
 ```
 
-The result should be a `201` status code with an empty `errors` array.
+**Sample Expected Response Body**
+
+```json
+{
+    "errors": []
+}
+```
+
+**Expected Response HTTP Status Code**
+
+`201 Created`
 
 #### 1.7 [Resident] Continue the exchange and obtain the credentials
 
@@ -711,7 +888,21 @@ The response should be similar to the following, where the `vp` contains the iss
 
 The Verifier needs to configure the parameters of the credential exchange by sending an [Exchange Definition](../exchanges.md#exchange-definitions).
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
-In the json below, `exchangeId` is an id unique to this exchange, for example a UUID.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/vc-api/exchanges`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+Fill `exchangeId` in the json below.
+`exchangeId` should be an id unique to this exchange, for example a UUID.
 
 Note the constraint on the `$.type` path of the credential.
 This is used to require that the presented credential be of type "PermanentResidentCard".
@@ -765,7 +956,17 @@ For more information on credential constraints, see the [Presentation Exchange s
 }
 ```
 
-The response should have a `201` code and have an empty errors array.
+**Sample Expected Response Body**
+
+```json
+{
+    "errors": []
+}
+```
+
+**Expected Response HTTP Status Code**
+
+`201 Created`
 
 #### 2.2 [Verifier] Provide an exchange invitation to the resident
 
@@ -782,12 +983,27 @@ Having configured the exchange, the Verifier must then ask the resident to prese
 }
 ```
 
-#### 2.3 [Resident] Present required credentials
+#### 2.3 [Resident] Initiate the presentation exchange
 
 Initiate the credential exchange by POSTing to the `url` directly in Postman or by navigating to the `Vc Api Controller initiate Exchange` request in the collection.
-If using the collection request, fill in the `exchangeId` param to be the value used for the exchange Id by the Verifier.
+Send the request as described below.
 
-Send the request. A similar json should be returned in the response body:
+**Request URL**
+
+If using the Postman collection request, fill in the `exchangeId` param to be the value used for the exchange Id by the Verifier.
+`{VC API base url}/vc-api/exchanges/{exchange id}`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+*empty*
+
+**Sample Expected Response Body**
+
+A similar json should be returned in the response body:
 ```json
 {
     "errors": [],
@@ -831,10 +1047,27 @@ This means that the holder must provide credentials which satisfy the `presentat
 
 Also note the `service` in the `interact` section of the VP Request.
 This is providing the location at which we can continue the credential request flow once we have met the `query` requirements.
+
+**Expected Response HTTP Status Code**
+
+`201 Created`
       
 #### 2.4 [Resident] Create the required presentation
 
-Then, open the `Vc Api Controller prove Presentation` request under the `vc-api/presentations/prove` folder.
+Open the `Vc Api Controller prove Presentation` request under the `vc-api/presentations/prove` folder.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/vc-api/presentations/prove`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
 In the request body, use the following json, filled with your own values.
 The `challenge` should be value received from the VP Request in the previous step.
 
@@ -923,7 +1156,9 @@ For example, your filled json would look like:
 }
 ```
 
-Send the request. The response should be a verifiable presentation, similar to the one below.
+**Sample Expected Response Body**
+
+The response should be a verifiable presentation, similar to the one below.
 ```json
 {
     "@context": [
@@ -985,18 +1220,39 @@ Send the request. The response should be a verifiable presentation, similar to t
 }
 ```
 
+**Expected Response HTTP Status Code**
+
+`201 Created`
+
 #### 2.5 [Resident] Continue the exchange
 
 Continue the exchange by sending the VP in response to the VP Request that was previously received.
+Open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange Id}` folder.
 
-To do this, open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange Id}` folder.
+Send the request as described below.
+
+**Request URL**
+
 In the request params, use the `transactionId` and `exchangeId` from the `serviceEndpoint` in the VP Request.
+
+`{VC API base url}/vc-api/exchanges/{exchangeId}/{transactionId}`
+
+**HTTP Verb**
+
+`PUT`
+
+**Request Body**
 
 In the request body, copy the VP that was obtained from the previous step.
 
-Send the request. The response should have a `200` status code and have an empty `errors` array, as shown below.
+**Sample Expected Response Body**
+
 ```json
 {
     "errors": []
 }
 ```
+
+**Expected Response HTTP Status Code**
+
+`200 OK`
