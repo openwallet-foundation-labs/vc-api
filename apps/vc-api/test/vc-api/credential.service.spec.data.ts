@@ -1,4 +1,3 @@
-import { IPresentation } from '@sphereon/pex';
 import { Optionality, Rules } from '@sphereon/pex-models';
 import { CredentialDto } from 'src/vc-api/credentials/dtos/credential.dto';
 import { Presentation } from 'src/vc-api/exchanges/types/presentation';
@@ -116,32 +115,34 @@ export const energyContractCredential: CredentialDto = {
   issuanceDate: '2022-03-18T08:57:32.477Z'
 };
 
-export const chargingDataCredential: CredentialDto = {
-  '@context': [
-    'https://www.w3.org/2018/credentials/v1',
-    {
-      timestamp: 'ew:timestamp',
-      kwh: 'ew:kwh',
-      chargingData: { '@id': 'ew:chargingData', '@type': 'ew:chargingData' },
-      ChargingData: 'ew:ChargingData',
-      contractDID: 'ew:contractDID',
-      evseId: 'ew:evseId',
-      ew: 'https://energyweb.org/ld-context-2022#'
-    }
-  ],
-  id: 'urn:uuid:a6032135-75d6-4019-b59d-420168c7cd85',
-  type: ['VerifiableCredential', 'ChargingData'],
-  credentialSubject: {
-    id: 'did:key:z6MkoB84PJkXzFpbqtfYV5WqBKHCSDf7A1SeepwzvE36QvCF',
-    chargingData: {
-      contractDID: 'did:ethr:blxm-local:0x429eCb49aAC34E076f19D5C91d7e8B956AEf9c08',
-      evseId: '123',
-      kwh: '5',
-      timestamp: '2022-04-05T15:45:35.346Z'
-    }
-  },
-  issuer: did,
-  issuanceDate: '2022-03-18T08:57:32.477Z'
+export const getChargingDataCredential: (issuerDid: string) => CredentialDto = (issuerDid) => {
+  return {
+    '@context': [
+      'https://www.w3.org/2018/credentials/v1',
+      {
+        timestamp: 'ew:timestamp',
+        kwh: 'ew:kwh',
+        chargingData: { '@id': 'ew:chargingData', '@type': 'ew:chargingData' },
+        ChargingData: 'ew:ChargingData',
+        contractDID: 'ew:contractDID',
+        evseId: 'ew:evseId',
+        ew: 'https://energyweb.org/ld-context-2022#'
+      }
+    ],
+    id: 'urn:uuid:a6032135-75d6-4019-b59d-420168c7cd85',
+    type: ['VerifiableCredential', 'ChargingData'],
+    credentialSubject: {
+      id: issuerDid,
+      chargingData: {
+        contractDID: 'did:ethr:blxm-local:0x429eCb49aAC34E076f19D5C91d7e8B956AEf9c08',
+        evseId: '123',
+        kwh: '5',
+        timestamp: '2022-04-05T15:45:35.346Z'
+      }
+    },
+    issuer: issuerDid,
+    issuanceDate: '2022-03-18T08:57:32.477Z'
+  };
 };
 
 export const energyContractVerifiableCredential: VerifiableCredential = {
@@ -157,7 +158,7 @@ export const energyContractVerifiableCredential: VerifiableCredential = {
 };
 
 export const chargingDataVerifiableCredential: VerifiableCredential = {
-  ...chargingDataCredential,
+  ...getChargingDataCredential(did),
   proof: {
     type: 'Ed25519Signature2018',
     proofPurpose: 'assertionMethod',
@@ -202,10 +203,7 @@ export const rebeamPresentation: Presentation = {
       }
     ]
   },
-  verifiableCredential: [
-    energyContractVerifiableCredential,
-    chargingDataVerifiableCredential
-  ]
+  verifiableCredential: [energyContractVerifiableCredential, chargingDataVerifiableCredential]
 } as Presentation;
 
 export const rebeamVerifiablePresentation = {

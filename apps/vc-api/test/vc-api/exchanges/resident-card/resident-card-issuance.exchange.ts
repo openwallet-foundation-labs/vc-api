@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { plainToClass } from 'class-transformer';
 import { WalletClient } from '../../../wallet-client';
 import { VerifiablePresentationDto } from '../../../../src/vc-api/credentials/dtos/verifiable-presentation.dto';
 import { CredentialDto } from '../../../../src/vc-api/credentials/dtos/credential.dto';
@@ -22,7 +23,7 @@ import { Presentation } from '../../../../src/vc-api/exchanges/types/presentatio
 import { ExchangeDefinitionDto } from '../../../../src/vc-api/exchanges/dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from '../../../../src/vc-api/exchanges/types/vp-request-interact-service-type';
 import { VpRequestQueryType } from '../../../../src/vc-api/exchanges/types/vp-request-query-type';
-import { plainToClass } from 'class-transformer';
+import { ProvePresentationOptionsDto } from '../../../../src/vc-api/credentials/dtos/prove-presentation-options.dto';
 
 export class ResidentCardIssuance {
   #exchangeId = 'permanent-resident-card-issuance';
@@ -65,15 +66,8 @@ export class ResidentCardIssuance {
     }
     const issuingDID = await walletClient.createDID('key');
     const credential = this.fillCredential(issuingDID.id, vp.holder);
-    const verificationMethodURI = issuingDID?.verificationMethod[0]?.id;
-    if (!verificationMethodURI) {
-      return { errors: ['verification method for issuance not available'] };
-    }
-    const options = {
-      verificationMethod: verificationMethodURI
-    };
     const issueCredentialDto = {
-      options,
+      options: {},
       credential
     };
     const vc = await walletClient.issueVC(issueCredentialDto);
@@ -82,8 +76,15 @@ export class ResidentCardIssuance {
       type: ['VerifiablePresentation'],
       verifiableCredential: [vc]
     };
+    const verificationMethodURI = issuingDID?.verificationMethod[0]?.id;
+    if (!verificationMethodURI) {
+      return { errors: ['verification method for issuance not available'] };
+    }
+    const presentationOptions: ProvePresentationOptionsDto = {
+      verificationMethod: verificationMethodURI
+    };
     const provePresentationDto = {
-      options,
+      options: presentationOptions,
       presentation
     };
     const returnVp = await walletClient.provePresentation(provePresentationDto);

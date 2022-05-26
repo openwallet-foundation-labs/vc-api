@@ -17,24 +17,25 @@
 
 import * as request from 'supertest';
 import * as nock from 'nock';
-import { IssueOptionsDto } from '../../../../src/vc-api/credentials/dtos/issue-options.dto';
 import { ProofPurpose } from '@sphereon/pex';
 import { RebeamCpoNode } from './rebeam-cpo-node';
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
 import { RebeamSupplier } from './rebeam-supplier';
-import { chargingDataCredential, presentationDefinition } from '../../credential.service.spec.data';
+import { getChargingDataCredential, presentationDefinition } from '../../credential.service.spec.data';
+import { ProvePresentationOptionsDto } from '../../../../src/vc-api/credentials/dtos/prove-presentation-options.dto';
 
 export const rebeamExchangeSuite = () => {
   it('Rebeam presentation using ed25119 signatures', async () => {
-    const holderDID = await walletClient.createDID('key');
-    const holderVerificationMethod = holderDID.verificationMethod[0].id;
+    const holderDIDDoc = await walletClient.createDID('key');
+    const holderVerificationMethod = holderDIDDoc.verificationMethod[0].id;
 
     // SUPPLIER: Issue "rebeam-customer" credential
     const supplier = new RebeamSupplier();
-    const energyContractVp = await supplier.issueCredential(holderDID, walletClient);
+    const energyContractVp = await supplier.issueCredential(holderDIDDoc, walletClient);
+    const credential = getChargingDataCredential(holderDIDDoc.id);
     const chargingDataVerifiableCredential = await walletClient.issueVC({
-      credential: chargingDataCredential,
-      options: { proofPurpose: ProofPurpose.authentication, verificationMethod: holderVerificationMethod }
+      credential,
+      options: {}
     });
 
     // CPO-NODE: Configure presentation exchange
@@ -59,12 +60,12 @@ export const rebeamExchangeSuite = () => {
       chargingDataVerifiableCredential
     ]);
 
-    const issuanceOptions: IssueOptionsDto = {
+    const presentationOptions: ProvePresentationOptionsDto = {
       proofPurpose: ProofPurpose.authentication,
       verificationMethod: holderVerificationMethod,
       challenge: presentationVpRequest.challenge
     };
-    const vp = await walletClient.provePresentation({ presentation, options: issuanceOptions });
+    const vp = await walletClient.provePresentation({ presentation, options: presentationOptions });
 
     // Holder submits presentation
     await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp, false);

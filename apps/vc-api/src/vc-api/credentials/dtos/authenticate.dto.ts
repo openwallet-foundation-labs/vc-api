@@ -16,7 +16,7 @@
  */
 
 import { IsString, ValidateNested } from 'class-validator';
-import { IssueOptionsDto } from './issue-options.dto';
+import { ProvePresentationOptionsDto } from './prove-presentation-options.dto';
 
 /**
  * DTO which contains DID holder to authenticate and options
@@ -26,5 +26,5 @@ export class AuthenticateDto {
   did: string;
 
   @ValidateNested()
-  options: IssueOptionsDto;
+  options: ProvePresentationOptionsDto;
 }

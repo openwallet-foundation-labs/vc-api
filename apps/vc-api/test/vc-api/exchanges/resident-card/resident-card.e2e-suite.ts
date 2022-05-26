@@ -15,17 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ProofPurpose } from '@sphereon/pex';
 import * as request from 'supertest';
 import * as nock from 'nock';
 import { IssueOptionsDto } from '../../../../src/vc-api/credentials/dtos/issue-options.dto';
-import { ResidentCardIssuance } from './resident-card-issuance.exchange';
-import { ProofPurpose } from '@sphereon/pex';
-import { ResidentCardPresentation } from './resident-card-presentation.exchange';
-import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
+import { PresentationDto } from '../../../../src/vc-api/credentials/dtos/presentation.dto';
 import {
   ReviewResult,
   SubmissionReviewDto
 } from '../../../../src/vc-api/exchanges/dtos/submission-review.dto';
+import { ResidentCardIssuance } from './resident-card-issuance.exchange';
+import { ResidentCardPresentation } from './resident-card-presentation.exchange';
+import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
+import { ProvePresentationOptionsDto } from 'src/vc-api/credentials/dtos/prove-presentation-options.dto';
 
 export const residentCardExchangeSuite = () => {
   it('should support Resident Card issuance and presentation', async () => {
@@ -46,27 +48,22 @@ export const residentCardExchangeSuite = () => {
 
     // As holder, create new DID and presentation to authentication as this DID
     // DID auth presentation: https://github.com/spruceid/didkit/blob/c5c422f2469c2c5cc2f6e6d8746e95b552fce3ed/lib/web/src/lib.rs#L382
-    const holderDID = await walletClient.createDID('key');
-    const holderVerificationMethod = holderDID.verificationMethod[0].id;
-    const options: IssueOptionsDto = {
+    const holderDIDDoc = await walletClient.createDID('key');
+    const holderVerificationMethod = holderDIDDoc.verificationMethod[0].id;
+    const options: ProvePresentationOptionsDto = {
       verificationMethod: holderVerificationMethod,
       proofPurpose: ProofPurpose.authentication,
       challenge: issuanceVpRequest.challenge
     };
     const didAuthResponse = await request(app.getHttpServer())
       .post(`${vcApiBaseUrl}/presentations/prove/authentication`)
-      .send({ did: holderDID.id, options })
+      .send({ did: holderDIDDoc.id, options })
       .expect(201);
     const didAuthVp = didAuthResponse.body;
     expect(didAuthVp).toBeDefined();
 
     // As holder, continue exchange by submitting did auth presention
-    const firstContinuationResponse = await walletClient.continueExchange(
-      issuanceExchangeContinuationEndpoint,
-      didAuthVp,
-      true
-    );
-    const submissionCheckEndpoint = firstContinuationResponse.vpRequest.interact.service[0].serviceEndpoint;
+    await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true);
 
     // As the issuer, get the transaction
     // TODO TODO TODO!!! How does the issuer know the transactionId? -> Maybe can rely on notification
@@ -117,21 +114,22 @@ export const residentCardExchangeSuite = () => {
 
     // Holder should parse VP Request for correct credentials...
     // Assume that holder figures out which VC they need and can prep presentation
-    const presentation = {
+    const presentation: PresentationDto = {
       '@context': [
         'https://www.w3.org/2018/credentials/v1',
         'https://www.w3.org/2018/credentials/examples/v1'
       ],
       type: ['VerifiablePresentation'],
-      verifiableCredential: [issuedVc]
+      verifiableCredential: [issuedVc],
+      holder: holderDIDDoc.id
     };
-    const issuanceOptions: IssueOptionsDto = {
-      proofPurpose: ProofPurpose.authentication,
+    const presentationOptions: ProvePresentationOptionsDto = {
       verificationMethod: holderVerificationMethod,
+      proofPurpose: ProofPurpose.authentication,
       created: '2021-11-16T14:52:19.514Z',
       challenge: presentationVpRequest.challenge
     };
-    const vp = await walletClient.provePresentation({ presentation, options: issuanceOptions });
+    const vp = await walletClient.provePresentation({ presentation, options: presentationOptions });
 
     // Holder submits presentation
     await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp, false);

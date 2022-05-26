@@ -33,9 +33,7 @@ export const vcApiSuite = () => {
         id: 'did:example:d23dd687a7dc6787646f2eb98d0'
       }
     };
-    const options: IssueOptionsDto = {
-      verificationMethod: didDoc.verificationMethod[0].id
-    };
+    const options: IssueOptionsDto = {};
     const postResponse = await request(app.getHttpServer())
       .post('/vc-api/credentials/issue')
       .send({ credential, options })

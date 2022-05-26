@@ -16,8 +16,8 @@
  */
 
 import { ValidateNested } from 'class-validator';
-import { IssueOptionsDto } from './issue-options.dto';
 import { PresentationDto } from './presentation.dto';
+import { ProvePresentationOptionsDto } from './prove-presentation-options.dto';
 
 /**
  * DTO which contains presentation and options
@@ -27,5 +27,5 @@ export class ProvePresentationDto {
   presentation: PresentationDto;
 
   @ValidateNested()
-  options: IssueOptionsDto;
+  options: ProvePresentationOptionsDto;
 }

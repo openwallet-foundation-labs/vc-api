@@ -19,10 +19,30 @@ import { ProofPurpose } from '@sphereon/pex';
 import { IsString, IsObject, IsOptional } from 'class-validator';
 
 /**
- * Options for specifying how the Data Integrity Proof is created for a credential issuance
- * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
+ * Options for specifying how the Data Integrity Proof is created for a credential presentation proof
+ * https://w3c-ccg.github.io/vc-api/#prove-presentation
  */
-export class IssueOptionsDto {
+export class ProvePresentationOptionsDto {
+  /**
+   * The type of the proof. Default is an appropriate proof type corresponding to the verification method.
+   */
+  @IsString()
+  @IsOptional()
+  type?: string;
+
+  /**
+   * The URI of the verificationMethod used for the proof. Default assertionMethod URI.
+   */
+  @IsString()
+  verificationMethod: string;
+
+  /**
+   * The purpose of the proof. Default 'assertionMethod'.
+   */
+  @IsString()
+  @IsOptional()
+  proofPurpose?: ProofPurpose;
+
   /**
    * The date and time of the proof (with a maximum accuracy in seconds). Default current system time.
    */

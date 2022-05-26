@@ -29,13 +29,13 @@ import {
   energyContractCredential,
   chargingDataVerifiableCredential,
   energyContractVerifiableCredential,
-  chargingDataCredential,
-  rebeamPresentation,
+  getChargingDataCredential,
   presentationDefinition,
-  rebeamVerifiablePresentation
+  rebeamVerifiablePresentation,
+  rebeamPresentation
 } from '../../../test/vc-api/credential.service.spec.data';
-import { challenge, did, key } from '../../../test/vc-api/credential.service.spec.key';
-import { PresentationDto } from './dtos/presentation.dto';
+import { challenge, did, key, didDoc } from '../../../test/vc-api/credential.service.spec.key';
+import { ProvePresentationOptionsDto } from './dtos/prove-presentation-options.dto';
 
 describe('CredentialsService', () => {
   let service: CredentialsService;
@@ -50,6 +50,7 @@ describe('CredentialsService', () => {
         {
           provide: DIDService,
           useValue: {
+            getDID: jest.fn(),
             getVerificationMethod: jest.fn()
           }
         },
@@ -78,24 +79,15 @@ describe('CredentialsService', () => {
 
   it.each([
     [energyContractCredential, energyContractVerifiableCredential],
-    [chargingDataCredential, chargingDataVerifiableCredential]
+    [getChargingDataCredential(did), chargingDataVerifiableCredential]
   ])(
     'credential %p can be issued to be a vc %p',
     async (credential: CredentialDto, expectedVc: VerifiableCredential) => {
       const issuanceOptions: IssueOptionsDto = {
-        proofPurpose: ProofPurpose.assertionMethod,
-        verificationMethod: verificationMethod,
         created: '2021-11-16T14:52:19.514Z'
       };
-      jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce({
-        id: verificationMethod,
-        type: 'some-verification-method-type',
-        controller: did,
-        publicKeyJwk: {
-          kid: 'some-key-id',
-          kty: 'OKP'
-        }
-      });
+      jest.spyOn(didService, 'getDID').mockResolvedValueOnce(didDoc);
+      jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce(didDoc.verificationMethod[0]);
       jest.spyOn(keyService, 'getPrivateKeyFromKeyId').mockResolvedValueOnce(key);
       const vc = await service.issueCredential({ credential, options: issuanceOptions });
       expect(vc['proof']['jws']).toBeDefined();
@@ -111,11 +103,10 @@ describe('CredentialsService', () => {
   );
 
   it('should be able to verify presentation of two credentials', async () => {
-    const issuanceOptions: IssueOptionsDto = {
-      proofPurpose: ProofPurpose.assertionMethod,
-      verificationMethod,
+    const issueOptions: IssueOptionsDto = {
       created: '2021-11-16T14:52:19.514Z'
     };
+    jest.spyOn(didService, 'getDID').mockResolvedValue(didDoc);
     jest.spyOn(didService, 'getVerificationMethod').mockResolvedValue({
       id: verificationMethod,
       type: 'some-verification-method-type',
@@ -125,15 +116,14 @@ describe('CredentialsService', () => {
         kty: 'OKP'
       }
     });
-
     jest.spyOn(keyService, 'getPrivateKeyFromKeyId').mockResolvedValue(key);
     const vc1 = await service.issueCredential({
       credential: energyContractCredential,
-      options: issuanceOptions
+      options: issueOptions
     });
     const vc2 = await service.issueCredential({
-      credential: chargingDataCredential,
-      options: issuanceOptions
+      credential: getChargingDataCredential(did),
+      options: issueOptions
     });
     const presentation = service.presentationFrom(presentationDefinition as IPresentationDefinition, [
       vc1,
@@ -152,24 +142,17 @@ describe('CredentialsService', () => {
   });
 
   it('should prove a vp', async () => {
-    const issuanceOptions: IssueOptionsDto = {
+    const presentationOptions: ProvePresentationOptionsDto = {
+      verificationMethod: didDoc.verificationMethod[0].id,
       proofPurpose: ProofPurpose.authentication,
-      verificationMethod: verificationMethod,
       created: rebeamVerifiablePresentation.proof.created
     };
-    jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce({
-      id: verificationMethod,
-      type: 'some-verification-method-type',
-      controller: did,
-      publicKeyJwk: {
-        kid: 'some-key-id',
-        kty: 'OKP'
-      }
-    });
+    jest.spyOn(didService, 'getDID').mockResolvedValueOnce(didDoc);
+    jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce(didDoc.verificationMethod[0]);
     jest.spyOn(keyService, 'getPrivateKeyFromKeyId').mockResolvedValueOnce(key);
     const vp = await service.provePresentation({
       presentation: rebeamPresentation,
-      options: issuanceOptions
+      options: presentationOptions
     });
     expect(energyContractVerifiableCredential['proof']['jws']).toBeDefined();
     /**
@@ -200,21 +183,14 @@ describe('CredentialsService', () => {
   });
 
   it('should be able to generate DIDAuth', async () => {
-    const issuanceOptions: IssueOptionsDto = {
+    const issuanceOptions: ProvePresentationOptionsDto = {
+      verificationMethod: didDoc.verificationMethod[0].id,
       proofPurpose: ProofPurpose.authentication,
-      verificationMethod: verificationMethod,
       created: '2021-11-16T14:52:19.514Z',
       challenge
     };
-    jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce({
-      id: verificationMethod,
-      type: 'some-verification-method-type',
-      controller: did,
-      publicKeyJwk: {
-        kid: 'some-key-id',
-        kty: 'OKP'
-      }
-    });
+    jest.spyOn(didService, 'getDID').mockResolvedValueOnce(didDoc);
+    jest.spyOn(didService, 'getVerificationMethod').mockResolvedValueOnce(didDoc.verificationMethod[0]);
     jest.spyOn(keyService, 'getPrivateKeyFromKeyId').mockResolvedValueOnce(key);
     const vp = await service.didAuthenticate({ did, options: issuanceOptions });
     expect(vp.holder).toEqual(did);

@@ -15,31 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DIDDocument } from 'did-resolver';
 import { WalletClient } from '../../../wallet-client';
 import { CredentialDto } from '../../../../src/vc-api/credentials/dtos/credential.dto';
 import { Presentation } from '../../../../src/vc-api/exchanges/types/presentation';
-import { DIDDocument } from 'did-resolver';
+import { ProvePresentationOptionsDto } from '../../../../src/vc-api/credentials/dtos/prove-presentation-options.dto';
 
 export class RebeamSupplier {
   /**
-   *
-   * TODO: get and approve presentation review
-   * @param vp
-   * @param walletClient
-   * @returns
+   * Issue credential to holder
    */
   async issueCredential(holderDidDoc: DIDDocument, walletClient: WalletClient) {
     const issuingDID = await walletClient.createDID('key');
     const credential = this.fillCredential(issuingDID.id, holderDidDoc.id);
-    const verificationMethodURI = issuingDID?.verificationMethod[0]?.id;
-    if (!verificationMethodURI) {
-      return { errors: ['verification method for issuance not available'] };
-    }
-    const options = {
-      verificationMethod: verificationMethodURI
-    };
     const issueCredentialDto = {
-      options,
+      options: {},
       credential
     };
     const vc = await walletClient.issueVC(issueCredentialDto);
@@ -48,8 +38,15 @@ export class RebeamSupplier {
       type: ['VerifiablePresentation'],
       verifiableCredential: [vc]
     };
+    const verificationMethodURI = issuingDID?.verificationMethod[0]?.id;
+    if (!verificationMethodURI) {
+      return { errors: ['verification method for issuance not available'] };
+    }
+    const presentationOptions: ProvePresentationOptionsDto = {
+      verificationMethod: verificationMethodURI
+    };
     const provePresentationDto = {
-      options,
+      options: presentationOptions,
       presentation
     };
     const returnVp = await walletClient.provePresentation(provePresentationDto);
