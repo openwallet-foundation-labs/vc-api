@@ -69,20 +69,25 @@ From a technical point of view, in this tutorial, we have access to the server A
 
 #### 1. Issuance workflow
 The technical issuance workflow is as follows:
-- [1.1 [Authority portal] Configure the credential issuance exchange](#11-authority-portal-configure-the-credential-issuance-exchange)
-- [1.2 [Authority portal] Provide an exchange invitation to the citizen](#12-authority-portal-provide-an-exchange-invitation-to-the-citizen)
-- [1.3 [Resident] Initiate issuance exchange using the request URL](#13-resident-initiate-issuance-exchange-using-the-request-url)
-- [1.4 [Resident] Create a DID authentication proof](#14-resident-create-a-did-authentication-proof)
-- [1.5 [Resident] Continue exchange by submitting the DID Auth proof](#15-resident-continue-exchange-by-submitting-the-did-auth-proof)
-- [1.6 [Authority portal] Issue "resident card" credential and add a review](#16-authority-portal-issue-resident-card-credential-and-add-a-review)
-- [1.7 [Resident] Continue the exchange and obtain the credentials](#17-resident-continue-the-exchange-and-obtain-the-credentials)
+- [1.1  [Authority portal] Configure the credential issuance exchange](#11-authority-portal-configure-the-credential-issuance-exchange)
+- [1.2  [Authority portal] Provide an exchange invitation to the citizen](#12-authority-portal-provide-an-exchange-invitation-to-the-citizen)
+- [1.3  [Resident] Initiate issuance exchange using the request URL](#13-resident-initiate-issuance-exchange-using-the-request-url)
+- [1.4  [Resident] Create a DID](#14-resident-create-a-did)
+- [1.5  [Resident] Create a DID authentication proof](#15-resident-create-a-did-authentication-proof)
+- [1.6  [Resident] Continue exchange by submitting the DID Auth proof](#16-resident-continue-exchange-by-submitting-the-did-auth-proof)
+- [1.7  [Authority portal] Check for notification of submitted presentation](#17-authority-portal-check-for-notification-of-submitted-presentation)
+- [1.8  [Authority portal] Create issuer DID](#18-authority-portal-create-issuer-did)
+- [1.9  [Authority portal] Issue "resident card" credential](#19-authority-portal-issue-resident-card-credential)
+- [1.10 [Authority portal] Wrap the issued VC in a VP](#110-authority-portal-wrap-the-issued-vc-in-a-vp)
+- [1.11 [Authority portal] Add a review to the exchange](#111-authority-portal-add-a-review-to-the-exchange)
+- [1.12 [Resident] Continue the exchange and obtain the credentials](#112-resident-continue-the-exchange-and-obtain-the-credentials)
 
 #### 2. Presentation workflow
-- [2.1 [Verifier] Configure Credential Exchange](#21-verifier-configure-credential-exchange)
-- [2.2 [Verifier] Provide an exchange invitation to the resident](22-verifier-provide-an-exchange-invitation-to-the-resident)
-- [2.3 [Resident] Present required credentials](23-resident-present-required-credentials)
-- [2.4 [Resident] Create the required presentation](24-resident-create-the-required-presentation)
-- [2.5 [Resident] Continue the exchange](25-resident-continue-the-exchange)
+- [2.1  [Verifier] Configure Credential Exchange](#21-verifier-configure-credential-exchange)
+- [2.2  [Verifier] Provide an exchange invitation to the resident](22-verifier-provide-an-exchange-invitation-to-the-resident)
+- [2.3  [Resident] Initiate the presentation exchange](#23-resident-initiate-the-presentation-exchange)
+- [2.4  [Resident] Create the required presentation](24-resident-create-the-required-presentation)
+- [2.5  [Resident] Continue the exchange](25-resident-continue-the-exchange)
 
 ## Overview and Objective
 
@@ -183,13 +188,13 @@ Note that the `exchangeId` from the exchange creation is to be used as the last 
 #### 1.3 [Resident] Initiate issuance exchange using the request URL
 
 Initiate a request for a PermanentResidentCard by POSTing to the `url` directly in Postman or by navigating to the `Vc Api Controller initiate Exchange` request in the collection.
-If using the collection request, fill in the `exchangeid` param to be `resident-card-issuance`.
 
 Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/vc-api/exchanges/{EXCHANGE ID FROM STEP 1.1}`
+If using the collection request, fill in the `exchangeid` param to be the exchange ID used in the first step.
+`{VC API base url}/vc-api/exchanges/{exchangeId}`
 
 **HTTP Verb**
 
@@ -411,7 +416,7 @@ There should be a notification of a submitted presentation for the authority por
 The authority portal can rely on VC-API's verification of the credential proofs and conformance to the credential query.
 The authority portal can then proceed with reviewing the presentation and issuing the "resident card" credential.
 
-#### 1.7 [Authority portal] Create issuer DID
+#### 1.8 [Authority portal] Create issuer DID
 The authority portal needs a DID from which they can issue a credential.
 Again, navigate to the `DID Controller create` request under the `did` folder.
 Send the request as described below.
@@ -460,7 +465,7 @@ Note down the `id` property. This is the authority portals's DID.
 
 `201 Created`
 
-#### 1.7 [Authority portal] Issue "resident card" credential and add a review
+#### 1.9 [Authority portal] Issue "resident card" credential
 
 After having created a new DID, the authority portal can then issue a credential to the resident DID that was previously created.
 Navigate to the `Vc Api Controller issue Credential` request under the `vc-api` folder.
@@ -562,7 +567,7 @@ The resonse is an issued Verifiable Credential, similar to the one shown below.
 }
 ```
 
-#### 1.7 [Authority portal] Wrap the issued VC in a VP
+#### 1.10 [Authority portal] Wrap the issued VC in a VP
 
 The authority portal should then prove a presentation in order to present the credential to the resident.
 Open the `Vc Api Controller prove Presentation` request under the `vc-api` folder.
@@ -715,7 +720,7 @@ The response body should return a verifiable presentation similar to this one:
 
 `201 Created`
 
-#### 1.7 [Authority portal] Add a review to the in-progress exchange
+#### 1.11 [Authority portal] Add a review to the exchange
 
 With a verifiable presentation in hand, the authority portal can add a review to the in-progress exchange.
 Open the `Vc Api Controller add Submission Review` request under the `vc-api/exchanges/{exchange id}/{transaction id}` folder.
@@ -814,7 +819,7 @@ Fill the json below appropriately and send as the body:
 
 `201 Created`
 
-#### 1.7 [Resident] Continue the exchange and obtain the credentials
+#### 1.12 [Resident] Continue the exchange and obtain the credentials
 
 As the review is submitted, the resident can continue the exchange to receive the credential.
 
