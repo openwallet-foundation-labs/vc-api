@@ -27,10 +27,12 @@ import { ExchangeService } from './exchanges/exchange.service';
 import { ExchangeResponseDto } from './exchanges/dtos/exchange-response.dto';
 import { ExchangeDefinitionDto } from './exchanges/dtos/exchange-definition.dto';
 import { ProvePresentationDto } from './credentials/dtos/prove-presentation.dto';
+import { VerifyCredentialDto } from './credentials/dtos/verify-credential.dto';
 import { GetTransactionDto } from './exchanges/dtos/get-transaction.dto';
 import { TransactionDto } from './exchanges/dtos/transaction.dto';
 import { SubmissionReviewDto } from './exchanges/dtos/submission-review.dto';
 import { PresentationDto } from './credentials/dtos/presentation.dto';
+import { VerificationResultDto } from './credentials/dtos/verification-result.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -49,6 +51,18 @@ export class VcApiController {
   @Post('credentials/issue')
   async issueCredential(@Body() issueDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {
     return await this.vcApiService.issueCredential(issueDto);
+  }
+
+  /**
+   * Verify a credential. Conforms to https://w3c-ccg.github.io/vc-api/#verify-credential
+   * @returns verification results: checks, warnings, errors
+   */
+  @Post('/credentials/verify')
+  async verifyCredential(
+    @Body()
+    verifyCredentialDto: VerifyCredentialDto
+  ): Promise<VerificationResultDto> {
+    return await this.vcApiService.verifyCredential(verifyCredentialDto.vc, verifyCredentialDto.options);
   }
 
   // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html
