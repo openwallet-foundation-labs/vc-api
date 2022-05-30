@@ -230,7 +230,7 @@ This is providing the location at which we can continue the credential exchange 
             "service": [
                 {
                     "type": "MediatedHttpPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/exchanges/resident-card-issuance/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
+                    "serviceEndpoint": "http://localhost:3000/exchanges/resident-card-issuance-82793/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
                 }
             ]
         }
@@ -366,11 +366,12 @@ The response should be a verifiable presentation, similar to the one below.
 
 Continue the exchange using the DIDAuth presentation.
 To do this, open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange id}/{transaction id}` folder.
-In the request params, use the `transactionId` from the `serviceEndpoint` in the VP Request and `exchangeId` as `resident-card-issuance`.
 
 Send the request as described below.
 
 **Request URL**
+
+In the request params, use the `transactionId` from the `serviceEndpoint` in the VP Request and `exchangeId` as the unique exchange ID configued in the initial step.
 
 `{VC API base url}/vc-api/exchanges/{EXCHANGE ID}/{TRANSACTION ID}`
 
