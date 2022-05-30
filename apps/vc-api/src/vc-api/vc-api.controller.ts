@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Put, HttpCode } from '@nestjs/common';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { IPresentationDefinition } from '@sphereon/pex';
 import { CredentialsService } from './credentials/credentials.service';
 import { IssueCredentialDto } from './credentials/dtos/issue-credential.dto';
@@ -58,6 +58,9 @@ export class VcApiController {
    * @returns verification results: checks, warnings, errors
    */
   @Post('/credentials/verify')
+  @HttpCode(200)
+  @ApiResponse({ status: 200, description: 'Verifiable Credential successfully verified' })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
   async verifyCredential(
     @Body()
     verifyCredentialDto: VerifyCredentialDto
