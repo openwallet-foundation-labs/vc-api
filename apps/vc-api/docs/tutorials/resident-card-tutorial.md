@@ -125,12 +125,12 @@ See the [exchanges documentation](../exchanges.md#mediated-exchange-interactions
 
 In order to test the notification functionality, you can use the "Post Test Server".
 This is a free website which allows you to view sent HTTP POST requests.
-With this service, requests are "dumped" to a "toilet" for later review.
+With this service, requests are saved to a dedicated location for later review.
 Please only use this service for this tutorial (or other non-production applications).
 
-To use the "Post Test Server" service with this tuorial, create a new "toilet" from the website home page.
+To use the "Post Test Server" service with this tutorial, create a new request bucket from the website home page.
 Then, in the resulting page, copy the POST URL, including the domain, into the exchange definition below.
-Creating a new "toilet" is to help you be sure that you are looking at the requests you (and not others) have created.
+Creating a new request bucket is to help you be sure that you are looking at the requests you (and not others) have created.
 
 ```json
 {
@@ -148,7 +148,7 @@ Creating a new "toilet" is to help you be sure that you are looking at the reque
     ],
     "callback": [
       {
-        "url": "FILL YOUR TOILET POST URL, for example 'http://ptsv2.com/t/ebitx-1652373826/post'"
+        "url": "FILL YOUR BUCKET POST URL, for example 'http://ptsv2.com/t/ebitx-1652373826/post'"
       }
     ],
     "isOneTime":true
@@ -410,7 +410,7 @@ This response indicates that the client attempt to continue the exchange again (
 
 #### 1.7 [Authority portal] Check for notification of submitted presentation
 
-Check the "toilet" configured as the callback when configuring the exchange definition.
+Check the request bucket configured as the callback when configuring the exchange definition.
 There should be a notification of a submitted presentation for the authority portal to review.
 
 The authority portal can rely on VC-API's verification of the credential proofs and conformance to the credential query.
