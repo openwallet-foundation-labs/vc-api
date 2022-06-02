@@ -27,8 +27,8 @@ export class KeyPair {
   public publicKeyThumbprint: string;
 
   @Column('simple-json')
-  public privateKeyJWK: JWK;
+  public privateKey: JWK;
 
   @Column('simple-json')
-  public publicKeyJWK: JWK;
+  public publicKey: JWK;
 }

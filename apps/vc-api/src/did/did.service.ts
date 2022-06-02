@@ -46,7 +46,19 @@ export class DIDService {
 
   public async generateKeyDID(): Promise<DIDDocument> {
     const keyDescription = await this.keyService.generateKey({ type: keyType.ed25519 });
-    const key = await this.keyService.getPublicKeyFromKeyId(keyDescription.keyId);
+    return await this.registerKeyDID(keyDescription.keyId);
+  }
+
+  /**
+   * Register a did:key for a key which is known to the server.
+   *
+   * The method is idempotent because did:key DID Document cannot be mutated.
+   *
+   * @param keyId keyId (JWK thumbprint) of the key stored on the server
+   * @returns DID Document of registered DID
+   */
+  public async registerKeyDID(keyId: string): Promise<DIDDocument> {
+    const key = await this.keyService.getPublicKeyFromKeyId(keyId);
     // Need to set kty because it is possibly undefined in 'jose' JWK type
     const difKey = { ...key, kty: 'OKP' };
     const didDoc = await DIDKeyFactory.generate(difKey);

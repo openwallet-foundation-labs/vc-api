@@ -28,7 +28,9 @@ import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-que
 import { TransactionDto } from '../src/vc-api/exchanges/dtos/transaction.dto';
 import { SubmissionReviewDto } from '../src/vc-api/exchanges/dtos/submission-review.dto';
 import { IPresentationDefinition } from '@sphereon/pex';
-import { PresentationDto } from 'src/vc-api/credentials/dtos/presentation.dto';
+import { PresentationDto } from '../src/vc-api/credentials/dtos/presentation.dto';
+import { KeyPairDto } from '../src/key/dtos/key-pair.dto';
+import { KeyDescriptionDto } from 'src/key/dtos/key-description.dto';
 
 /**
  * A wallet client for e2e tests
@@ -38,6 +40,24 @@ export class WalletClient {
 
   constructor(app: INestApplication) {
     this.#app = app;
+  }
+
+  async exportKey(keyId: string): Promise<KeyPairDto> {
+    const getResponse = await request(this.#app.getHttpServer())
+      .get(`/key/${keyId}`)
+      .expect(200);
+    expect(getResponse.body).toHaveProperty('privateKey');
+    expect(getResponse.body).toHaveProperty('publicKey');
+    return getResponse.body;
+  }
+
+  async importKey(keyPair: KeyPairDto): Promise<KeyDescriptionDto> {
+    const postResponse = await request(this.#app.getHttpServer())
+      .post('/key')
+      .send(keyPair)
+      .expect(201);
+    expect(postResponse.body).toHaveProperty('keyId');
+    return postResponse.body;
   }
 
   async createDID(requestedMethod: string): Promise<DIDDocument> {

@@ -24,6 +24,7 @@ import { residentCardExchangeSuite } from './vc-api/exchanges/resident-card/resi
 import { VpRequestDto } from '../src/vc-api/exchanges/dtos/vp-request.dto';
 import { rebeamExchangeSuite } from './vc-api/exchanges/rebeam/rebeam.e2e-suite';
 import { vcApiSuite } from './vc-api/credentials/vc-api.e2e-suite';
+import { keySuite } from './key/key.e2e-suite';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -46,6 +47,7 @@ describe('App (e2e)', () => {
   });
 
   describe('DID (e2e)', didSuite);
+  describe('Key (e2e)', keySuite);
   describe('VC-API (e2e)', vcApiSuite);
   describe('Resident Card (e2e)', residentCardExchangeSuite);
   describe('Rebeam (e2e)', rebeamExchangeSuite);

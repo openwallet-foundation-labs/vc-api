@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { KeyPair } from './key-pair.entity';
-import { KeyService } from './key.service';
-import { KeyController } from './key.controller';
+import { IKeyDescription } from '@energyweb/w3c-ccg-webkms';
+import { IsObject } from 'class-validator';
 
-@Module({
-  imports: [TypeOrmModule.forFeature([KeyPair])],
-  providers: [KeyService],
-  exports: [KeyService],
-  controllers: [KeyController]
-})
-export class KeyModule {}
+/**
+ * KeyPair
+ */
+export class KeyDescriptionDto implements IKeyDescription {
+  /**
+   * id of key (for example, JWK thumbprint)
+   */
+  @IsObject()
+  public keyId: string;
+}
