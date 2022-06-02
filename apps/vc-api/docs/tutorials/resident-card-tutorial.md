@@ -169,9 +169,8 @@ Creating a new request bucket is to help you be sure that you are looking at the
 #### 1.2 [Authority portal] Provide an exchange invitation to the citizen
 
 The authority portal can communicate to the citizen that they can initiate request for a "PermanentResidentCard" credential by
-providing them the json object below.
-They can do this through a QR code for example.
-Note that the `exchangeId` from the exchange creation is to be used as the last fragment of the url.
+filling the `exchange id` in the json template below and transmitting the json to the citizen.
+They can do this transmission by encoding the json in a QR code and displaying to the citizen for example.
 
 ```json
 {
@@ -483,7 +482,7 @@ Send the request as described below.
 
 **Request Body**
 
-Fill in, in the JSON below, the resident DID as the `subject` id and the authority portal DID as the `issuer` from the DIDs that were generated in previous steps.
+Fill in, in the json below, the resident DID as the `subject` id and the authority portal DID as the `issuer` from the DIDs that were generated in previous steps.
 
 ```json
 {
