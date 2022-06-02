@@ -1,6 +1,24 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/key": {
+      "post": {
+        "operationId": "KeyController_import",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeyPairDto" } } }
+        },
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/key/{keyId}": {
+      "get": {
+        "operationId": "KeyController_export",
+        "parameters": [{ "name": "keyId", "required": true, "in": "path", "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "" } }
+      }
+    },
     "/did": {
       "post": {
         "operationId": "DIDController_create",
@@ -61,6 +79,14 @@
           "required": true,
           "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthenticateDto" } } }
         },
+        "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/presentations/from": {
+      "post": {
+        "operationId": "VcApiController_presentationFrom",
+        "parameters": [],
         "responses": { "201": { "description": "" } },
         "tags": ["vc-api"]
       }
@@ -151,6 +177,7 @@
   "servers": [],
   "components": {
     "schemas": {
+      "KeyPairDto": { "type": "object", "properties": {} },
       "CreateDidOptionsDto": { "type": "object", "properties": {} },
       "IssueCredentialDto": { "type": "object", "properties": {} },
       "AuthenticateDto": { "type": "object", "properties": {} },
