@@ -18,11 +18,18 @@
 import { VerifiableCredentialDto } from './verifiable-credential.dto';
 import { VerifyOptionsDto } from './verify-options.dto';
 
+import { IsObject, ValidateNested, IsDefined } from 'class-validator';
+import { Type } from 'class-transformer';
+
 export class VerifyCredentialDto {
   /**
    * A JSON-LD Verifiable Credential with a proof.
    * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
    */
+  @IsObject()
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => VerifiableCredentialDto)
   vc: VerifiableCredentialDto;
 
   /**
@@ -30,5 +37,9 @@ export class VerifyCredentialDto {
    * https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyCredential
    * https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyPresentation
    */
+  @IsObject()
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => VerifyOptionsDto)
   options: VerifyOptionsDto;
 }
