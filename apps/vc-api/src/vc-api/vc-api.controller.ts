@@ -33,7 +33,7 @@ import { TransactionDto } from './exchanges/dtos/transaction.dto';
 import { SubmissionReviewDto } from './exchanges/dtos/submission-review.dto';
 import { PresentationDto } from './credentials/dtos/presentation.dto';
 import { VerificationResultDto } from './credentials/dtos/verification-result.dto';
-
+import { VerifyPresentationDto } from './credentials/dtos/verify-presentation.dto';
 /**
  * VcApi API conforms to W3C vc-api
  * https://github.com/w3c-ccg/vc-api
@@ -111,6 +111,20 @@ export class VcApiController {
     @Body() provePresentationDto: ProvePresentationDto
   ): Promise<VerifiablePresentationDto> {
     return await this.vcApiService.provePresentation(provePresentationDto);
+  }
+
+  /**
+   * Verify a presentation. Conforms to https://w3c-ccg.github.io/vc-api/#verify-presentation
+   * @returns verification results: checks, warnings, errors
+   */
+  @Post('presentations/verify')
+  @HttpCode(200)
+  @ApiResponse({ status: 200, description: 'Verifiable Presentation successfully verified!' })
+  @ApiResponse({ status: 400, description: 'Invalid or malformed input' })
+  async verifyPresentation(
+    @Body() verifyPresentation: VerifyPresentationDto
+  ): Promise<VerificationResultDto> {
+    return this.vcApiService.verifyPresentation(verifyPresentation.vp, verifyPresentation.options);
   }
 
   /**
