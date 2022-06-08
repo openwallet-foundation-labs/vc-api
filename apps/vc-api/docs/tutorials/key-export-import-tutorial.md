@@ -23,11 +23,11 @@
 
 Steps covered in this tutorial:
 
-[1.1 Create DID](#11-create-a-did)
-[1.2 Export Key](#12-export-key)
+- [1.1 Create DID](#11-create-a-did)
+- [1.2 Export Key](#12-export-key)
 
-[2.1 Import Key](#21-import-key)
-[2.2 Register DID](#22-register-did)
+- [2.1 Import Key](#21-import-key)
+- [2.2 Register DID](#22-register-did)
 
 ## Steps
 
