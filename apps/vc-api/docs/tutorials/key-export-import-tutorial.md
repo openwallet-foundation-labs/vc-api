@@ -121,7 +121,7 @@ Send the request as described below.
 
 **Expected Response HTTP Status Code**
 
-`201 Created`
+`200 OK`
 
 ### 2.1 Import Key
 
