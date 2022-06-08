@@ -20,6 +20,7 @@ import { DIDService } from './did.service';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateDidOptionsDto } from './dto/create-did-options.dto';
+import { DidMethod } from './types/did-method';
 
 @ApiTags('did')
 @Controller('did')
@@ -33,10 +34,13 @@ export class DIDController {
    */
   @Post()
   async create(@Body() body: CreateDidOptionsDto): Promise<DIDDocument> {
-    if (body.method === 'ethr') {
+    if (body.method === DidMethod.ethr) {
       return await this.didService.generateEthrDID();
     }
-    if (body.method === 'key') {
+    if (body.method === DidMethod.key) {
+      if (body.keyId) {
+        return await this.didService.registerKeyDID(body.keyId);
+      }
       return await this.didService.generateKeyDID();
     }
     throw new Error('Requested DID method not supported');

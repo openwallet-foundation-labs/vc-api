@@ -15,27 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { DidMethod } from '../types/did-method';
-
-/**
- * Create DID options
- */
-export class CreateDidOptionsDto {
-  /**
-   * DID Method to create.
-   * Must be one of "key" or "ethr"
-   */
-  @IsEnum(DidMethod)
-  method: DidMethod;
-
-  /**
-   * id of key (for example, JWK thumbprint).
-   * This key must be known to the server already.
-   * If provided, DID will be created using this key.
-   * Currently only supported for did:key.
-   */
-  @IsString()
-  @IsOptional()
-  keyId?: string;
+export enum DidMethod {
+  key = 'key',
+  ethr = 'ethr'
 }

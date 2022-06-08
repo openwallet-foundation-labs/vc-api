@@ -16,7 +16,7 @@
  */
 
 import { IKeyDescription } from '@energyweb/w3c-ccg-webkms';
-import { IsObject } from 'class-validator';
+import { IsString } from 'class-validator';
 
 /**
  * KeyPair
@@ -25,6 +25,6 @@ export class KeyDescriptionDto implements IKeyDescription {
   /**
    * id of key (for example, JWK thumbprint)
    */
-  @IsObject()
+  @IsString()
   public keyId: string;
 }

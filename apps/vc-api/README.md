@@ -84,6 +84,11 @@ The DID Module in the [vc-api](./apps/vc-api) offers the generation of DIDs and 
 ### Key Module
 The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
 
+#### Key Import/Export
+
+The key module allows for the import and export of key pairs.
+A tutorial demonstrating this available here: [Key Export/Import Tutorial](./docs/tutorials/key-export-import-tutorial.md)
+
 ## Database
 Currently, the app uses an **in-memory DB** for now for app execution and tests.
 The rationale for this for executions that, as the app is only being used in a demo context, it is not necessary to persist data between executions.

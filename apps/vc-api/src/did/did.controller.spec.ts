@@ -23,6 +23,7 @@ import { DIDController } from './did.controller';
 import { DIDService } from './did.service';
 import { DIDDocumentEntity } from './entities/did-document.entity';
 import { VerificationMethodEntity } from './entities/verification-method.entity';
+import { DidMethod } from './types/did-method';
 
 describe('DidController', () => {
   let controller: DIDController;
@@ -47,7 +48,7 @@ describe('DidController', () => {
 
   describe('create', () => {
     it('should create an ethr DID', async () => {
-      const did = await controller.create({ method: 'ethr' });
+      const did = await controller.create({ method: DidMethod.ethr });
     });
   });
 });

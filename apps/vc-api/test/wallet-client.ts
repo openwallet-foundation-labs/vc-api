@@ -60,10 +60,10 @@ export class WalletClient {
     return postResponse.body;
   }
 
-  async createDID(requestedMethod: string): Promise<DIDDocument> {
+  async createDID(requestedMethod: string, keyId?: string): Promise<DIDDocument> {
     const postResponse = await request(this.#app.getHttpServer())
       .post('/did')
-      .send({ method: requestedMethod })
+      .send({ method: requestedMethod, keyId })
       .expect(201);
     expect(postResponse.body).toHaveProperty('id');
     expect(postResponse.body).toHaveProperty('verificationMethod');

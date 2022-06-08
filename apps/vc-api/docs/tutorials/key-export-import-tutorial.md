@@ -22,13 +22,16 @@
 ### Technical workflows
 
 Steps covered in this tutorial:
-1. DID Generation
-1. Key Export
-1. Key Import
+
+[1.1 Create DID](#11-create-a-did)
+[1.2 Export Key](#12-export-key)
+
+[2.1 Import Key](#21-import-key)
+[2.2 Register DID](#22-register-did)
 
 ## Steps
 
-### 1 Create a DID
+### 1.1 Create a DID
 
 Let's create a new DID.
 
@@ -78,7 +81,7 @@ Response body should be similar to the one below but with a different `did`.
 
 `201 Created`
 
-### 2 Export Key
+### 1.2 Export Key
 
 The key can be exported by using the key id located at `verificationMethod.publicKeyJwk.kid` in the DID document from the previous step.
 
@@ -116,9 +119,9 @@ Send the request as described below.
 }
 ```
 
-### 3 Import Key
+### 2.1 Import Key
 
-The key can be imported by providing the `privateKey` and `publicKey`.
+A key can be imported by providing the `privateKey` and `publicKey`.
 
 Send the request as described below.
 
@@ -136,15 +139,15 @@ Send the request as described below.
 {
   "privateKey": {
     "crv": "Ed25519",
-    "d": "31DlEXUMXAvcAuTpBl5cPlPavrzo4I9s63WiT0ni8zg",
-    "x": "5uRJcJ67oMzfaB3XXQeLNj_Bv3ew1mmV8lItQ1k52og",
+    "d": "XYinvK___oQmhBvL0LDJPmryrvXDNKebtFznjri2YWk",
+    "x": "E5ljjWvsZZ2NYpDr7QDbit-WWKMxbzn3YgMjRa1dShQ",
     "kty": "OKP"
   },
   "publicKey": {
     "crv": "Ed25519",
-    "x": "5uRJcJ67oMzfaB3XXQeLNj_Bv3ew1mmV8lItQ1k52og",
+    "x": "E5ljjWvsZZ2NYpDr7QDbit-WWKMxbzn3YgMjRa1dShQ",
     "kty": "OKP",
-    "kid": "KizsQVRSz6l73kFnrAHJ1V6c5YQS6I0SS9zyZMNNdRs"
+    "kid": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
   }
 }
 ```
@@ -153,8 +156,52 @@ Send the request as described below.
 
 ```json
 {
-  "keyId": "KizsQVRSz6l73kFnrAHJ1V6c5YQS6I0SS9zyZMNNdRs"
+  "keyId": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
 }
 ```
 
+### 2.2 Register DID
 
+A key can be registered against a key known to the server.
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/did`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+```json
+{
+  "method": "key",
+  "keyId": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
+}
+```
+
+**Sample Expected Response Body**
+
+The DID Document of the registered DID.
+
+```json
+{
+  "id": "did:key:z6MkfmmT2qF4bXwErwQ1dgWLxDLvCvGqGYJnudNULp7t63X9",
+  "verificationMethod": [
+    {
+      "id": "did:key:z6MkfmmT2qF4bXwErwQ1dgWLxDLvCvGqGYJnudNULp7t63X9#z6MkfmmT2qF4bXwErwQ1dgWLxDLvCvGqGYJnudNULp7t63X9",
+      "type": "Ed25519VerificationKey2018",
+      "controller": "did:key:z6MkfmmT2qF4bXwErwQ1dgWLxDLvCvGqGYJnudNULp7t63X9",
+      "publicKeyJwk": {
+        "crv": "Ed25519",
+        "x": "E5ljjWvsZZ2NYpDr7QDbit-WWKMxbzn3YgMjRa1dShQ",
+        "kty": "OKP",
+        "kid": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
+      }
+    }
+  ]
+}
+```
