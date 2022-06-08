@@ -119,6 +119,10 @@ Send the request as described below.
 }
 ```
 
+**Expected Response HTTP Status Code**
+
+`201 Created`
+
 ### 2.1 Import Key
 
 A key can be imported by providing the `privateKey` and `publicKey`.
@@ -159,6 +163,10 @@ Send the request as described below.
   "keyId": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
 }
 ```
+
+**Expected Response HTTP Status Code**
+
+`201 Created`
 
 ### 2.2 Register DID
 
@@ -205,3 +213,7 @@ The DID Document of the registered DID.
   ]
 }
 ```
+
+**Expected Response HTTP Status Code**
+
+`201 Created`
