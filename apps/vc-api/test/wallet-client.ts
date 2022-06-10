@@ -131,12 +131,13 @@ export class WalletClient {
   async continueExchange(
     exchangeContinuationEndpoint: string,
     vp: VerifiablePresentationDto,
-    expectsVpRequest: boolean
+    expectsVpRequest: boolean,
+    expectsProcessionInProgress: boolean = false
   ) {
     const continueExchangeResponse = await request(this.#app.getHttpServer())
       .put(exchangeContinuationEndpoint)
       .send(vp)
-      .expect(200);
+      .expect(expectsProcessionInProgress ? 202 : 200);
     expect(continueExchangeResponse.body.errors).toHaveLength(0);
     if (expectsVpRequest) {
       expect(continueExchangeResponse.body.vpRequest).toBeDefined();

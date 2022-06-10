@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { VerifiablePresentationDto } from 'src/vc-api/credentials/dtos/verifiable-presentation.dto';
 import { VpRequestDto } from './vp-request.dto';
 
@@ -46,4 +46,10 @@ export class ExchangeResponseDto {
   @ValidateNested()
   @IsOptional()
   vp?: VerifiablePresentationDto;
+
+  /**
+   * True if an exchange submission is currently being processed or reviewed asyncronously
+   */
+  @IsBoolean()
+  processingInProgress: boolean;
 }

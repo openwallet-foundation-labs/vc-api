@@ -71,6 +71,23 @@
         "tags": ["vc-api"]
       }
     },
+    "/vc-api/credentials/verify": {
+      "post": {
+        "operationId": "VcApiController_verifyCredential",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/VerifyCredentialDto" } }
+          }
+        },
+        "responses": {
+          "200": { "description": "Verifiable Credential successfully verified" },
+          "400": { "description": "Invalid input" }
+        },
+        "tags": ["vc-api"]
+      }
+    },
     "/vc-api/presentations/prove/authentication": {
       "post": {
         "operationId": "VcApiController_proveAuthenticationPresentation",
@@ -102,6 +119,23 @@
           }
         },
         "responses": { "201": { "description": "" } },
+        "tags": ["vc-api"]
+      }
+    },
+    "/vc-api/presentations/verify": {
+      "post": {
+        "operationId": "VcApiController_verifyPresentation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/VerifyPresentationDto" } }
+          }
+        },
+        "responses": {
+          "200": { "description": "Verifiable Presentation successfully verified!" },
+          "400": { "description": "Invalid or malformed input" }
+        },
         "tags": ["vc-api"]
       }
     },
@@ -142,7 +176,12 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
           }
         },
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": { "description": "Verifiable Presentation successfully submitted and verified" },
+          "202": {
+            "description": "Verifiable Presentation successfully submitted. Further review in progress."
+          }
+        },
         "tags": ["vc-api"]
       },
       "get": {
@@ -180,8 +219,10 @@
       "KeyPairDto": { "type": "object", "properties": {} },
       "CreateDidOptionsDto": { "type": "object", "properties": {} },
       "IssueCredentialDto": { "type": "object", "properties": {} },
+      "VerifyCredentialDto": { "type": "object", "properties": {} },
       "AuthenticateDto": { "type": "object", "properties": {} },
       "ProvePresentationDto": { "type": "object", "properties": {} },
+      "VerifyPresentationDto": { "type": "object", "properties": {} },
       "ExchangeDefinitionDto": { "type": "object", "properties": {} },
       "VerifiablePresentationDto": { "type": "object", "properties": {} },
       "SubmissionReviewDto": { "type": "object", "properties": {} }

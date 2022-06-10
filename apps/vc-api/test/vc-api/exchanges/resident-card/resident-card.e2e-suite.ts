@@ -63,7 +63,7 @@ export const residentCardExchangeSuite = () => {
     expect(didAuthVp).toBeDefined();
 
     // As holder, continue exchange by submitting did auth presention
-    await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true);
+    await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true, true);
 
     // As the issuer, get the transaction
     // TODO TODO TODO!!! How does the issuer know the transactionId? -> Maybe can rely on notification

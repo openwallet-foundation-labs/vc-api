@@ -121,7 +121,8 @@ export class TransactionEntity {
     if (errors.length > 0) {
       return {
         response: {
-          errors
+          errors,
+          processingInProgress: false
         },
         callback: []
       };
@@ -142,7 +143,8 @@ export class TransactionEntity {
               challenge: uuidv4(),
               query: [],
               interact: this.vpRequest.interact // Holder should query the same endpoint again to check if it has been reviewed
-            }
+            },
+            processingInProgress: true
           },
           callback: this.callback
         };
@@ -154,7 +156,8 @@ export class TransactionEntity {
         return {
           response: {
             errors: [],
-            vp: this.presentationReview?.VP
+            vp: this.presentationReview?.VP,
+            processingInProgress: false
           },
           callback: []
         };
@@ -164,7 +167,8 @@ export class TransactionEntity {
       this.presentationSubmission = new PresentationSubmissionEntity(presentation, verificationResult);
       return {
         response: {
-          errors: []
+          errors: [],
+          processingInProgress: false
         },
         callback: this.callback
       };

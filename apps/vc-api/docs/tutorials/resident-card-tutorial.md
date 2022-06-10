@@ -406,7 +406,7 @@ This response indicates that the client attempt to continue the exchange again (
 
 **Expected Response HTTP Status Code**
 
-`200 OK`
+`202 Accepted`
 
 #### 1.7 [Authority portal] Check for notification of submitted presentation
 

@@ -60,13 +60,15 @@ export class ExchangeService {
     const exchange = await this.exchangeRepository.findOne(exchangeId);
     if (!exchange) {
       return {
-        errors: [`${exchangeId}: no exchange definition found for this exchangeId`]
+        errors: [`${exchangeId}: no exchange definition found for this exchangeId`],
+        processingInProgress: false
       };
     }
     const baseUrl = this.configService.get<string>('baseUrl');
     if (!baseUrl) {
       return {
-        errors: [`base url is not defined`]
+        errors: [`base url is not defined`],
+        processingInProgress: false
       };
     }
     const baseWithControllerPath = `${baseUrl}/vc-api`;
@@ -74,7 +76,8 @@ export class ExchangeService {
     await this.transactionRepository.save(transaction);
     return {
       errors: [],
-      vpRequest: VpRequestDto.toDto(transaction.vpRequest)
+      vpRequest: VpRequestDto.toDto(transaction.vpRequest),
+      processingInProgress: false
     };
   }
 
@@ -92,10 +95,12 @@ export class ExchangeService {
     const transactionQuery = await this.getExchangeTransaction(transactionId);
     if (transactionQuery.errors.length > 0 || !transactionQuery.transaction) {
       return {
-        errors: transactionQuery.errors
+        errors: transactionQuery.errors,
+        processingInProgress: false
       };
     }
     const transaction = transactionQuery.transaction;
+
     const { response, callback } = await transaction.processPresentation(
       verifiablePresentation,
       this.vpSubmissionVerifierService
@@ -109,6 +114,7 @@ export class ExchangeService {
         error: (e) => Logger.error(inspect(e))
       });
     });
+
     return response;
   }
 

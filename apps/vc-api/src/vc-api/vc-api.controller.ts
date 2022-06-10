@@ -15,8 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Body, Controller, Get, Param, Post, Put, HttpCode } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, HttpCode, Res } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
+import { Response } from 'express';
 import { IPresentationDefinition } from '@sphereon/pex';
 import { CredentialsService } from './credentials/credentials.service';
 import { IssueCredentialDto } from './credentials/dtos/issue-credential.dto';
@@ -164,12 +165,25 @@ export class VcApiController {
    * @returns
    */
   @Put('/exchanges/:exchangeId/:transactionId')
+  @ApiResponse({ status: 200, description: 'Verifiable Presentation successfully submitted and verified' })
+  @ApiResponse({
+    status: 202,
+    description: 'Verifiable Presentation successfully submitted. Further review in progress.'
+  })
   async continueExchange(
     @Param('exchangeId') exchangeId: string,
     @Param('transactionId') transactionId: string,
-    @Body() presentation: VerifiablePresentationDto
-  ): Promise<ExchangeResponseDto> {
-    return await this.exchangeService.continueExchange(presentation, transactionId);
+    @Body() presentation: VerifiablePresentationDto,
+    @Res() res: Response
+  ): Promise<ExchangeResponseDto | Response> {
+    const response = await this.exchangeService.continueExchange(presentation, transactionId);
+
+    if (response.processingInProgress) {
+      // Currently 5 second retry time is hardcoded but it could be dynamic based on the use case in the future
+      res.status(202).setHeader('Retry-After', 5);
+    }
+
+    return res.send(response);
   }
 
   /**
