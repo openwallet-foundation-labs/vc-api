@@ -37,6 +37,7 @@ specifiers:
   ethr-did-resolver: ~5.0.2
   jest: 27.0.6
   jose: ^4.1.5
+  nock: ~13.2.4
   prettier: ^2.3.2
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
@@ -88,6 +89,7 @@ dependencies:
   ethr-did-resolver: 5.0.2
   jest: 27.0.6_ts-node@10.7.0
   jose: 4.1.5
+  nock: 13.2.4
   prettier: 2.4.1
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
@@ -5572,7 +5574,7 @@ packages:
     dev: false
 
   /json-stringify-safe/5.0.1:
-    resolution: {integrity: sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=}
+    resolution: {integrity: sha512-ZClg6AaYvamvYEE82d3Iyd3vSSIjQ+odgjaTzRuO3s7toCdFKczob2i0zCh7JE8kWn17yvAWhUVxvqGwUalsRA==}
     dev: false
 
   /json5/1.0.1:
@@ -8168,7 +8170,7 @@ packages:
     dev: false
 
   file:projects/ssi-vc-api.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-MMrdTOdLvwmXyFXIPNuD6ZmUGh/jVKpPW30H1XV43V/9XcutV22mI2KPAkkv3Pi5zD+fxUfOqFgmd6P6BWITTQ==, tarball: file:projects/ssi-vc-api.tgz}
+    resolution: {integrity: sha512-qUYSkNYpZlKCgHbMmk1R94fFFzv6VHyhSZblueAEz0VVHzvbr3cUgRaaUPB5OgD7DJJgIR0IZ6/wt6HNkpTLhg==, tarball: file:projects/ssi-vc-api.tgz}
     id: file:projects/ssi-vc-api.tgz
     name: '@rush-temp/ssi-vc-api'
     version: 0.0.0
@@ -8184,6 +8186,7 @@ packages:
       '@nestjs/swagger': 5.1.5_ea14560b646b9e6de5a63f20f1277708
       '@nestjs/testing': 8.1.2_830699a7a1bc4b367722dd63c0377123
       '@nestjs/typeorm': 8.0.2_12346420c5d0822584d78b786936ea28
+      '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.4.4
       '@sphereon/pex': 1.0.2
       '@sphereon/pex-models': 1.1.0
       '@spruceid/didkit-wasm': 0.1.9
