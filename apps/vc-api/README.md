@@ -66,16 +66,18 @@ The [W3C Credentials Community Group](https://w3c-ccg.github.io/) also publishes
 
 Not all of the endpoints available from the VC-API app are standard.
 
-| Purpose | Standard | Spec Link
-| --- | --- | --- |
-| Issue Credential | Yes | https://w3c-ccg.github.io/vc-api/#issue-credential
-| Prove Presentation | Yes | https://w3c-ccg.github.io/vc-api/#prove-presentation
-| Initiate Exchange | Yes | https://w3c-ccg.github.io/vc-api/#initiate-exchange
-| Continue Exchange | Yes | https://w3c-ccg.github.io/vc-api/#continue-exchange
-| Configure Exchange | No | 
-| Query Submissions | No |  
-| Submit Submission Review | No |
-| Create presentation from credenitals | No |
+| Profile | Purpose | Standard | Spec Link
+| --- | --- | --- | --- |
+| Issuing | Issue Credential | Yes | https://w3c-ccg.github.io/vc-api/#issue-credential
+| Verifying | Verify Credential | Yes | https://w3c-ccg.github.io/vc-api/#verify-credential
+| Verifying | Verify Presentation | Yes | https://w3c-ccg.github.io/vc-api/#verify-presentation
+| Presenting | Prove Presentation | Yes | https://w3c-ccg.github.io/vc-api/#prove-presentation
+| Presenting | Initiate Exchange | Yes | https://w3c-ccg.github.io/vc-api/#initiate-exchange
+| Presenting | Continue Exchange | Yes | https://w3c-ccg.github.io/vc-api/#continue-exchange
+| Presenting | Configure Exchange | No | 
+| Presenting | Query Submissions | No |  
+| Presenting | Submit Submission Review | No |
+| Presenting | Create Presentation from Credentials | No |
 
 ### DID Module
 
