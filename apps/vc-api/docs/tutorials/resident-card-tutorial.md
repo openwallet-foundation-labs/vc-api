@@ -84,10 +84,10 @@ The technical issuance workflow is as follows:
 
 #### 2. Presentation workflow
 - [2.1  [Verifier] Configure Credential Exchange](#21-verifier-configure-credential-exchange)
-- [2.2  [Verifier] Provide an exchange invitation to the resident](22-verifier-provide-an-exchange-invitation-to-the-resident)
+- [2.2  [Verifier] Provide an exchange invitation to the resident](#22-verifier-provide-an-exchange-invitation-to-the-resident)
 - [2.3  [Resident] Initiate the presentation exchange](#23-resident-initiate-the-presentation-exchange)
-- [2.4  [Resident] Create the required presentation](24-resident-create-the-required-presentation)
-- [2.5  [Resident] Continue the exchange](25-resident-continue-the-exchange)
+- [2.4  [Resident] Create the required presentation](#24-resident-create-the-required-presentation)
+- [2.5  [Resident] Continue the exchange](#25-resident-continue-the-exchange)
 
 ## Overview and Objective
 
