@@ -1011,37 +1011,56 @@ If using the Postman collection request, fill in the `exchangeId` param to be th
 A similar json should be returned in the response body:
 ```json
 {
-    "errors": [],
-    "vpRequest": {
-        "challenge": "7c66d573-4da6-4e13-b52f-9b5c844d6d52",
-        "query": [
-            {
-                "type": "PresentationDefinition",
-                "credentialQuery": [
-                    {
-                        "presentationDefinition": {
-                            "id": "286bc1e0-f1bd-488a-a873-8d71be3c690e",
-                            "input_descriptors": [
-                                {
-                                    "id": "permanent_resident_card",
-                                    "name": "Permanent Resident Card",
-                                    "purpose": "We can only allow permanent residents into the application"
-                                }
-                            ]
+   "errors":[
+      
+   ],
+   "vpRequest":{
+      "challenge":"0951460c-e6f4-44d6-906b-9286ec9de40b",
+      "query":[
+         {
+            "type":"PresentationDefinition",
+            "credentialQuery":[
+               {
+                  "presentationDefinition":{
+                     "id":"286bc1e0-f1bd-488a-a873-8d71be3c690e",
+                     "input_descriptors":[
+                        {
+                           "id":"PermanentResidentCard",
+                           "name":"PermanentResidentCard",
+                           "purpose":"PermanentResidentCard",
+                           "constraints":{
+                              "fields":[
+                                 {
+                                    "path":[
+                                       "$.type"
+                                    ],
+                                    "filter":{
+                                       "type":"array",
+                                       "contains":{
+                                          "type":"string",
+                                          "const":"PermanentResidentCard"
+                                       }
+                                    }
+                                 }
+                              ]
+                           }
                         }
-                    }
-                ]
-            }
-        ],
-        "interact": {
-            "service": [
-                {
-                    "type": "UnmediatedHttpPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/vc-api/exchanges/presentation-1/e8b0b9a0-6265-45df-b811-1d4e4e4790b1"
-                }
+                     ]
+                  }
+               }
             ]
-        }
-    }
+         }
+      ],
+      "interact":{
+         "service":[
+            {
+               "type":"UnmediatedHttpPresentationService2021",
+               "serviceEndpoint":"https://vc-api-dev.energyweb.org/vc-api/exchanges/34712646/b38b7c65-f0d7-4d00-b026-f2704ff716cc"
+            }
+         ]
+      }
+   },
+   "processingInProgress":false
 }
 ```
 The `challenge` value and the final fragment of the `serviceEndpoint`, which is the `transaction id`, should be different.
