@@ -163,7 +163,7 @@ describe('ExchangeService', () => {
     });
   });
 
-  describe.only('continueExchange', () => {
+  describe('continueExchange', () => {
     it('should send transaction dto if callback is configured', async () => {
       const exchangeDef: ExchangeDefinitionDto = {
         exchangeId: exchangeId,

@@ -143,6 +143,14 @@ For details on the structure and properties of an exchange definition, see the [
 
 Exhange Definitions are currently non-standard and custom to this VC-API implementation.
 
+### Presentation Notifications
+
+When defining an exchange, callbacks can be configured to allow parties to receive notice of a VP submitted in response to an exchange.
+Notifications consist of POST requests to the configured URLs.
+A callback is configured by adding an entry to the callback array in the [Exchange Definition](../src/vc-api/exchanges/dtos/exchange-definition.dto.ts).
+
+For an example of the result of a callback notification, see the [Resident Card Tutorial](../docs/tutorials/resident-card-tutorial.md#17-authority-portal-check-for-notification-of-submitted-presentation).
+
 ### Exchange Definition for Issuance
 
 For issuance, a [Mediated Exchange](./exchanges.md#mediated-exchange-interactions) is required.
