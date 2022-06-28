@@ -416,6 +416,66 @@ There should be a notification of a submitted presentation for the authority por
 The authority portal can rely on VC-API's verification of the credential proofs and conformance to the credential query.
 The authority portal can then proceed with reviewing the presentation and issuing the "resident card" credential.
 
+An example of the expected POST body received in the request bucket is:
+
+```json
+{
+   "transactionId":"1b9995c6-17ed-4ec4-bbef-7b9ee986bc3c",
+   "exchangeId":"resident-card-issuance-82793",
+   "vpRequest": {
+        "challenge": "57ca126c-acbf-4da4-8f79-447150e93128",
+        "query": [
+            {
+                "type": "DIDAuth",
+                "credentialQuery": []
+            }
+        ],
+        "interact": {
+            "service": [
+                {
+                    "type": "MediatedHttpPresentationService2021",
+                    "serviceEndpoint": "http://localhost:3000/exchanges/resident-card-issuance-82793/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
+                }
+            ]
+        }
+    },
+   "callback": [
+      {
+        "url": "http://ptsv2.com/t/ebitx-1652373826/post"
+      }
+   ],
+   "presentationReview":{
+      "presentationReviewId":"fb71bd08-ccf1-4395-b501-3c09086d98c4",
+      "reviewStatus":"pending_review",
+      "VP":null
+   },
+   "presentationSubmission":{
+      "vp":{
+          "@context": [
+              "https://www.w3.org/2018/credentials/v1"
+          ],
+          "type": "VerifiablePresentation",
+          "proof": {
+              "type": "Ed25519Signature2018",
+              "proofPurpose": "authentication",
+              "challenge": "c2e806b4-35ed-409b-bc3a-b849d7c2b204",
+              "verificationMethod": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A#z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
+              "created": "2022-04-29T09:25:55.969Z",
+              "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..51vek0DLAcdL2DxMRQlOFfFz306Y-EDvqhWYzCInU9UYFT_HQZHW2udSeX2w35Nn-JO4ouhJFeiM8l3e2sEEBQ"
+          },
+          "holder": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A"
+      },
+      "verificationResult":{
+         "errors":[],
+         "checks":[
+            "proof"
+         ],
+         "warnings":[]
+      }
+   }
+}
+```
+
 #### 1.8 [Authority portal] Create issuer DID
 The authority portal needs a DID from which they can issue a credential.
 Again, navigate to the `DID Controller create` request under the `did` folder.
