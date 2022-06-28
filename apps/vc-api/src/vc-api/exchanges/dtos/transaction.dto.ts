@@ -54,6 +54,6 @@ export class TransactionDto {
   // TODO: make generic so that it can be used in all Dtos
   static toDto(transaction: TransactionEntity): TransactionDto {
     const data = classToPlain(transaction);
-    return plainToClass(TransactionEntity, data);
+    return plainToClass(TransactionDto, data);
   }
 }

@@ -107,7 +107,6 @@ export class ExchangeService {
     );
     await this.transactionRepository.save(transaction);
     callback?.forEach((callback) => {
-      // TODO: check if toDto is working. Seems be keeping it as Entity type.
       const body = TransactionDto.toDto(transaction);
       this.httpService.post(callback.url, body).subscribe({
         next: (v) => Logger.log(inspect(v)), // inspect used to replace circular references https://stackoverflow.com/a/18354289
