@@ -18,7 +18,6 @@
 import { ProofPurpose } from '@sphereon/pex';
 import * as request from 'supertest';
 import * as nock from 'nock';
-import { IssueOptionsDto } from '../../../../src/vc-api/credentials/dtos/issue-options.dto';
 import { PresentationDto } from '../../../../src/vc-api/credentials/dtos/presentation.dto';
 import {
   ReviewResult,
@@ -29,11 +28,16 @@ import { ResidentCardPresentation } from './resident-card-presentation.exchange'
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
 import { ProvePresentationOptionsDto } from 'src/vc-api/credentials/dtos/prove-presentation-options.dto';
 
+const callbackUrlBase: string = 'http://example.com';
+const callbackUrlPath: string = '/endpoint';
+const callbackUrl: string = `${callbackUrlBase}${callbackUrlPath}`;
+
 export const residentCardExchangeSuite = () => {
   it('should support Resident Card issuance and presentation', async () => {
     // As issuer, configure credential issuance exchange
     // POST /exchanges
-    const exchange = new ResidentCardIssuance();
+    const exchange = new ResidentCardIssuance(callbackUrl);
+    const issuanceCallbackScope = nock(callbackUrlBase).post(callbackUrlPath).reply(201);
     await request(app.getHttpServer())
       .post(`${vcApiBaseUrl}/exchanges`)
       .send(exchange.getExchangeDefinition())
@@ -64,6 +68,7 @@ export const residentCardExchangeSuite = () => {
 
     // As holder, continue exchange by submitting did auth presention
     await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true, true);
+    issuanceCallbackScope.done();
 
     // As the issuer, get the transaction
     // TODO TODO TODO!!! How does the issuer know the transactionId? -> Maybe can rely on notification
@@ -95,10 +100,8 @@ export const residentCardExchangeSuite = () => {
 
     // Configure presentation exchange
     // POST /exchanges
-    const callbackUrlBase = 'http://example.com';
-    const callbackUrlPath = '/endpoint';
-    const presentationExchange = new ResidentCardPresentation(`${callbackUrlBase}${callbackUrlPath}`);
-    const scope = nock(callbackUrlBase).post(callbackUrlPath).reply(201, { message: 'you did it!' });
+    const presentationExchange = new ResidentCardPresentation(callbackUrl);
+    const presentationCallbackScope = nock(callbackUrlBase).post(callbackUrlPath).reply(201);
     const exchangeDef = presentationExchange.getExchangeDefinition();
     await request(app.getHttpServer()).post(`${vcApiBaseUrl}/exchanges`).send(exchangeDef).expect(201);
 
@@ -133,6 +136,6 @@ export const residentCardExchangeSuite = () => {
 
     // Holder submits presentation
     await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp, false);
-    scope.done();
+    presentationCallbackScope.done();
   });
 };
