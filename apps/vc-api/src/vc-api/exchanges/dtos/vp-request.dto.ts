@@ -42,9 +42,12 @@ export class VpRequestDto {
    *  This document defines several common query types."
    */
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => VpRequestQueryDto)
   query: VpRequestQueryDto[];
 
   @ValidateNested()
+  @Type(() => VpRequestInteractDto)
   interact: VpRequestInteractDto;
 
   static toDto(vpRequestEntity: VpRequestEntity): VpRequestDto {

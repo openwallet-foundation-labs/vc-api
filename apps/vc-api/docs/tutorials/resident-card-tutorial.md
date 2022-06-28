@@ -444,11 +444,6 @@ An example of the expected POST body received in the request bucket is:
         "url": "http://ptsv2.com/t/ebitx-1652373826/post"
       }
    ],
-   "presentationReview":{
-      "presentationReviewId":"fb71bd08-ccf1-4395-b501-3c09086d98c4",
-      "reviewStatus":"pending_review",
-      "VP":null
-   },
    "presentationSubmission":{
       "vp":{
           "@context": [

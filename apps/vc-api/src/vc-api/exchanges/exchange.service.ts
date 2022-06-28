@@ -30,6 +30,7 @@ import { ConfigService } from '@nestjs/config';
 import { TransactionDto } from './dtos/transaction.dto';
 import { ReviewResult, SubmissionReviewDto } from './dtos/submission-review.dto';
 import { VpSubmissionVerifierService } from './vp-submission-verifier.service';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class ExchangeService {
@@ -106,8 +107,10 @@ export class ExchangeService {
       this.vpSubmissionVerifierService
     );
     await this.transactionRepository.save(transaction);
+    const body = TransactionDto.toDto(transaction);
+    // TODO: react to validation errors
+    const validationErrors = await validate(body, { whitelist: true, forbidUnknownValues: true });
     callback?.forEach((callback) => {
-      const body = TransactionDto.toDto(transaction);
       this.httpService.post(callback.url, body).subscribe({
         next: (v) => Logger.log(inspect(v)), // inspect used to replace circular references https://stackoverflow.com/a/18354289
         error: (e) => Logger.error(inspect(e))
