@@ -88,6 +88,7 @@ The technical issuance workflow is as follows:
 - [2.3  [Resident] Initiate the presentation exchange](#23-resident-initiate-the-presentation-exchange)
 - [2.4  [Resident] Create the required presentation](#24-resident-create-the-required-presentation)
 - [2.5  [Resident] Continue the exchange](#25-resident-continue-the-exchange)
+- [2.6 [Verifier] Act on Submitted Presentation](#26-verifier-act-on-submitted-presentation)
 
 ## Overview and Objective
 
@@ -123,7 +124,7 @@ Fill in the `exchangeId` with a unique id, such as a [UUID](https://en.wikipedia
 Note the `interactService` `type` of `MediatedHttpPresentationService2021`.
 See the [exchanges documentation](../exchanges.md#mediated-exchange-interactions) for information about mediated exchanges.
 
-In order to test the notification functionality, you can use the "Post Test Server".
+In order to test the notification functionality, you can use the "[Post Test Server](http://ptsv2.com/)".
 This is a free website which allows you to view sent HTTP POST requests.
 With this service, requests are saved to a dedicated location for later review.
 Please only use this service for this tutorial (or other non-production applications).
@@ -1070,7 +1071,7 @@ A similar json should be returned in the response body:
       
    ],
    "vpRequest":{
-      "challenge":"0951460c-e6f4-44d6-906b-9286ec9de40b",
+      "challenge":"7c66d573-4da6-4e13-b52f-9b5c844d6d52",
       "query":[
          {
             "type":"PresentationDefinition",
@@ -1335,3 +1336,135 @@ In the request body, copy the VP that was obtained from the previous step.
 **Expected Response HTTP Status Code**
 
 `200 OK`
+
+#### 2.6 [Verifier] Act on Submitted Presentation
+
+In this presentation exchange (part 2) of this tutorial, no callback was configured in the exchange definition.
+This is because the Post Test Server (used [during the issuance exchange](#11-authority-portal-configure-the-credential-issuance-exchange)) has a Body Length of 1500 and so cannot accept the POST.
+However, typically a Verifier would configure a callback in order to be able to act on the submitted presentation.
+
+For reference, the callback notification that would have been receive in a configured callback for this presentation would be:
+
+```json
+{
+   "transactionId":"b38b7c65-f0d7-4d00-b026-f2704ff716cc",
+   "exchangeId":"34712646",
+   "vpRequest":{
+      "challenge":"7c66d573-4da6-4e13-b52f-9b5c844d6d52",
+      "query":[
+         {
+            "type":"PresentationDefinition",
+            "credentialQuery":[
+               {
+                  "presentationDefinition":{
+                     "id":"286bc1e0-f1bd-488a-a873-8d71be3c690e",
+                     "input_descriptors":[
+                        {
+                           "id":"PermanentResidentCard",
+                           "name":"PermanentResidentCard",
+                           "purpose":"PermanentResidentCard",
+                           "constraints":{
+                              "fields":[
+                                 {
+                                    "path":[
+                                       "$.type"
+                                    ],
+                                    "filter":{
+                                       "type":"array",
+                                       "contains":{
+                                          "type":"string",
+                                          "const":"PermanentResidentCard"
+                                       }
+                                    }
+                                 }
+                              ]
+                           }
+                        }
+                     ]
+                  }
+               }
+            ]
+         }
+      ],
+      "interact":{
+         "service":[
+            {
+               "type":"UnmediatedHttpPresentationService2021",
+               "serviceEndpoint":"https://vc-api-dev.energyweb.org/vc-api/exchanges/34712646/b38b7c65-f0d7-4d00-b026-f2704ff716cc"
+            }
+         ]
+      }
+   },
+   "presentationSubmission":{
+      "vp":{
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://www.w3.org/2018/credentials/examples/v1"
+        ],
+        "type": [
+            "VerifiablePresentation"
+        ],
+        "verifiableCredential": [
+            {
+                "@context": [
+                    "https://www.w3.org/2018/credentials/v1",
+                    "https://w3id.org/citizenship/v1"
+                ],
+                "id": "https://issuer.oidp.uscis.gov/credentials/83627465",
+                "type": [
+                    "VerifiableCredential",
+                    "PermanentResidentCard"
+                ],
+                "credentialSubject": {
+                    "id": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
+                    "birthDate": "1958-07-17",
+                    "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
+                    "lprCategory": "C09",
+                    "commuterClassification": "C1",
+                    "birthCountry": "Bahamas",
+                    "lprNumber": "999-999-999",
+                    "residentSince": "2015-01-01",
+                    "type": [
+                        "PermanentResident",
+                        "Person"
+                    ],
+                    "gender": "Male",
+                    "familyName": "SMITH",
+                    "givenName": "JOHN"
+                },
+                "issuer": "did:key:z6MkjB8kjJee3JoJ9WmzTG2vXhWJ9KtwPtWLtEec17iFNiEL",
+                "issuanceDate": "2019-12-03T12:19:52Z",
+                "proof": {
+                    "type": "Ed25519Signature2018",
+                    "proofPurpose": "assertionMethod",
+                    "verificationMethod": "did:key:z6MkjB8kjJee3JoJ9WmzTG2vXhWJ9KtwPtWLtEec17iFNiEL#z6MkjB8kjJee3JoJ9WmzTG2vXhWJ9KtwPtWLtEec17iFNiEL",
+                    "created": "2022-04-29T09:53:23.786Z",
+                    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..slzsK4BoLyMHX18MtnVlwF9JqKj4BvVC46cjyVBPFPwrjpzGhbLLbAV3x_j-_B4ZUZuQBa5a-yq6CiW6sJ26AA"
+                },
+                "expirationDate": "2029-12-03T12:19:52Z"
+            }
+        ],
+        "proof": {
+            "type": "Ed25519Signature2018",
+            "proofPurpose": "authentication",
+            "challenge": "7c66d573-4da6-4e13-b52f-9b5c844d6d52",
+            "verificationMethod": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A#z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
+            "created": "2022-04-29T10:56:09.336Z",
+            "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..Sqpo8ostkoK7_69TxvHMzzRLuebdZ8IaXj2z6p1-M30FSZdIXMPXBg4kyukoKZ4Jls7eXyJ0FgaSKirGO-reCA"
+        },
+        "holder": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A"
+      },
+      "verificationResult":{
+         "errors":[
+            
+         ],
+         "checks":[
+            "proof"
+         ],
+         "warnings":[
+            
+         ]
+      }
+   }
+}
+```
