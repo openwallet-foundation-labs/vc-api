@@ -25,6 +25,8 @@ import { VpRequestDto } from '../src/vc-api/exchanges/dtos/vp-request.dto';
 import { rebeamExchangeSuite } from './vc-api/exchanges/rebeam/rebeam.e2e-suite';
 import { vcApiSuite } from './vc-api/credentials/vc-api.e2e-suite';
 import { keySuite } from './key/key.e2e-suite';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { ExchangeEntity } from '../src/vc-api/exchanges/entities/exchange.entity';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -44,6 +46,10 @@ describe('App (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe()); // https://github.com/nestjs/nest/issues/5264
     await app.init();
     walletClient = new WalletClient(app);
+
+    //TODO: reset the database fully
+    const exchangeRepository = app.get(getRepositoryToken(ExchangeEntity));
+    await exchangeRepository.clear();
   });
 
   describe('DID (e2e)', didSuite);

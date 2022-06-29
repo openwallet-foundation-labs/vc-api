@@ -58,15 +58,21 @@ describe('ExchangeService', () => {
     findOne: jest.fn(() => transaction),
     save: jest.fn((entity) => {
       transaction = entity;
+      return entity;
     })
   }));
-  let exchange: ExchangeEntity;
-  const repositoryMockFactory = jest.fn(() => ({
-    findOne: jest.fn(() => exchange),
-    save: jest.fn((entity) => {
-      exchange = entity;
-    })
-  }));
+
+  const repositoryMockFactory = jest.fn(() => {
+    let exchange: ExchangeEntity;
+
+    return {
+      findOne: jest.fn(() => exchange),
+      save: jest.fn((entity: ExchangeEntity) => {
+        exchange = entity;
+        return entity;
+      })
+    };
+  });
 
   const mockHttpService = {
     post: jest.fn(() => {
