@@ -27,7 +27,12 @@ import { ProvePresentationOptionsDto } from '../../../../src/vc-api/credentials/
 
 export class ResidentCardIssuance {
   #exchangeId = 'permanent-resident-card-issuance';
+  #callbackUrl: string;
   queryType = VpRequestQueryType.didAuth;
+
+  constructor(callbackUrl: string) {
+    this.#callbackUrl = callbackUrl;
+  }
 
   getExchangeId(): string {
     return this.#exchangeId;
@@ -48,7 +53,11 @@ export class ResidentCardIssuance {
         }
       ],
       isOneTime: false,
-      callback: []
+      callback: [
+        {
+          url: this.#callbackUrl
+        }
+      ]
     };
     return plainToClass(ExchangeDefinitionDto, exchangeDefinition);
   }
