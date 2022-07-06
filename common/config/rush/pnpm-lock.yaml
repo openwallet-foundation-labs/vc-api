@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@nestjs/axios': ~0.0.7
+  '@nestjs/axios': ~0.0.8
   '@nestjs/cli': ^8.0.0
   '@nestjs/common': ^8.0.0
   '@nestjs/config': ^2.1.0
@@ -1718,6 +1718,17 @@ packages:
       typescript: 4.7.4
     transitivePeerDependencies:
       - chokidar
+    dev: false
+
+  /@nestjs/serve-static/2.2.2_fce4c3b686c1225eb94686491d30b061:
+    resolution: {integrity: sha512-3Mr+Q/npS3N7iGoF3Wd6Lj9QcjMGxbNrSqupi5cviM0IKrZ1BHl5qekW95rWYNATAVqoTmjGROAq+nKKpuUagQ==}
+    peerDependencies:
+      '@nestjs/common': ^6.0.0 || ^7.0.0 || ^8.0.0
+      '@nestjs/core': ^6.0.0 || ^7.0.0 || ^8.0.0
+    dependencies:
+      '@nestjs/common': 8.4.7_a33b8c25f6562e8508e37318284cdc0d
+      '@nestjs/core': 8.4.7_2aa064eef171d5a7957432d22e4b3f20
+      path-to-regexp: 0.1.7
     dev: false
 
   /@nestjs/swagger/5.1.5_c82075b6f679333bc8b88ebcff885156:
@@ -8290,7 +8301,7 @@ packages:
     dev: false
 
   file:projects/ssi-vc-api.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-Qotfqh9pU0+XBWj2ln9k7XWVnBGtjgp6VmcfIWFaTSYvHARGfKY31TUL0DPvNeoVeN+j3M6pB7azzAAaP5TY7w==, tarball: file:projects/ssi-vc-api.tgz}
+    resolution: {integrity: sha512-PORFJ1tBtjOrtUjJjFG40sYpoxGL0pln6+POMzRnjYC7dIw266NVVKOOm++RNNqe2j9QKtqK8W3R6mxL2IF5OQ==, tarball: file:projects/ssi-vc-api.tgz}
     id: file:projects/ssi-vc-api.tgz
     name: '@rush-temp/ssi-vc-api'
     version: 0.0.0
@@ -8302,6 +8313,7 @@ packages:
       '@nestjs/core': 8.4.7_2aa064eef171d5a7957432d22e4b3f20
       '@nestjs/platform-express': 8.4.7_fce4c3b686c1225eb94686491d30b061
       '@nestjs/schematics': 8.0.11_typescript@4.7.4
+      '@nestjs/serve-static': 2.2.2_fce4c3b686c1225eb94686491d30b061
       '@nestjs/swagger': 5.1.5_c82075b6f679333bc8b88ebcff885156
       '@nestjs/testing': 8.4.7_c1bddf0102e0d68dc342d4afcbe21907
       '@nestjs/typeorm': 8.0.4_4967a077601f378d566b47f3ee68696d

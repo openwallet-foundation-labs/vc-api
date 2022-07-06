@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.mobilewallet",
+      "sha256_cert_fingerprints": [
+        "DE:FB:6D:06:CB:89:AE:44:01:B9:5A:76:CF:53:21:F9:C8:BF:B3:65:54:7D:F6:3B:36:81:A2:06:6E:56:D2:82"
+      ]
+    }
+  }
+]

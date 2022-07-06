@@ -44,7 +44,8 @@
     "swagger-ui-express": "~4.1.6",
     "uuid": "~8.3.2",
     "@sphereon/pex": "~1.0.2",
-    "@nestjs/axios": "~0.0.8"
+    "@nestjs/axios": "~0.0.8",
+    "@nestjs/serve-static": "~2.2.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

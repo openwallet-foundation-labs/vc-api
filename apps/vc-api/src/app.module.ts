@@ -22,6 +22,8 @@ import { DidModule } from './did/did.module';
 import { VcApiModule } from './vc-api/vc-api.module';
 import { TypeOrmSQLiteModule } from './in-memory-db';
 import config from './config/configuration';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -29,7 +31,13 @@ import config from './config/configuration';
     KeyModule,
     DidModule,
     VcApiModule,
-    ConfigModule.forRoot({ load: [config] })
+    ConfigModule.forRoot({ load: [config] }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../..', 'static-assets'),
+      serveStaticOptions: {
+        index: false
+      }
+    })
   ]
 })
 export class AppModule {}
