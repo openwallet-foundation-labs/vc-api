@@ -36,10 +36,8 @@ import { AuthenticateDto } from './dtos/authenticate.dto';
 import { ProvePresentationDto } from './dtos/prove-presentation.dto';
 import { CredentialVerifier } from './types/credential-verifier';
 import { PresentationDto } from './dtos/presentation.dto';
-import { IPresentationDefinition, IVerifiableCredential, PEX, Status } from '@sphereon/pex';
+import { IPresentationDefinition, IVerifiableCredential, PEX, ProofPurpose, Status } from '@sphereon/pex';
 import { VerificationMethod } from 'did-resolver';
-import { ProofPurpose } from '@sphereon/pex';
-import { PresentationDefinitionWrapper } from '@sphereon/pex-models';
 import { ProvePresentationOptionsDto } from './dtos/prove-presentation-options.dto';
 
 /**
@@ -125,6 +123,11 @@ export class CredentialsService implements CredentialVerifier {
       }
     };
     const submissionContextUri = 'https://identity.foundation/presentation-exchange/submission/v1';
+
+    presentation['@context'] = Array.isArray(presentation['@context'])
+      ? presentation['@context']
+      : [presentation['@context']];
+
     presentation['@context'] = presentation['@context'].filter((c) => c !== submissionContextUri);
     presentation['@context'].push(submissionContext as any);
     return presentation as PresentationDto;

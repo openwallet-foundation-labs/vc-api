@@ -8,6 +8,7 @@ specifiers:
   '@nestjs/core': ^8.0.0
   '@nestjs/platform-express': ^8.0.0
   '@nestjs/schematics': ^8.0.0
+  '@nestjs/serve-static': ~2.2.2
   '@nestjs/swagger': ~5.1.5
   '@nestjs/testing': ^8.0.0
   '@nestjs/typeorm': 8.0.4
@@ -15,7 +16,7 @@ specifiers:
   '@rush-temp/ssi-vc-api': file:./projects/ssi-vc-api.tgz
   '@rush-temp/w3c-ccg-webkms': file:./projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': ~2.3.2
-  '@sphereon/pex': ~1.0.2
+  '@sphereon/pex': ~1.1.2
   '@sphereon/pex-models': ~1.1.0
   '@spruceid/didkit-wasm-node': ~0.1.6
   '@trust/keyto': ^1.0.1
@@ -60,6 +61,7 @@ dependencies:
   '@nestjs/core': 8.4.7_2aa064eef171d5a7957432d22e4b3f20
   '@nestjs/platform-express': 8.4.7_fce4c3b686c1225eb94686491d30b061
   '@nestjs/schematics': 8.0.11_typescript@4.7.4
+  '@nestjs/serve-static': 2.2.2_fce4c3b686c1225eb94686491d30b061
   '@nestjs/swagger': 5.1.5_c82075b6f679333bc8b88ebcff885156
   '@nestjs/testing': 8.4.7_c1bddf0102e0d68dc342d4afcbe21907
   '@nestjs/typeorm': 8.0.4_4967a077601f378d566b47f3ee68696d
@@ -67,7 +69,7 @@ dependencies:
   '@rush-temp/ssi-vc-api': file:projects/ssi-vc-api.tgz_babel-jest@26.6.3
   '@rush-temp/w3c-ccg-webkms': file:projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.7.4
-  '@sphereon/pex': 1.0.2
+  '@sphereon/pex': 1.1.2
   '@sphereon/pex-models': 1.1.0
   '@spruceid/didkit-wasm-node': 0.1.6
   '@trust/keyto': 1.0.1
@@ -1912,14 +1914,15 @@ packages:
     resolution: {integrity: sha512-kMslWspdqwuXGBFxOPXTAK8HlIHycBR/locYHMlYmyvdnau6bp40JXk2zviBRVOPfe8N3Dv2p5IPAjMk3pT77A==}
     dev: false
 
-  /@sphereon/pex/1.0.2:
-    resolution: {integrity: sha512-uwXZt0CQc/0qVyxEREu4mhz9HhvxGirw0L2pxwXT13mpYS5p61maUaF1Dl/G5tV9XyU1CrhaXKdCw9GRNPgzmA==}
+  /@sphereon/pex/1.1.2:
+    resolution: {integrity: sha512-NcfLqMaIpjAgnAIzLk759m5KxCjshXEA5BjGRnKWrqnhcYmTaHODWFt2GGSZBoQ+z+4ngb0X5oUVTNLCA/X+xg==}
     engines: {node: '>=10'}
     dependencies:
       '@sphereon/pex-models': 1.1.0
       ajv: 8.11.0
       ajv-formats: 2.1.1
       jsonpath: 1.1.1
+      jwt-decode: 3.1.2
       nanoid: 3.3.4
       string.prototype.matchall: 4.0.7
     dev: false
@@ -5828,6 +5831,10 @@ packages:
       object.assign: 4.1.2
     dev: false
 
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
+
   /kind-of/3.2.2:
     resolution: {integrity: sha512-NOW9QQXMoZGg/oqnVNoNTTIFEIid1627WCffUBJEdMxYApq7mNE7CpzucIPc+ZQg25Phej7IJSmX3hO+oblOtQ==}
     engines: {node: '>=0.10.0'}
@@ -8301,7 +8308,7 @@ packages:
     dev: false
 
   file:projects/ssi-vc-api.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-PORFJ1tBtjOrtUjJjFG40sYpoxGL0pln6+POMzRnjYC7dIw266NVVKOOm++RNNqe2j9QKtqK8W3R6mxL2IF5OQ==, tarball: file:projects/ssi-vc-api.tgz}
+    resolution: {integrity: sha512-DdN9jxzNdaSveHWy3Ui7ww0lMwtgMZCJhjG1QYvEFQtf9qnn864VKc+q11ZXHz8DrGHvsWTiFUp5kVZb/zHTiA==, tarball: file:projects/ssi-vc-api.tgz}
     id: file:projects/ssi-vc-api.tgz
     name: '@rush-temp/ssi-vc-api'
     version: 0.0.0
@@ -8318,7 +8325,7 @@ packages:
       '@nestjs/testing': 8.4.7_c1bddf0102e0d68dc342d4afcbe21907
       '@nestjs/typeorm': 8.0.4_4967a077601f378d566b47f3ee68696d
       '@rushstack/eslint-config': 2.3.4_eslint@7.32.0+typescript@4.7.4
-      '@sphereon/pex': 1.0.2
+      '@sphereon/pex': 1.1.2
       '@sphereon/pex-models': 1.1.0
       '@spruceid/didkit-wasm-node': 0.1.6
       '@types/express': 4.17.13
