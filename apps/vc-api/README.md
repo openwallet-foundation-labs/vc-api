@@ -2,7 +2,7 @@
 
 ## Description
 
-This [vc-api app](./apps/vc-api) is a NestJs implementation of the [W3C Credentials Community Group](https://w3c-ccg.github.io/) [VC API Specification](https://w3c-ccg.github.io/vc-api).
+This [vc-api app](./) is a NestJs implementation of the [W3C Credentials Community Group](https://w3c-ccg.github.io/) [VC API Specification](https://w3c-ccg.github.io/vc-api).
 [Nest](https://github.com/nestjs/nest) is a Typescript framework for server-side applications.
 
 ## Tutorials
@@ -81,7 +81,7 @@ Not all of the endpoints available from the VC-API app are standard.
 
 ### DID Module
 
-The DID Module in the [vc-api](./apps/vc-api) offers the generation of DIDs and tracking the data resolvable in their DID documents.
+The DID Module in the [vc-api](./) offers the generation of DIDs and tracking the data resolvable in their DID documents.
 
 ### Key Module
 The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
