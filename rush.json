@@ -454,6 +454,10 @@
     {
       "packageName": "@energyweb/ssi-vc-api",
       "projectFolder": "apps/vc-api"
+    },
+    {
+      "packageName": "@energyweb/credential-from-input-descriptor",
+      "projectFolder": "apps/credential-from-input-descriptor"
     }
   ]
 }
