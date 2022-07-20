@@ -41,38 +41,16 @@ service:
   port: 3000
 
 ingress:
-  enabled: true
+  enabled: false
   className: ""
-  annotations:
-      kubernetes.io/ingress.class: alb
-      alb.ingress.kubernetes.io/scheme: internet-facing
-      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
-      alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
-      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:098061033856:certificate/113422ff-4d6f-4f7c-b644-64cf06327312
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: inpdesc-to-cred-dev.energyweb.org
+    - host: chart-example.local
       paths:
-      - path: "/"
-        pathType: Prefix
-        backend:
-          service:
-            name: ssl-redirect
-            port:
-              name: use-annotation
-      - path: "/api"
-        pathType: Prefix
-        backend:
-          service:
-            name: idc
-            port:
-              number: 3000
-      - path: "/"
-        pathType: Prefix
-        backend:
-          service:
-            name: idc
-            port:
-              number: 3000
+        - path: /
+          pathType: ImplementationSpecific
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
