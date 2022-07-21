@@ -23,19 +23,34 @@ jobs:
         run: echo "::set-output name=id::$(uuidgen)"
     outputs:
       unique_id: ${{ steps.unique_id.outputs.id }}
-  install-build-and-push:
+
+  configure_environment:
     runs-on: ubuntu-latest
     needs: [cancel-previous, unique_id]
+    outputs:
+      aws_region: ${{ steps.env_vars.outputs.aws_region }}
+      aws_access_key_id_ssi: ${{ steps.env_vars.outputs.aws_access_key_id_ssi }}
+      aws_secret_key_ssi: ${{ steps.env_vars.outputs.aws_secret_key_ssi }}
+      aws_ecr_repository_ssi: ${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}
+      aws_secret_key__id_idc: ${{ steps.env_vars.outputs.aws_access_key_id_idc }}
+      aws_secret_key_idc: ${{ steps.env_vars.outputs.aws_secret_key_idc }}
+      aws_ecr_repository_idc: ${{ steps.env_vars.outputs.aws_ecr_repository_idc }}
+      argocd_url: ${{ steps.env_vars.outputs.argocd_url }}
+      argocd_username: ${{ steps.env_vars.outputs.argocd_username }}
+      argocd_password: ${{ steps.env_vars.outputs.argocd_password }}
     steps:
       - name: Get GHA environment name
         id: env_vars
         run: |
           echo "Running on branch ${{ github.ref }}"
-          if [ "${{ github.ref }}" = "refs/heads/DOI-2022-input-descriptor-to-credential" ]; then
-            echo "::set-output name=aws_access_key_id::${{ secrets.DEV_AWS_ACCESS_KEY_ID_IDC }}"
-            echo "::set-output name=aws_secret_key::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY_IDC }}"
+          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
             echo "::set-output name=aws_region::${{ secrets.AWS_REGION }}"
-            echo "::set-output name=aws_ecr_repository::${{ secrets.DEV_ECR_REPOSITORY_IDC }}"
+            echo "::set-output name=aws_access_key_id_ssi::${{ secrets.DEV_AWS_ACCESS_KEY_ID }}"
+            echo "::set-output name=aws_secret_key_ssi::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}"
+            echo "::set-output name=aws_ecr_repository_ssi::${{ secrets.DEV_ECR_REPOSITORY }}"
+            echo "::set-output name=aws_access_key_id_idc::${{ secrets.DEV_AWS_ACCESS_KEY_ID_IDC }}"
+            echo "::set-output name=aws_secret_key_idc::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY_IDC }}"
+            echo "::set-output name=aws_ecr_repository_idc::${{ secrets.DEV_ECR_REPOSITORY_IDC }}"
             echo "::set-output name=argocd_url::${{ secrets.DEV_ARGOCD_URL }}"
             echo "::set-output name=argocd_username::${{ secrets.DEV_ARGOCD_USERNAME }}"
             echo "::set-output name=argocd_password::${{ secrets.DEV_ARGOCD_PASS }}"
@@ -43,6 +58,12 @@ jobs:
             echo "Branch ${{ github.ref }} is not configured for deployment"
             exit 1
           fi
+  semantic_version:
+    runs-on: ubuntu-latest
+    needs: [cancel-previous, unique_id]
+    outputs:
+      image_tag: ${{ steps.tag_version.outputs.new_tag }}
+    steps:
       - uses: actions/checkout@v2
       - name: Get the tag version
         id: get_version
@@ -55,7 +76,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: master
           custom_release_rules: major:major:Major Changes,minor:minor:Minor Changes,chore:patch:Chores
-          fetch_all_tags: true
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
@@ -64,12 +84,16 @@ jobs:
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
 
+  build_docker_idc:
+    runs-on: ubuntu-latest
+    needs: [configure_environment, semantic_version]
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ steps.env_vars.outputs.aws_access_key_id }}
-          aws-secret-access-key: ${{ steps.env_vars.outputs.aws_secret_key }}
-          aws-region: ${{ steps.env_vars.outputs.aws_region }}
+          aws-access-key-id: ${{ needs.configure_environment.outputs.outputs.aws_access_key_id_idc }}
+          aws-secret-access-key: ${{ needs.configure_environment.outputs.outputs.aws_secret_key_idc }}
+          aws-region: ${{ needs.configure_environment.outputs.outputs.aws_region }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -77,25 +101,29 @@ jobs:
 
       - name: Build & push docker images
         env:
-          BUILD_ID: ${{ steps.tag_version.outputs.new_tag }}
+          BUILD_ID: ${{ needs.semantic_version.outputs.image_tag }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository }}:$BUILD_ID -f apps/credential-from-input-descriptor/Dockerfile .
-          docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository }}:$BUILD_ID
+          docker build -t $ECR_REGISTRY/${{ needs.configure_environment.outputs.aws_ecr_repository_idc }}:$BUILD_ID -f apps/credential-from-input-descriptor/Dockerfile .
+          docker push $ECR_REGISTRY/${{ needs.configure_environment.outputs.aws_ecr_repository_idc }}:$BUILD_ID
       - name: Logout of Amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
+  deploy_idc:
+    runs-on: ubuntu-latest
+    needs: [configure_environment, semantic_version]
+    steps:
       - name: ArgoCD login
         uses: clowdhaus/argo-cd-action/@v1.9.0
         id: argocd_login
         with:
-          command: login ${{ steps.env_vars.outputs.argocd_url }}
-          options: --insecure --password ${{ steps.env_vars.outputs.argocd_password }} --username ${{ steps.env_vars.outputs.argocd_username }}
+          command: login ${{ needs.configure_environment.outputs.argocd_url }}
+          options: --insecure --password ${{ needs.configure_environment.outputs.argocd_password }} --username ${{ needs.configure_environment.outputs.argocd_username }}
 
       - name: ArgoCD overvrite values.yaml
         uses: clowdhaus/argo-cd-action/@v1.9.0
         id: argocd_image_tag_overwrite
         with:
           command: app set input-descriptor-credential
-          options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
+          options: -p image.tag=${{ needs.semantic_version.outputs.image_tag }}
