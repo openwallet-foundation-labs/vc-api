@@ -28,17 +28,6 @@ jobs:
     name: Configure environment
     runs-on: ubuntu-latest
     needs: [cancel-previous, unique_id]
-    outputs:
-      aws_region: ${{ steps.env_vars.outputs.aws_region }}
-      aws_access_key_id_ssi: ${{ steps.env_vars.outputs.aws_access_key_id_ssi }}
-      aws_secret_key_ssi: ${{ steps.env_vars.outputs.aws_secret_key_ssi }}
-      aws_ecr_repository_ssi: ${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}
-      aws_secret_key__id_idc: ${{ steps.env_vars.outputs.aws_access_key_id_idc }}
-      aws_secret_key_idc: ${{ steps.env_vars.outputs.aws_secret_key_idc }}
-      aws_ecr_repository_idc: ${{ steps.env_vars.outputs.aws_ecr_repository_idc }}
-      argocd_url: ${{ steps.env_vars.outputs.argocd_url }}
-      argocd_username: ${{ steps.env_vars.outputs.argocd_username }}
-      argocd_password: ${{ steps.env_vars.outputs.argocd_password }}
     steps:
       - name: Get GHA environment name
         id: env_vars
@@ -59,6 +48,18 @@ jobs:
             echo "Branch ${{ github.ref }} is not configured for deployment"
             exit 1
           fi
+    outputs:
+      aws_region: ${{ steps.env_vars.outputs.aws_region }}
+      aws_access_key_id_ssi: ${{ steps.env_vars.outputs.aws_access_key_id_ssi }}
+      aws_secret_key_ssi: ${{ steps.env_vars.outputs.aws_secret_key_ssi }}
+      aws_ecr_repository_ssi: ${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}
+      aws_access_key_id_idc: ${{ steps.env_vars.outputs.aws_access_key_id_idc }}
+      aws_secret_key_idc: ${{ steps.env_vars.outputs.aws_secret_key_idc }}
+      aws_ecr_repository_idc: ${{ steps.env_vars.outputs.aws_ecr_repository_idc }}
+      argocd_url: ${{ steps.env_vars.outputs.argocd_url }}
+      argocd_username: ${{ steps.env_vars.outputs.argocd_username }}
+      argocd_password: ${{ steps.env_vars.outputs.argocd_password }}
+
   semantic_version:
     name: Semantic version
     runs-on: ubuntu-latest
@@ -96,7 +97,7 @@ jobs:
         with:
           aws-access-key-id: ${{ needs.configure_environment.outputs.aws_access_key_id_idc }}
           aws-secret-access-key: ${{ needs.configure_environment.outputs.aws_secret_key_idc }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ needs.configure_environment.outputs.aws_region }}
 
       - name: Login to Amazon ECR
         id: login-ecr
