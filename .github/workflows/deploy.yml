@@ -2,7 +2,7 @@ name: Build and deploy
 
 on:
   push:
-    branches: ['master']
+    branches: ['DOI-2022-input-descriptor-to-credential']
     paths-ignore: ['devops/**']
   workflow_dispatch:
 
@@ -31,11 +31,14 @@ jobs:
         id: env_vars
         run: |
           echo "Running on branch ${{ github.ref }}"
-          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
-            echo "::set-output name=aws_access_key_id::${{ secrets.DEV_AWS_ACCESS_KEY_ID }}"
-            echo "::set-output name=aws_secret_key::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}"
+          if [ "${{ github.ref }}" = "refs/heads/DOI-2022-input-descriptor-to-credential" ]; then
             echo "::set-output name=aws_region::${{ secrets.AWS_REGION }}"
-            echo "::set-output name=aws_ecr_repository::${{ secrets.DEV_ECR_REPOSITORY }}"
+            echo "::set-output name=aws_access_key_id_ssi::${{ secrets.DEV_AWS_ACCESS_KEY_ID }}"
+            echo "::set-output name=aws_secret_key_ssi::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}"
+            echo "::set-output name=aws_ecr_repository_ssi::${{ secrets.DEV_ECR_REPOSITORY }}"
+            echo "::set-output name=aws_access_key_id_idc::${{ secrets.DEV_AWS_ACCESS_KEY_ID_IDC }}"
+            echo "::set-output name=aws_secret_key_idc::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY_IDC }}"
+            echo "::set-output name=aws_ecr_repository_idc::${{ secrets.DEV_ECR_REPOSITORY_IDC }}"
             echo "::set-output name=argocd_url::${{ secrets.DEV_ARGOCD_URL }}"
             echo "::set-output name=argocd_username::${{ secrets.DEV_ARGOCD_USERNAME }}"
             echo "::set-output name=argocd_password::${{ secrets.DEV_ARGOCD_PASS }}"
@@ -63,24 +66,24 @@ jobs:
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials SSI
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ steps.env_vars.outputs.aws_access_key_id }}
-          aws-secret-access-key: ${{ steps.env_vars.outputs.aws_secret_key }}
+          aws-access-key-id: ${{ steps.env_vars.outputs.aws_access_key_id_ssi }}
+          aws-secret-access-key: ${{ steps.env_vars.outputs.aws_secret_key_ssi }}
           aws-region: ${{ steps.env_vars.outputs.aws_region }}
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build & push docker images
+      - name: Build & push docker SSI images
         env:
           BUILD_ID: ${{ steps.tag_version.outputs.new_tag }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository }}:$BUILD_ID -f Dockerfile .
-          docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository }}:$BUILD_ID
+          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}:$BUILD_ID -f Dockerfile .
+          docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}:$BUILD_ID
       - name: Logout of Amazon ECR
         if: always()
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
@@ -97,4 +100,40 @@ jobs:
         id: argocd_image_tag_overwrite
         with:
           command: app set ssi-wallet
+          options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
+
+      - name: Configure AWS credentials IDC
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ steps.env_vars.outputs.aws_access_key_id_idc }}
+          aws-secret-access-key: ${{ steps.env_vars.outputs.aws_secret_key_idc }}
+          aws-region: ${{ steps.env_vars.outputs.aws_region }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build & push docker images
+        env:
+          BUILD_ID: ${{ steps.tag_version.outputs.new_tag }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_idc }}:$BUILD_ID -f apps/credential-from-input-descriptor/Dockerfile .
+          docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_idc }}:$BUILD_ID
+      - name: Logout of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
+
+      - name: ArgoCD login
+        uses: clowdhaus/argo-cd-action/@v1.9.0
+        id: argocd_login
+        with:
+          command: login ${{ steps.env_vars.outputs.argocd_url }}
+          options: --insecure --password ${{ steps.env_vars.outputs.argocd_password }} --username ${{ steps.env_vars.outputs.argocd_username }}
+
+      - name: ArgoCD overvrite values.yaml
+        uses: clowdhaus/argo-cd-action/@v1.9.0
+        id: argocd_image_tag_overwrite
+        with:
+          command: app set input-descriptor-credential
           options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
