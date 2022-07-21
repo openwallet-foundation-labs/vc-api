@@ -25,6 +25,7 @@ jobs:
       unique_id: ${{ steps.unique_id.outputs.id }}
 
   configure_environment:
+    name: Configure environment
     runs-on: ubuntu-latest
     needs: [cancel-previous, unique_id]
     outputs:
@@ -59,6 +60,7 @@ jobs:
             exit 1
           fi
   semantic_version:
+    name: Semantic version
     runs-on: ubuntu-latest
     needs: [cancel-previous, unique_id]
     outputs:
@@ -85,14 +87,15 @@ jobs:
           body: ${{ steps.tag_version.outputs.changelog }}
 
   build_docker_idc:
+    name: Build Docker Image IDC
     runs-on: ubuntu-latest
     needs: [configure_environment, semantic_version]
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ needs.configure_environment.outputs.outputs.aws_access_key_id_idc }}
-          aws-secret-access-key: ${{ needs.configure_environment.outputs.outputs.aws_secret_key_idc }}
+          aws-access-key-id: ${{ needs.configure_environment.outputs.aws_access_key_id_idc }}
+          aws-secret-access-key: ${{ needs.configure_environment.outputs.aws_secret_key_idc }}
           aws-region: ${{ needs.configure_environment.outputs.outputs.aws_region }}
 
       - name: Login to Amazon ECR
@@ -111,6 +114,7 @@ jobs:
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
   deploy_idc:
+    name: Deploy IDC
     runs-on: ubuntu-latest
     needs: [configure_environment, semantic_version]
     steps:
