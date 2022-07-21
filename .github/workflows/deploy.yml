@@ -97,7 +97,7 @@ jobs:
 
       - name: ArgoCD overvrite SSI values.yaml
         uses: clowdhaus/argo-cd-action/@v1.9.0
-        id: argocd_image_tag_overwrite
+        id: argocd_image_tag_overwrite_ssi
         with:
           command: app set ssi-wallet
           options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
@@ -133,7 +133,7 @@ jobs:
 
       - name: ArgoCD overvrite IDC values.yaml
         uses: clowdhaus/argo-cd-action/@v1.9.0
-        id: argocd_image_tag_overwrite
+        id: argocd_image_tag_overwrite_idc
         with:
           command: app set input-descriptor-credential
           options: -p image.tag=${{ steps.tag_version.outputs.new_tag }}
