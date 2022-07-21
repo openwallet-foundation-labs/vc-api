@@ -2,7 +2,8 @@ name: Build and deploy IDC
 
 on:
   push:
-    branches: ['master']
+    branches: ['DOI-2022-input-descriptor-to-credential']
+    paths-ignore: ['devops/**']
   workflow_dispatch:
 
 jobs:
@@ -30,7 +31,7 @@ jobs:
         id: env_vars
         run: |
           echo "Running on branch ${{ github.ref }}"
-          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+          if [ "${{ github.ref }}" = "refs/heads/DOI-2022-input-descriptor-to-credential" ]; then
             echo "::set-output name=aws_access_key_id::${{ secrets.DEV_AWS_ACCESS_KEY_ID_IDC }}"
             echo "::set-output name=aws_secret_key::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY_IDC }}"
             echo "::set-output name=aws_region::${{ secrets.AWS_REGION }}"
@@ -54,6 +55,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           release_branches: master
           custom_release_rules: major:major:Major Changes,minor:minor:Minor Changes,chore:patch:Chores
+          fetch_all_tags: true
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
