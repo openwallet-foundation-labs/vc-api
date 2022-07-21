@@ -96,7 +96,7 @@ jobs:
         with:
           aws-access-key-id: ${{ needs.configure_environment.outputs.aws_access_key_id_idc }}
           aws-secret-access-key: ${{ needs.configure_environment.outputs.aws_secret_key_idc }}
-          aws-region: ${{ needs.configure_environment.outputs.aws_region }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
