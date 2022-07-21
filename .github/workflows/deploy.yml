@@ -74,28 +74,28 @@ jobs:
           aws-region: ${{ steps.env_vars.outputs.aws_region }}
 
       - name: Login to Amazon ECR
-        id: login-ecr
+        id: login-ecr-ssi
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build & push docker SSI images
         env:
           BUILD_ID: ${{ steps.tag_version.outputs.new_tag }}
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ steps.login-ecr-ssi.outputs.registry }}
         run: |
           docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}:$BUILD_ID -f Dockerfile .
           docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}:$BUILD_ID
       - name: Logout of Amazon ECR
         if: always()
-        run: docker logout ${{ steps.login-ecr.outputs.registry }}
+        run: docker logout ${{ steps.login-ecr-ssi.outputs.registry }}
 
-      - name: ArgoCD login
+      - name: Deploy SSI
         uses: clowdhaus/argo-cd-action/@v1.9.0
-        id: argocd_login
+        id: argocd_login_ssi
         with:
           command: login ${{ steps.env_vars.outputs.argocd_url }}
           options: --insecure --password ${{ steps.env_vars.outputs.argocd_password }} --username ${{ steps.env_vars.outputs.argocd_username }}
 
-      - name: ArgoCD overvrite values.yaml
+      - name: ArgoCD overvrite SSI values.yaml
         uses: clowdhaus/argo-cd-action/@v1.9.0
         id: argocd_image_tag_overwrite
         with:
@@ -110,28 +110,28 @@ jobs:
           aws-region: ${{ steps.env_vars.outputs.aws_region }}
 
       - name: Login to Amazon ECR
-        id: login-ecr
+        id: login-ecr-idc
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build & push docker images
+      - name: Build & push docker images IDC
         env:
           BUILD_ID: ${{ steps.tag_version.outputs.new_tag }}
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REGISTRY: ${{ steps.login-ecr-idc.outputs.registry }}
         run: |
           docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_idc }}:$BUILD_ID -f apps/credential-from-input-descriptor/Dockerfile .
           docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_idc }}:$BUILD_ID
       - name: Logout of Amazon ECR
         if: always()
-        run: docker logout ${{ steps.login-ecr.outputs.registry }}
+        run: docker logout ${{ steps.login-ecr-idc.outputs.registry }}
 
-      - name: ArgoCD login
+      - name: Deploy IDC
         uses: clowdhaus/argo-cd-action/@v1.9.0
-        id: argocd_login
+        id: argocd_login_idc
         with:
           command: login ${{ steps.env_vars.outputs.argocd_url }}
           options: --insecure --password ${{ steps.env_vars.outputs.argocd_password }} --username ${{ steps.env_vars.outputs.argocd_username }}
 
-      - name: ArgoCD overvrite values.yaml
+      - name: ArgoCD overvrite IDC values.yaml
         uses: clowdhaus/argo-cd-action/@v1.9.0
         id: argocd_image_tag_overwrite
         with:
