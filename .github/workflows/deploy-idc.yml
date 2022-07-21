@@ -43,7 +43,7 @@ jobs:
         id: env_vars
         run: |
           echo "Running on branch ${{ github.ref }}"
-          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+          if [ "${{ github.ref }}" = "refs/heads/DOI-2022-input-descriptor-to-credential" ]; then
             echo "::set-output name=aws_region::${{ secrets.AWS_REGION }}"
             echo "::set-output name=aws_access_key_id_ssi::${{ secrets.DEV_AWS_ACCESS_KEY_ID }}"
             echo "::set-output name=aws_secret_key_ssi::${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}"
