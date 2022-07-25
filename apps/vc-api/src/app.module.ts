@@ -33,10 +33,11 @@ import { join } from 'path';
     VcApiModule,
     ConfigModule.forRoot({ load: [config] }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../..', 'static-assets'),
+      rootPath: join(__dirname, '../..', 'static-assets', '.well-known'),
       serveStaticOptions: {
         index: false
-      }
+      },
+      serveRoot: '/.well-known'
     })
   ]
 })

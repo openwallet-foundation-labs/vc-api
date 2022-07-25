@@ -9,7 +9,7 @@ specifiers:
   '@nestjs/core': ^8.0.0
   '@nestjs/platform-express': ^8.0.0
   '@nestjs/schematics': ^8.0.0
-  '@nestjs/serve-static': ~2.2.0
+  '@nestjs/serve-static': ^3.0.0
   '@nestjs/swagger': ~5.1.0
   '@nestjs/testing': ^8.0.0
   '@nestjs/typeorm': 8.0.4
@@ -67,7 +67,7 @@ dependencies:
   '@nestjs/core': 8.4.7_2aa064eef171d5a7957432d22e4b3f20
   '@nestjs/platform-express': 8.4.7_fce4c3b686c1225eb94686491d30b061
   '@nestjs/schematics': 8.0.11_typescript@4.7.4
-  '@nestjs/serve-static': 2.2.2_fce4c3b686c1225eb94686491d30b061
+  '@nestjs/serve-static': 3.0.0_fce4c3b686c1225eb94686491d30b061
   '@nestjs/swagger': 5.1.5_ce4055f8a70424510229f2128b9d2f34
   '@nestjs/testing': 8.4.7_c1bddf0102e0d68dc342d4afcbe21907
   '@nestjs/typeorm': 8.0.4_4967a077601f378d566b47f3ee68696d
@@ -1745,15 +1745,15 @@ packages:
       - chokidar
     dev: false
 
-  /@nestjs/serve-static/2.2.2_fce4c3b686c1225eb94686491d30b061:
-    resolution: {integrity: sha512-3Mr+Q/npS3N7iGoF3Wd6Lj9QcjMGxbNrSqupi5cviM0IKrZ1BHl5qekW95rWYNATAVqoTmjGROAq+nKKpuUagQ==}
+  /@nestjs/serve-static/3.0.0_fce4c3b686c1225eb94686491d30b061:
+    resolution: {integrity: sha512-TpXjgs4136dQqWUjEcONqppqXDsrJhRkmKWzuBMOUAnP4HjHpNmlycvkHnDnWSoG2YD4a7Enh4ViYGWqCfHStA==}
     peerDependencies:
-      '@nestjs/common': ^6.0.0 || ^7.0.0 || ^8.0.0
-      '@nestjs/core': ^6.0.0 || ^7.0.0 || ^8.0.0
+      '@nestjs/common': ^9.0.0
+      '@nestjs/core': ^9.0.0
     dependencies:
       '@nestjs/common': 8.4.7_5199533202e21c7185c9d97f881e2827
       '@nestjs/core': 8.4.7_2aa064eef171d5a7957432d22e4b3f20
-      path-to-regexp: 0.1.7
+      path-to-regexp: 0.2.5
     dev: false
 
   /@nestjs/swagger/5.1.5_ce4055f8a70424510229f2128b9d2f34:
@@ -6573,6 +6573,10 @@ packages:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
     dev: false
 
+  /path-to-regexp/0.2.5:
+    resolution: {integrity: sha512-l6qtdDPIkmAmzEO6egquYDfqQGPMRNGjYtrU13HAXb3YSRrt7HSb1sJY0pKp6o2bAa86tSB6iwaW2JbthPKr7Q==}
+    dev: false
+
   /path-to-regexp/3.2.0:
     resolution: {integrity: sha512-jczvQbCUS7XmS7o+y1aEO9OBVFeZBQ1MDSEqmO7xSoPgOPoowY/SxLpZ6Vh97/8qHZOteiCKb7gkG9gA2ZUxJA==}
     dev: false
@@ -8416,7 +8420,7 @@ packages:
     dev: false
 
   file:projects/ssi-vc-api.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-/zxEe8Fn2B+rZEZc2muoC8n+SN8gtT2LSNaScKCnhHJFCh9beihuBI3FyUzA00QYq+tSRxg3qXT5chvQYUbPpg==, tarball: file:projects/ssi-vc-api.tgz}
+    resolution: {integrity: sha512-Jg6tfSyVM/jFcz6ZuMut/mdvPAof2VYygb/7ew/l3eW8lha/P1qXIrR+UGxUhLVlZu0fx2la/tEibYKB6dcyHw==, tarball: file:projects/ssi-vc-api.tgz}
     id: file:projects/ssi-vc-api.tgz
     name: '@rush-temp/ssi-vc-api'
     version: 0.0.0
@@ -8428,7 +8432,7 @@ packages:
       '@nestjs/core': 8.4.7_2aa064eef171d5a7957432d22e4b3f20
       '@nestjs/platform-express': 8.4.7_fce4c3b686c1225eb94686491d30b061
       '@nestjs/schematics': 8.0.11_typescript@4.7.4
-      '@nestjs/serve-static': 2.2.2_fce4c3b686c1225eb94686491d30b061
+      '@nestjs/serve-static': 3.0.0_fce4c3b686c1225eb94686491d30b061
       '@nestjs/swagger': 5.1.5_ce4055f8a70424510229f2128b9d2f34
       '@nestjs/testing': 8.4.7_c1bddf0102e0d68dc342d4afcbe21907
       '@nestjs/typeorm': 8.0.4_4967a077601f378d566b47f3ee68696d
