@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
+  "main": "dist/src/index.js",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

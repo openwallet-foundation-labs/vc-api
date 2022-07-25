@@ -16,6 +16,7 @@ specifiers:
   '@rush-temp/credential-from-input-descriptor': file:./projects/credential-from-input-descriptor.tgz
   '@rush-temp/ssi-did': file:./projects/ssi-did.tgz
   '@rush-temp/ssi-vc-api': file:./projects/ssi-vc-api.tgz
+  '@rush-temp/ssi-vc-api-tests-e2e': file:./projects/ssi-vc-api-tests-e2e.tgz
   '@rush-temp/w3c-ccg-webkms': file:./projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': ~2.6.0
   '@sphereon/pex': ~1.1.0
@@ -74,6 +75,7 @@ dependencies:
   '@rush-temp/credential-from-input-descriptor': file:projects/credential-from-input-descriptor.tgz_babel-jest@26.6.3
   '@rush-temp/ssi-did': file:projects/ssi-did.tgz_ts-node@10.8.1
   '@rush-temp/ssi-vc-api': file:projects/ssi-vc-api.tgz_babel-jest@26.6.3
+  '@rush-temp/ssi-vc-api-tests-e2e': file:projects/ssi-vc-api-tests-e2e.tgz_37a84f89aa699e0d83352fdef05a54fa
   '@rush-temp/w3c-ccg-webkms': file:projects/w3c-ccg-webkms.tgz
   '@rushstack/eslint-config': 2.6.2_eslint@8.19.0+typescript@4.7.4
   '@sphereon/pex': 1.1.2
@@ -8417,6 +8419,54 @@ packages:
       - supports-color
       - ts-node
       - utf-8-validate
+    dev: false
+
+  file:projects/ssi-vc-api-tests-e2e.tgz_37a84f89aa699e0d83352fdef05a54fa:
+    resolution: {integrity: sha512-ygqoUYUEU3bfIFxD9pyumevgzQBl3J9ca9g09P6MZZTT6PajQfcLu9jI8J+auGVwp7O8EGWWLgha804KicZ2FQ==, tarball: file:projects/ssi-vc-api-tests-e2e.tgz}
+    id: file:projects/ssi-vc-api-tests-e2e.tgz
+    name: '@rush-temp/ssi-vc-api-tests-e2e'
+    version: 0.0.0
+    dependencies:
+      '@nestjs/common': 8.4.7_5199533202e21c7185c9d97f881e2827
+      '@nestjs/testing': 8.4.7_c1bddf0102e0d68dc342d4afcbe21907
+      '@types/jest': 27.5.2
+      '@types/supertest': 2.0.12
+      '@typescript-eslint/eslint-plugin': 5.30.5_f646e16e2de31e818e163bded4698d6b
+      '@typescript-eslint/parser': 5.30.5_eslint@8.19.0+typescript@4.7.4
+      eslint: 8.19.0
+      eslint-config-prettier: 8.5.0_eslint@8.19.0
+      eslint-plugin-prettier: 4.2.1_fd2e32b7574349919aac0818c3f895ea
+      jest: 27.0.6_ts-node@10.8.1
+      prettier: 2.7.1
+      rimraf: 3.0.2
+      supertest: 6.2.3
+      ts-jest: 27.1.5_d72aeffe33666a81c9d394a1de77d638
+      ts-loader: 9.3.1_typescript@4.7.4
+      ts-node: 10.8.1_841f2a74d64cdda652a10d589e346265
+      tsconfig-paths: 4.0.0
+      typescript: 4.7.4
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@nestjs/core'
+      - '@nestjs/microservices'
+      - '@nestjs/platform-express'
+      - '@swc/core'
+      - '@swc/wasm'
+      - '@types/node'
+      - babel-jest
+      - bufferutil
+      - cache-manager
+      - canvas
+      - class-transformer
+      - class-validator
+      - debug
+      - esbuild
+      - node-notifier
+      - reflect-metadata
+      - rxjs
+      - supports-color
+      - utf-8-validate
+      - webpack
     dev: false
 
   file:projects/ssi-vc-api.tgz_babel-jest@26.6.3:

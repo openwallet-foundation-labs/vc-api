@@ -4,7 +4,6 @@
  */
 {
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
-
   /**
    * (Required) This specifies the version of the Rush engine to be used in this repo.
    * Rush's "version selector" feature ensures that the globally installed tool will
@@ -17,7 +16,6 @@
    * correct error-underlining and tab-completion for editors such as VS Code.
    */
   "rushVersion": "5.63.0",
-
   /**
    * The next field selects which package manager should be installed and determines its version.
    * Rush installs its own local copy of the package manager to ensure that your build process
@@ -27,7 +25,6 @@
    * for details about these alternatives.
    */
   "pnpmVersion": "6.32.3",
-
   // "npmVersion": "6.14.15",
   // "yarnVersion": "1.9.4",
 
@@ -108,7 +105,6 @@
      */
     // "useWorkspaces": true
   },
-
   /**
    * Older releases of the Node.js engine may be missing features required by your system.
    * Other releases may have bugs.  In particular, the "latest" version will not be a
@@ -121,7 +117,6 @@
    * LTS versions: https://nodejs.org/en/download/releases/
    */
   "nodeSupportedVersionRange": ">=12.13.0 <13.0.0 || >=14.15.0 <=16.10.0",
-
   /**
    * Odd-numbered major versions of Node.js are experimental.  Even-numbered releases
    * spend six months in a stabilization period before the first Long Term Support (LTS) version.
@@ -147,7 +142,6 @@
    * section of the common-versions.json.
    */
   "ensureConsistentVersions": true,
-
   /**
    * Large monorepos can become intimidating for newcomers if project folder paths don't follow
    * a consistent and recognizable pattern.  When the system allows nested folder trees,
@@ -266,7 +260,6 @@
      */
     // "changeLogUpdateCommitMessage": "Update changelogs [skip ci]"
   },
-
   "repository": {
     /**
      * The URL of this Git repository, used by "rush change" to determine the base branch for your PR.
@@ -295,7 +288,6 @@
      */
     // "defaultRemote": "origin"
   },
-
   /**
    * Event hooks are customized script actions that Rush executes when specific events occur
    */
@@ -306,23 +298,19 @@
     "preRushInstall": [
       // "common/scripts/pre-rush-install.js"
     ],
-
     /**
      * The list of shell commands to run after the Rush installation finishes
      */
     "postRushInstall": [],
-
     /**
      * The list of shell commands to run before the Rush build command starts
      */
     "preRushBuild": [],
-
     /**
      * The list of shell commands to run after the Rush build command finishes
      */
     "postRushBuild": []
   },
-
   /**
    * Installation variants allow you to maintain a parallel set of configuration files that can be
    * used to build the entire monorepo with an alternate set of dependencies.  For example, suppose
@@ -353,7 +341,6 @@
     //   "description": "Build this repo using the previous release of the SDK"
     // }
   ],
-
   /**
    * Rush can collect anonymous telemetry about everyday developer activity such as
    * success/failure of installs, builds, and other operations.  You can use this to identify
@@ -458,6 +445,10 @@
     {
       "packageName": "@energyweb/credential-from-input-descriptor",
       "projectFolder": "apps/credential-from-input-descriptor"
+    },
+    {
+      "packageName": "@energyweb/ssi-vc-api-tests-e2e",
+      "projectFolder": "tests/e2e"
     }
   ]
 }
