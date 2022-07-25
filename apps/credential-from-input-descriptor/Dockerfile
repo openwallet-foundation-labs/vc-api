@@ -12,6 +12,7 @@ COPY apps/vc-api/package.json apps/vc-api/package.json
 COPY libraries/did/package.json libraries/did/package.json
 COPY libraries/webkms/package.json libraries/webkms/package.json
 COPY apps/credential-from-input-descriptor/package.json apps/credential-from-input-descriptor/package.json
+COPY tests/e2e/package.json tests/e2e/package.json
 
 RUN node common/scripts/install-run-rush.js install
 
