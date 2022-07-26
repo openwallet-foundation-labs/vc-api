@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/key": {
+    "/v1/key": {
       "post": {
         "operationId": "KeyController_import",
         "parameters": [],
@@ -12,14 +12,14 @@
         "responses": { "201": { "description": "" } }
       }
     },
-    "/key/{keyId}": {
+    "/v1/key/{keyId}": {
       "get": {
         "operationId": "KeyController_export",
         "parameters": [{ "name": "keyId", "required": true, "in": "path", "schema": { "type": "string" } }],
         "responses": { "200": { "description": "" } }
       }
     },
-    "/did": {
+    "/v1/did": {
       "post": {
         "operationId": "DIDController_create",
         "parameters": [],
@@ -33,7 +33,7 @@
         "tags": ["did"]
       }
     },
-    "/did/{did}": {
+    "/v1/did/{did}": {
       "get": {
         "operationId": "DIDController_getByDID",
         "parameters": [{ "name": "did", "required": true, "in": "path", "schema": { "type": "string" } }],
@@ -41,7 +41,7 @@
         "tags": ["did"]
       }
     },
-    "/did/verification-method/{id}": {
+    "/v1/did/verification-method/{id}": {
       "get": {
         "operationId": "DIDController_getVerificationMethods",
         "parameters": [{ "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }],
@@ -49,7 +49,7 @@
         "tags": ["did"]
       }
     },
-    "/did/label/{did}": {
+    "/v1/did/label/{did}": {
       "post": {
         "operationId": "DIDController_label",
         "parameters": [],
@@ -57,7 +57,7 @@
         "tags": ["did"]
       }
     },
-    "/vc-api/credentials/issue": {
+    "/v1/vc-api/credentials/issue": {
       "post": {
         "operationId": "VcApiController_issueCredential",
         "parameters": [],
@@ -71,7 +71,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/credentials/verify": {
+    "/v1/vc-api/credentials/verify": {
       "post": {
         "operationId": "VcApiController_verifyCredential",
         "parameters": [],
@@ -88,7 +88,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/presentations/prove/authentication": {
+    "/v1/vc-api/presentations/prove/authentication": {
       "post": {
         "operationId": "VcApiController_proveAuthenticationPresentation",
         "parameters": [],
@@ -100,7 +100,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/presentations/from": {
+    "/v1/vc-api/presentations/from": {
       "post": {
         "operationId": "VcApiController_presentationFrom",
         "parameters": [],
@@ -108,7 +108,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/presentations/prove": {
+    "/v1/vc-api/presentations/prove": {
       "post": {
         "operationId": "VcApiController_provePresentation",
         "parameters": [],
@@ -122,7 +122,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/presentations/verify": {
+    "/v1/vc-api/presentations/verify": {
       "post": {
         "operationId": "VcApiController_verifyPresentation",
         "parameters": [],
@@ -139,7 +139,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/exchanges": {
+    "/v1/vc-api/exchanges": {
       "post": {
         "operationId": "VcApiController_createExchange",
         "parameters": [],
@@ -153,7 +153,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/exchanges/{exchangeId}": {
+    "/v1/vc-api/exchanges/{exchangeId}": {
       "post": {
         "operationId": "VcApiController_initiateExchange",
         "parameters": [
@@ -163,7 +163,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/exchanges/{exchangeId}/{transactionId}": {
+    "/v1/vc-api/exchanges/{exchangeId}/{transactionId}": {
       "put": {
         "operationId": "VcApiController_continueExchange",
         "parameters": [
@@ -194,7 +194,7 @@
         "tags": ["vc-api"]
       }
     },
-    "/vc-api/exchanges/{exchangeId}/{transactionId}/review": {
+    "/v1/vc-api/exchanges/{exchangeId}/{transactionId}/review": {
       "post": {
         "operationId": "VcApiController_addSubmissionReview",
         "parameters": [
