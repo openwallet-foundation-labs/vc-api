@@ -79,9 +79,6 @@ sequenceDiagram
 
     par review presentation
       ISH->>IService: notify verification service of new presentation
-      IService->>ISH: query outstanding presentations to review
-      activate ISH
-        ISH-->>IService: return presentation to review
       deactivate ISH
       IService->>IService: process presentation
       opt credential issuance
