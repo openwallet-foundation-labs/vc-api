@@ -93,14 +93,14 @@ The technical issuance workflow is as follows:
 ## Overview and Objective
 
 The objective of this tutorial is walk through a simple credential issuance and presentation flow.
-A diagram of this flow is available in the root README.
+A diagram of this flow is available in the [Exchanges Documentation](../exchanges.md).
 
 ## Steps
 ### 0. Setup the Postman Collection
 
 First, download and install [Postman](https://www.postman.com/downloads/).
 
-Then, from the Postman app, import [the open-api json](./open-api.json) and [the environment](./ewf-ssi-wallet.postman_environment.json) for the Nest.js wallet. Instructions on how to import into Postman can be found [here](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman).
+Then, from the Postman app, import [the open-api json](../openapi.json) and [the environment](../vc-api.postman_environment.json) for the Nest.js wallet. Instructions on how to import into Postman can be found [here](https://learning.postman.com/docs/getting-started/importing-and-exporting-data/#importing-data-into-postman).
 
 ### 1. Permanent Resident Card issuance
 
