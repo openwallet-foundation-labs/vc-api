@@ -93,7 +93,7 @@ The technical issuance workflow is as follows:
 ## Overview and Objective
 
 The objective of this tutorial is walk through a simple credential issuance and presentation flow.
-A diagram of this flow is available in the root README.
+A diagram of this flow is available in the [Exchanges Documentation](../exchanges.md).
 
 ## Steps
 ### 0. Setup the Postman Collection
