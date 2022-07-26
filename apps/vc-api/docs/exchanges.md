@@ -40,8 +40,8 @@ This flow can be either a credential verification exchange (an exchange between 
 ```mermaid
 sequenceDiagram
   actor R as Holder
-  participant RSH as Holder SSI Hub
-  participant RSB as Web UI
+  participant RSH as Holder Credential Storage
+  participant RSB as Wallet UI
   participant ISH as Verifier/Issuer SSI Wallet
   participant IService as Verification/Issuance Service
 
