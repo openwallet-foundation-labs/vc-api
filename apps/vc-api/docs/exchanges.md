@@ -40,8 +40,8 @@ This flow can be either a credential verification exchange (an exchange between 
 ```mermaid
 sequenceDiagram
   actor R as Holder
-  participant RSH as Holder SSI Hub
-  participant RSB as Web UI
+  participant RSH as Holder Credential Storage
+  participant RSB as Wallet UI
   participant ISH as Verifier/Issuer SSI Wallet
   participant IService as Verification/Issuance Service
 
@@ -79,9 +79,6 @@ sequenceDiagram
 
     par review presentation
       ISH->>IService: notify verification service of new presentation
-      IService->>ISH: query outstanding presentations to review
-      activate ISH
-        ISH-->>IService: return presentation to review
       deactivate ISH
       IService->>IService: process presentation
       opt credential issuance
