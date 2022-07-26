@@ -79,7 +79,6 @@ sequenceDiagram
 
     par review presentation
       ISH->>IService: notify verification service of new presentation
-      deactivate ISH
       IService->>IService: process presentation
       opt credential issuance
         IService->>IService: prepare & issue VCs (as a VP)
