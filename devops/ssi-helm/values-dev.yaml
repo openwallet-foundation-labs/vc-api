@@ -104,4 +104,4 @@ tolerations: []
 affinity: {}
 
 appValues:
-  BASE_URL: https://vc-api-dev.energyweb.org/v1
+  BASE_URL: https://vc-api-dev.energyweb.org

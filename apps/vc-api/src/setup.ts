@@ -20,13 +20,16 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+export const API_DEFAULT_VERSION: string = '1';
+export const API_DEFAULT_VERSION_PREFIX: string = `/v${API_DEFAULT_VERSION}`;
+
 async function setupApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
   app.enableCors({ origin: true });
   app.useGlobalPipes(new ValidationPipe());
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: ['1']
+    defaultVersion: [API_DEFAULT_VERSION]
   });
   return app;
 }

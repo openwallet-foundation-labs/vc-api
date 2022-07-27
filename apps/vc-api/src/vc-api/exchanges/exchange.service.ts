@@ -31,6 +31,7 @@ import { TransactionDto } from './dtos/transaction.dto';
 import { ReviewResult, SubmissionReviewDto } from './dtos/submission-review.dto';
 import { VpSubmissionVerifierService } from './vp-submission-verifier.service';
 import { validate } from 'class-validator';
+import { API_DEFAULT_VERSION_PREFIX } from '../../setup';
 
 @Injectable()
 export class ExchangeService {
@@ -76,7 +77,7 @@ export class ExchangeService {
         processingInProgress: false
       };
     }
-    const baseWithControllerPath = `${baseUrl}/vc-api`;
+    const baseWithControllerPath = `${baseUrl}${API_DEFAULT_VERSION_PREFIX}/vc-api`;
     const transaction = exchange.start(baseWithControllerPath);
     await this.transactionRepository.save(transaction);
     return {

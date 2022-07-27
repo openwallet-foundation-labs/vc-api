@@ -16,7 +16,7 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 import { WalletClient } from './wallet-client';
 import { didSuite } from './did/did.e2e-suite';
@@ -27,6 +27,7 @@ import { vcApiSuite } from './vc-api/credentials/vc-api.e2e-suite';
 import { keySuite } from './key/key.e2e-suite';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ExchangeEntity } from '../src/vc-api/exchanges/entities/exchange.entity';
+import { API_DEFAULT_VERSION, API_DEFAULT_VERSION_PREFIX } from '../src/setup';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -34,7 +35,7 @@ jest.setTimeout(300 * 1000);
 
 export let app: INestApplication;
 export let walletClient: WalletClient;
-export const vcApiBaseUrl = '/vc-api';
+export const vcApiBaseUrl = `${API_DEFAULT_VERSION_PREFIX}/vc-api`;
 
 describe('App (e2e)', () => {
   beforeEach(async () => {
@@ -44,6 +45,10 @@ describe('App (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe()); // https://github.com/nestjs/nest/issues/5264
+    app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: [API_DEFAULT_VERSION]
+    });
     await app.init();
     walletClient = new WalletClient(app);
 

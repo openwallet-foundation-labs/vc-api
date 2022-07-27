@@ -31,6 +31,7 @@ import { IPresentationDefinition } from '@sphereon/pex';
 import { PresentationDto } from '../src/vc-api/credentials/dtos/presentation.dto';
 import { KeyPairDto } from '../src/key/dtos/key-pair.dto';
 import { KeyDescriptionDto } from 'src/key/dtos/key-description.dto';
+import { API_DEFAULT_VERSION_PREFIX } from '../src/setup';
 
 /**
  * A wallet client for e2e tests
@@ -44,7 +45,7 @@ export class WalletClient {
 
   async exportKey(keyId: string): Promise<KeyPairDto> {
     const getResponse = await request(this.#app.getHttpServer())
-      .get(`/key/${keyId}`)
+      .get(`${API_DEFAULT_VERSION_PREFIX}/key/${keyId}`)
       .expect(200);
     expect(getResponse.body).toHaveProperty('privateKey');
     expect(getResponse.body).toHaveProperty('publicKey');
@@ -53,7 +54,7 @@ export class WalletClient {
 
   async importKey(keyPair: KeyPairDto): Promise<KeyDescriptionDto> {
     const postResponse = await request(this.#app.getHttpServer())
-      .post('/key')
+      .post(`${API_DEFAULT_VERSION_PREFIX}/key`)
       .send(keyPair)
       .expect(201);
     expect(postResponse.body).toHaveProperty('keyId');
@@ -62,7 +63,7 @@ export class WalletClient {
 
   async createDID(requestedMethod: string, keyId?: string): Promise<DIDDocument> {
     const postResponse = await request(this.#app.getHttpServer())
-      .post('/did')
+      .post(`${API_DEFAULT_VERSION_PREFIX}/did`)
       .send({ method: requestedMethod, keyId })
       .expect(201);
     expect(postResponse.body).toHaveProperty('id');
@@ -73,7 +74,7 @@ export class WalletClient {
     expect(createdMethod).toEqual(requestedMethod);
 
     const getResponse = await request(this.#app.getHttpServer())
-      .get(`/did/${newDID}`)
+      .get(`${API_DEFAULT_VERSION_PREFIX}/did/${newDID}`)
       .expect(200);
     expect(getResponse.body).toHaveProperty('verificationMethod');
     expect(postResponse.body['verificationMethod']).toMatchObject(getResponse.body['verificationMethod']);
@@ -82,7 +83,7 @@ export class WalletClient {
 
   async issueVC(issueCredentialDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {
     const postResponse = await request(this.#app.getHttpServer())
-      .post('/vc-api/credentials/issue')
+      .post(`${API_DEFAULT_VERSION_PREFIX}/vc-api/credentials/issue`)
       .send(issueCredentialDto)
       .expect(201);
     return postResponse.body;
@@ -93,7 +94,7 @@ export class WalletClient {
     credentials: VerifiableCredentialDto[]
   ): Promise<PresentationDto> {
     const postResponse = await request(this.#app.getHttpServer())
-      .post('/vc-api/presentations/from')
+      .post(`${API_DEFAULT_VERSION_PREFIX}/vc-api/presentations/from`)
       .send({ presentationDefinition, credentials })
       .expect(201);
     return postResponse.body;
@@ -101,7 +102,7 @@ export class WalletClient {
 
   async provePresentation(provePresentationDto: ProvePresentationDto): Promise<VerifiablePresentationDto> {
     const postResponse = await request(this.#app.getHttpServer())
-      .post('/vc-api/presentations/prove')
+      .post(`${API_DEFAULT_VERSION_PREFIX}/vc-api/presentations/prove`)
       .send(provePresentationDto)
       .expect(201);
     return postResponse.body;
@@ -152,7 +153,7 @@ export class WalletClient {
    */
   async getExchangeTransaction(exchangeId: string, transactionId: string) {
     const continueExchangeResponse = await request(this.#app.getHttpServer())
-      .get(`/vc-api/exchanges/${exchangeId}/${transactionId}`)
+      .get(`${API_DEFAULT_VERSION_PREFIX}/vc-api/exchanges/${exchangeId}/${transactionId}`)
       .expect(200);
     expect(continueExchangeResponse.body.errors).toHaveLength(0);
     expect(continueExchangeResponse.body.transaction).toBeDefined();
@@ -168,7 +169,7 @@ export class WalletClient {
     submissionReviewDto: SubmissionReviewDto
   ) {
     const continueExchangeResponse = await request(this.#app.getHttpServer())
-      .post(`/vc-api/exchanges/${exchangeId}/${transactionId}/review`)
+      .post(`${API_DEFAULT_VERSION_PREFIX}/vc-api/exchanges/${exchangeId}/${transactionId}/review`)
       .send(submissionReviewDto)
       .expect(201);
     return continueExchangeResponse?.body;
