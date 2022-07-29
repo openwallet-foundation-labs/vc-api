@@ -15,24 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
-import { setupApp, setupSwaggerDocument } from './setup';
-import { SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from '../src';
+import { setupSwaggerDocument } from '../src/setup';
+import { writeFile } from 'fs/promises';
+import path from 'path';
+import { Test } from '@nestjs/testing';
 
-async function bootstrap() {
-  const logger = new Logger('bootstrap', { timestamp: true });
-  logger.debug('starting');
+(async () => {
+  const module = await Test.createTestingModule({
+    imports: [AppModule]
+  }).compile();
 
-  const app = await NestFactory.create(AppModule);
-  setupApp(app);
-  SwaggerModule.setup('api', app, setupSwaggerDocument(app));
-
-  const port = parseInt(process.env.PORT) || 3000;
-  await app.listen(port);
-  logger.log(`listening on http://127.0.0.1:${port}`);
-  logger.log(`Swagger available on http://127.0.0.1:${port}/api`);
-}
-
-bootstrap();
+  const app = module.createNestApplication(undefined, { logger: false });
+  const doc = setupSwaggerDocument(app);
+  await writeFile(path.join(__dirname, '..', 'docs', 'openapi.json'), JSON.stringify(doc, null, 2));
+})();
