@@ -27,6 +27,19 @@ import { CallbackConfiguration } from '../types/callback-configuration';
 import { PresentationSubmissionEntity } from './presentation-submission.entity';
 import { SubmissionVerifier } from '../types/submission-verifier';
 
+export class TransactionEntityException extends Error {
+  constructor(message?: string) {
+    super(message);
+    this.initName();
+  }
+
+  public initName(): void {
+    this.name = this.constructor.name;
+  }
+}
+
+export class TransactionDidForbiddenException extends TransactionEntityException {}
+
 /**
  * A TypeOrm entity representing an exchange transaction
  * https://w3c-ccg.github.io/vc-api/#exchange-examples
@@ -115,6 +128,12 @@ export class TransactionEntity {
     presentation: VerifiablePresentation,
     verifier: SubmissionVerifier
   ): Promise<{ response: ExchangeResponseDto; callback: CallbackConfiguration[] }> {
+    if (this.presentationSubmission && this.presentationSubmission.vp.holder !== presentation.holder) {
+      throw new TransactionDidForbiddenException(
+        'DID does not match the DID that initially submitted the presentation'
+      );
+    }
+
     const verificationResult = await verifier.verifyVpRequestSubmission(presentation, this.vpRequest);
     const errors = verificationResult.errors;
 
@@ -129,8 +148,8 @@ export class TransactionEntity {
     }
 
     const service = this.vpRequest.interact.service[0]; // TODO: Not sure how to handle multiple interaction services
-    if (service.type == VpRequestInteractServiceType.mediatedPresentation) {
-      if (this.presentationReview.reviewStatus == PresentationReviewStatus.pendingSubmission) {
+    if (service.type === VpRequestInteractServiceType.mediatedPresentation) {
+      if (this.presentationReview.reviewStatus === PresentationReviewStatus.pendingSubmission) {
         // TODO: should we allow overwrite of a previous submitted submission?
         if (!this.presentationSubmission) {
           this.presentationSubmission = new PresentationSubmissionEntity(presentation, verificationResult);
@@ -150,8 +169,8 @@ export class TransactionEntity {
         };
       }
       if (
-        this.presentationReview.reviewStatus == PresentationReviewStatus.approved ||
-        this.presentationReview.reviewStatus == PresentationReviewStatus.rejected
+        this.presentationReview.reviewStatus === PresentationReviewStatus.approved ||
+        this.presentationReview.reviewStatus === PresentationReviewStatus.rejected
       ) {
         return {
           response: {
@@ -163,7 +182,7 @@ export class TransactionEntity {
         };
       }
     }
-    if (service.type == VpRequestInteractServiceType.unmediatedPresentation) {
+    if (service.type === VpRequestInteractServiceType.unmediatedPresentation) {
       this.presentationSubmission = new PresentationSubmissionEntity(presentation, verificationResult);
       return {
         response: {

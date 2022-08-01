@@ -18,7 +18,7 @@
 import { PresentationReviewStatus } from '../types/presentation-review-status';
 import { SubmissionVerifier } from '../types/submission-verifier';
 import { VpRequestInteractServiceType } from '../types/vp-request-interact-service-type';
-import { TransactionEntity } from './transaction.entity';
+import { TransactionDidForbiddenException, TransactionEntity } from './transaction.entity';
 import { VpRequestEntity } from './vp-request.entity';
 
 describe('TransactionEntity', () => {
@@ -103,5 +103,31 @@ describe('TransactionEntity', () => {
       expect(transaction.presentationSubmission.verificationResult).toEqual(submissionVerificationResult);
       expect(transaction.presentationSubmission.vp).toEqual(vp);
     });
+  });
+
+  it('should throw a TransactionDidForbiddenException exception when called second time with holder non matching', async function () {
+    const vpRequest: VpRequestEntity = {
+      challenge,
+      query: [],
+      interact: {
+        service: [
+          {
+            type: VpRequestInteractServiceType.unmediatedPresentation,
+            serviceEndpoint: 'https://endpoint.com'
+          }
+        ]
+      }
+    };
+    const transaction = new TransactionEntity(transactionId, exchangeId, vpRequest, configuredCallback);
+    await transaction.processPresentation(vp, mockSubmissionVerifier);
+
+    const vp2 = { ...vp, holder: 'invalid holder' };
+
+    await expect(transaction.processPresentation(vp2, mockSubmissionVerifier)).rejects.toThrow(
+      TransactionDidForbiddenException
+    );
+    await expect(transaction.processPresentation(vp2, mockSubmissionVerifier)).rejects.toThrow(
+      'DID does not match the DID that initially submitted the presentation'
+    );
   });
 });
