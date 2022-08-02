@@ -20,6 +20,8 @@ import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { setupApp, setupSwaggerDocument } from './setup';
 import { SwaggerModule } from '@nestjs/swagger';
+import { readFile } from 'fs/promises';
+import { resolve as resolvePath } from 'path';
 
 async function bootstrap() {
   const logger = new Logger('bootstrap', { timestamp: true });
@@ -31,6 +33,9 @@ async function bootstrap() {
 
   const port = parseInt(process.env.PORT) || 3000;
   await app.listen(port);
+  console.log(
+    '\n' + (await readFile(resolvePath(__dirname, '..', '..', '..', 'license-header.txt'))).toString() + '\n'
+  );
   logger.log(`listening on http://127.0.0.1:${port}`);
   logger.log(`Swagger available on http://127.0.0.1:${port}/api`);
 }

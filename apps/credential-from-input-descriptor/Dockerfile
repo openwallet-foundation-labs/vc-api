@@ -28,6 +28,7 @@ ENV NODE_ENV=production
 
 EXPOSE 3000
 
+COPY license-header.txt /app
 COPY --from=builder /app/common/deploy /app
 
 CMD ["node", "apps/credential-from-input-descriptor/dist/main.js"]

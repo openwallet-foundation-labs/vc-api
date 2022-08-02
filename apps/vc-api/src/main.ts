@@ -16,11 +16,18 @@
  */
 
 import { setupApp, setupSwaggerDocument } from './setup';
+import { readFile } from 'fs/promises';
+import { resolve as resolvePath } from 'path';
 
 async function bootstrap() {
   const app = await setupApp();
   setupSwaggerDocument(app);
   await app.listen(3000);
+  console.log(
+    '\n' +
+      (await readFile(resolvePath(__dirname, '..', '..', '..', '..', 'license-header.txt'))).toString() +
+      '\n'
+  );
 }
 
 bootstrap();
