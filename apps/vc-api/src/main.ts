@@ -23,11 +23,15 @@ async function bootstrap() {
   const app = await setupApp();
   setupSwaggerDocument(app);
   await app.listen(3000);
-  console.log(
-    '\n' +
-      (await readFile(resolvePath(__dirname, '..', '..', '..', '..', 'license-header.txt'))).toString() +
-      '\n'
-  );
+  try {
+    console.log(
+      '\n' +
+        (await readFile(resolvePath(__dirname, '..', '..', '..', '..', 'license-header.txt'))).toString() +
+        '\n'
+    );
+  } catch (err) {
+    console.error(`license file not found: ${err}`);
+  }
 }
 
 bootstrap();

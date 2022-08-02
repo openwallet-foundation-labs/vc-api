@@ -33,9 +33,17 @@ async function bootstrap() {
 
   const port = parseInt(process.env.PORT) || 3000;
   await app.listen(port);
-  console.log(
-    '\n' + (await readFile(resolvePath(__dirname, '..', '..', '..', 'license-header.txt'))).toString() + '\n'
-  );
+
+  try {
+    console.log(
+      '\n' +
+        (await readFile(resolvePath(__dirname, '..', '..', '..', 'license-header.txt'))).toString() +
+        '\n'
+    );
+  } catch (err) {
+    logger.error(`license file not found: ${err}`);
+  }
+
   logger.log(`listening on http://127.0.0.1:${port}`);
   logger.log(`Swagger available on http://127.0.0.1:${port}/api`);
 }
