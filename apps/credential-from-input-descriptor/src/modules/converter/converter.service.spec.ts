@@ -44,7 +44,7 @@ describe('ConverterService', () => {
         constraints: {
           fields: [
             {
-              path: '$.@context',
+              path: ['$.@context'],
               filter: {
                 $schema: 'http://json-schema.org/draft-07/schema#',
                 type: 'array',
@@ -77,7 +77,7 @@ describe('ConverterService', () => {
               }
             },
             {
-              path: '$.id',
+              path: ['$.id'],
               filter: {
                 type: 'string',
                 const: 'foobar'

@@ -19,6 +19,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { InputDesciptorToCredentialDto } from '../src/modules/converter/dtos';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -42,12 +43,12 @@ describe('AppController (e2e)', () => {
           .send({
             constraints: {
               fields: [
-                { path: '$.@context', filter: {} },
-                { path: '$.credentialSubject', filter: {} },
-                { path: '$.type', filter: {} }
+                { path: ['$.@context'], filter: {} },
+                { path: ['$.credentialSubject'], filter: {} },
+                { path: ['$.type'], filter: {} }
               ]
             }
-          });
+          } as InputDesciptorToCredentialDto);
       });
 
       it('should respond with 201 status code', async function () {
@@ -76,7 +77,9 @@ describe('AppController (e2e)', () => {
       beforeEach(async function () {
         result = await request(app.getHttpServer())
           .post('/converter/input-descriptor-to-credential')
-          .send({ constraints: { fields: [{ path: '$.foobar', filter: {} }] } });
+          .send({
+            constraints: { fields: [{ path: ['$.foobar'], filter: {} }] }
+          } as InputDesciptorToCredentialDto);
       });
 
       it('should respond with 400 status code', async function () {

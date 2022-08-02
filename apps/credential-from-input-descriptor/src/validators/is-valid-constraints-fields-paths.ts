@@ -32,7 +32,14 @@ export class IsValidConstraintsFieldsPathsConstraint implements ValidatorConstra
       return false;
     }
 
-    if (!requiredPaths.every((required) => value.map((v) => v.path).includes(required))) {
+    if (
+      !requiredPaths.every((required) =>
+        value
+          .map((v) => v.path)
+          .flat()
+          .includes(required)
+      )
+    ) {
       return false;
     }
 

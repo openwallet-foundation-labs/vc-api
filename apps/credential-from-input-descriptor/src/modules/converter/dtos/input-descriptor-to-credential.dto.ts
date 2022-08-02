@@ -23,9 +23,9 @@ import { exampleFieldFilter } from './field.dto';
 
 const examplePayload = {
   fields: [
-    { path: '$.@context', filter: exampleFieldFilter },
-    { path: '$.type', filter: exampleFieldFilter },
-    { path: '$.credentialSubject', filter: exampleFieldFilter }
+    { path: ['$.@context'], filter: exampleFieldFilter },
+    { path: ['$.type'], filter: exampleFieldFilter },
+    { path: ['$.credentialSubject'], filter: exampleFieldFilter }
   ]
 };
 

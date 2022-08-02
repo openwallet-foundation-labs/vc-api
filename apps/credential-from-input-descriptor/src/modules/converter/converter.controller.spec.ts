@@ -57,7 +57,7 @@ describe('ConverterController', () => {
         constraints: {
           fields: [
             {
-              path: '$.@context',
+              path: ['$.@context'],
               filter: {}
             }
           ]

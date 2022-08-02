@@ -95,9 +95,9 @@ describe('E2E Suite', function () {
       const validPayload = {
         constraints: {
           fields: [
-            { path: '$.@context', filter: {} },
-            { path: '$.credentialSubject', filter: {} },
-            { path: '$.type', filter: {} }
+            { path: ['$.@context'], filter: {} },
+            { path: ['$.credentialSubject'], filter: {} },
+            { path: ['$.type'], filter: {} }
           ]
         }
       };
@@ -130,7 +130,7 @@ describe('E2E Suite', function () {
       constraints: {
         fields: [
           {
-            path: '$.@context',
+            path: ['$.@context'],
             filter: {
               $schema: 'http://json-schema.org/draft-07/schema#',
               type: 'array',
@@ -163,7 +163,7 @@ describe('E2E Suite', function () {
             }
           },
           {
-            path: '$.credentialSubject',
+            path: ['$.credentialSubject'],
             filter: {
               type: 'object',
               properties: {
@@ -173,7 +173,7 @@ describe('E2E Suite', function () {
             }
           },
           {
-            path: '$.type',
+            path: ['$.type'],
             filter: {
               type: 'array',
               items: [{ const: 'VerifiableCredential' }]

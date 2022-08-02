@@ -29,7 +29,12 @@ export class ConverterService {
     inputDesciptorToCredentialDto: InputDesciptorToCredentialDto
   ): Promise<CredentialDto> {
     const intermediateResults: { path: string; result: JsonValue }[] = await Promise.all(
-      inputDesciptorToCredentialDto.constraints.fields.map(async (field) => this.convertField(field))
+      inputDesciptorToCredentialDto.constraints.fields.map(async (field) => {
+        return this.convertField({
+          ...field,
+          path: field.path[0]
+        });
+      })
     );
 
     return intermediateResults.reduce((acc, resultItem) => {
