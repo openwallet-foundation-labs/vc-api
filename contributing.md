@@ -37,7 +37,7 @@ If a maintainer asks you to "rebase" your PR, they're saying that a lot of code 
 
 ## Pull request process
 
- 1. Fork the repo, clone it to your own machine and create your branch from `master`
+ 1. Fork the repo, clone it to your own machine and create your branch from `develop`
  2. Commit changes to your branch
  3. If you've added code that should be tested, add tests
  4. If you've changed APIs, or if needed, update the documentation, README, etc.
