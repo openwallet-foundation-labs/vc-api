@@ -18,10 +18,11 @@
 import { setupApp, setupSwaggerDocument } from './setup';
 import { readFile } from 'fs/promises';
 import { resolve as resolvePath } from 'path';
+import { SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await setupApp();
-  setupSwaggerDocument(app);
+  SwaggerModule.setup('api', app, setupSwaggerDocument(app));
   await app.listen(3000);
   try {
     console.log(

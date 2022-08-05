@@ -9,14 +9,16 @@
           "required": true,
           "content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeyPairDto" } } }
         },
-        "responses": { "201": { "description": "" } }
+        "responses": { "201": { "description": "" } },
+        "tags": ["key"]
       }
     },
     "/v1/key/{keyId}": {
       "get": {
         "operationId": "KeyController_export",
         "parameters": [{ "name": "keyId", "required": true, "in": "path", "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "" } }
+        "responses": { "200": { "description": "" } },
+        "tags": ["key"]
       }
     },
     "/v1/did": {

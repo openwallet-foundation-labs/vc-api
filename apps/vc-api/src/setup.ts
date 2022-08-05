@@ -43,7 +43,6 @@ function setupSwaggerDocument(app: INestApplication): OpenAPIObject {
     .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
   return document;
 }
 
