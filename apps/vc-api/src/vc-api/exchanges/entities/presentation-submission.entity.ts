@@ -28,7 +28,7 @@ import { VerifiablePresentation } from '../types/verifiable-presentation';
 @Entity()
 export class PresentationSubmissionEntity {
   constructor(vp: VerifiablePresentation, verificationResult: VerificationResult) {
-    this.vp = vp;
+    this.vpHolder = vp?.holder;
     this.verificationResult = verificationResult;
   }
 
@@ -41,9 +41,6 @@ export class PresentationSubmissionEntity {
   @Column('simple-json')
   verificationResult: VerificationResult;
 
-  /**
-   * The Verifiable Presentation submitted in response to the transaction's VP Request
-   */
-  @Column('simple-json')
-  vp: VerifiablePresentation;
+  @Column('text', { nullable: true })
+  vpHolder: string;
 }

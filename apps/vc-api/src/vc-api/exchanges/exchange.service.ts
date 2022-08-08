@@ -27,11 +27,12 @@ import { VpRequestDto } from './dtos/vp-request.dto';
 import { ExchangeDefinitionDto } from './dtos/exchange-definition.dto';
 import { TransactionEntity } from './entities/transaction.entity';
 import { ConfigService } from '@nestjs/config';
-import { TransactionDto } from './dtos/transaction.dto';
+import { CallbackDto } from './dtos/callback.dto';
 import { ReviewResult, SubmissionReviewDto } from './dtos/submission-review.dto';
 import { VpSubmissionVerifierService } from './vp-submission-verifier.service';
 import { validate } from 'class-validator';
 import { API_DEFAULT_VERSION_PREFIX } from '../../setup';
+import { PresentationSubmissionEntity } from './entities/presentation-submission.entity';
 
 @Injectable()
 export class ExchangeService {
@@ -112,7 +113,15 @@ export class ExchangeService {
       this.vpSubmissionVerifierService
     );
     await this.transactionRepository.save(transaction);
-    const body = TransactionDto.toDto(transaction);
+
+    const body = CallbackDto.toDto({
+      ...transaction,
+      presentationSubmission: {
+        ...transaction.presentationSubmission,
+        vp: verifiablePresentation
+      } as PresentationSubmissionEntity
+    } as TransactionEntity);
+
     // TODO: react to validation errors
     const validationErrors = await validate(body, { whitelist: true, forbidUnknownValues: true });
     callback?.forEach((callback) => {

@@ -34,7 +34,8 @@ describe('TransactionEntity', () => {
     verifiableCredential: [],
     proof: {
       challenge
-    }
+    },
+    holder: 'did:key:z6MkuwwWSi4W3Hw33XUbdzmFaByEpCfWTuMN5huHaPNSZPB7'
   };
 
   const submissionVerificationResult = {
@@ -70,7 +71,7 @@ describe('TransactionEntity', () => {
       it('should process a presentation submission', async () => {
         const transaction = new TransactionEntity(transactionId, exchangeId, vpRequest, configuredCallback);
         const { callback, response } = await transaction.processPresentation(vp, mockSubmissionVerifier);
-        expect(transaction.presentationSubmission.vp).toEqual(vp);
+        expect(transaction.presentationSubmission.vpHolder).toEqual(vp.holder);
         expect(transaction.presentationSubmission.verificationResult).toEqual(submissionVerificationResult);
         expect(transaction.presentationReview.reviewStatus).toEqual(PresentationReviewStatus.pendingReview);
         expect(transaction.presentationReview.VP).toEqual(undefined); // Issuer hasn't submitted a VP yet
@@ -101,7 +102,7 @@ describe('TransactionEntity', () => {
       expect(response.vpRequest).toBeUndefined();
       expect(response.vp).toBeUndefined(); // No issued credentials in the VP
       expect(transaction.presentationSubmission.verificationResult).toEqual(submissionVerificationResult);
-      expect(transaction.presentationSubmission.vp).toEqual(vp);
+      expect(transaction.presentationSubmission.vpHolder).toEqual(vp.holder);
     });
   });
 

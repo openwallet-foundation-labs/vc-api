@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { classToPlain, plainToClass, Type } from 'class-transformer';
+import { instanceToPlain, plainToInstance, Type } from 'class-transformer';
 import { IsOptional, IsString, ValidateNested } from 'class-validator';
 import { TransactionEntity } from '../entities/transaction.entity';
-import { PresentationSubmissionSecureDto } from './presentation-submission-secure.dto';
+import { PresentationSubmissionFullDto } from './presentation-submission-full.dto';
 import { VpRequestDto } from './vp-request.dto';
 
-export class TransactionDto {
+export class CallbackDto {
   /**
    * An id for the transaction
    */
@@ -47,13 +47,12 @@ export class TransactionDto {
    * Is optional because submission may not have occured yet
    */
   @ValidateNested()
-  @Type(() => PresentationSubmissionSecureDto)
+  @Type(() => PresentationSubmissionFullDto)
   @IsOptional()
-  presentationSubmission?: PresentationSubmissionSecureDto;
+  presentationSubmission?: PresentationSubmissionFullDto;
 
   // TODO: make generic so that it can be used in all Dtos
-  static toDto(transaction: TransactionEntity): TransactionDto {
-    const data = classToPlain(transaction);
-    return plainToClass(TransactionDto, data);
+  static toDto(transaction: TransactionEntity): CallbackDto {
+    return plainToInstance(CallbackDto, instanceToPlain(transaction));
   }
 }

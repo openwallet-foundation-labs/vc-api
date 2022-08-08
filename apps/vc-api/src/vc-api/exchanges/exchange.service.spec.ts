@@ -170,7 +170,12 @@ describe('ExchangeService', () => {
   });
 
   describe('continueExchange', () => {
-    it('should send transaction dto if callback is configured', async () => {
+    let exchangeResponse;
+    let transactionId;
+    let actualCallbackUrl: string;
+    let actualCallbackBody: Record<string, unknown>;
+
+    beforeEach(async function () {
       const exchangeDef: ExchangeDefinitionDto = {
         exchangeId: exchangeId,
         interactServices: [
@@ -186,11 +191,100 @@ describe('ExchangeService', () => {
           }
         ]
       };
+
+      mockHttpService.post.mockClear();
+
       await service.createExchange(exchangeDef);
-      const exchangeResponse = await service.startExchange(exchangeId);
-      const transactionId = exchangeResponse.vpRequest.interact.service[0].serviceEndpoint.split('/').pop();
+      exchangeResponse = await service.startExchange(exchangeId);
+      transactionId = exchangeResponse.vpRequest.interact.service[0].serviceEndpoint.split('/').pop();
       await service.continueExchange(vp, transactionId);
+
+      [actualCallbackUrl, actualCallbackBody] = mockHttpService.post.mock.calls[0] as unknown as [
+        string,
+        Record<string, unknown>
+      ];
+    });
+
+    it('should send callback request', async () => {
       expect(mockHttpService.post.mock.calls).toHaveLength(1);
+    });
+
+    it('should send callback request to a correct url', async () => {
+      expect(actualCallbackUrl).toBe('http://example.com');
+    });
+
+    describe('and callback request body', function () {
+      it('should contain expected properties', async function () {
+        expect(Object.keys(actualCallbackBody)).toEqual([
+          'transactionId',
+          'exchangeId',
+          'vpRequest',
+          'presentationSubmission'
+        ]);
+      });
+
+      it('should contain correct exchangeId', async function () {
+        expect(actualCallbackBody.exchangeId).toBe('test-exchange');
+      });
+
+      it('should contain correct transactionId', async function () {
+        expect(actualCallbackBody.transactionId).toBe(transactionId);
+      });
+
+      describe('and presentationSubmission', function () {
+        let presentationSubmission;
+
+        beforeEach(async function () {
+          presentationSubmission = actualCallbackBody.presentationSubmission;
+        });
+
+        it('should contain expected properties', async function () {
+          expect(Object.keys(presentationSubmission).sort()).toEqual(['verificationResult', 'vp'].sort());
+        });
+
+        it('should contain correct verificationResult', async function () {
+          expect(presentationSubmission.verificationResult).toEqual({
+            checks: ['proof'],
+            errors: [],
+            warnings: []
+          });
+        });
+
+        it('should contain correct vp', async function () {
+          expect(presentationSubmission.vp).toEqual(vp);
+        });
+      });
+
+      describe('and vpRequest', function () {
+        let vpRequest;
+
+        beforeEach(async function () {
+          vpRequest = actualCallbackBody.vpRequest;
+        });
+
+        it('should contain expected properties', async function () {
+          expect(Object.keys(vpRequest).sort()).toEqual(['challenge', 'interact', 'query'].sort());
+        });
+
+        it('should contain correct challenge property', async function () {
+          expect(vpRequest.challenge).toBe(exchangeResponse.vpRequest.challenge);
+        });
+
+        it('should contain correct interact property', async function () {
+          expect(vpRequest.interact).toEqual({
+            service: [
+              {
+                serviceEndpoint: exchangeResponse.vpRequest.interact.service[0].serviceEndpoint,
+                type: 'UnmediatedHttpPresentationService2021'
+              }
+            ]
+          });
+        });
+
+        it('should contain correct query property', async function () {
+          expect(vpRequest.query).toEqual([]);
+        });
+      });
     });
   });
 
