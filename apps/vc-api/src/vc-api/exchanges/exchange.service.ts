@@ -47,7 +47,7 @@ export class ExchangeService {
   ) {}
 
   public async createExchange(exchangeDefinitionDto: ExchangeDefinitionDto) {
-    if (await this.exchangeRepository.findOne(exchangeDefinitionDto.exchangeId)) {
+    if (await this.exchangeRepository.findOneBy({ exchangeId: exchangeDefinitionDto.exchangeId })) {
       throw new ConflictException(`exchangeId='${exchangeDefinitionDto.exchangeId}' already exists`);
     }
 
@@ -64,7 +64,7 @@ export class ExchangeService {
    * @returns exchange response
    */
   public async startExchange(exchangeId: string): Promise<ExchangeResponseDto> {
-    const exchange = await this.exchangeRepository.findOne(exchangeId);
+    const exchange = await this.exchangeRepository.findOneBy({ exchangeId });
     if (!exchange) {
       return {
         errors: [`${exchangeId}: no exchange definition found for this exchangeId`],
@@ -135,7 +135,7 @@ export class ExchangeService {
   }
 
   public async getExchange(exchangeId: string): Promise<{ errors: string[]; exchange?: ExchangeEntity }> {
-    const exchange = await this.exchangeRepository.findOne(exchangeId);
+    const exchange = await this.exchangeRepository.findOneBy({ exchangeId });
     if (!exchange) {
       return { errors: [`${exchangeId}: no exchange found for this transaction id`] };
     }
@@ -145,9 +145,17 @@ export class ExchangeService {
   public async getExchangeTransaction(
     transactionId: string
   ): Promise<{ errors: string[]; transaction?: TransactionEntity }> {
-    const transaction = await this.transactionRepository.findOne(transactionId, {
-      relations: ['vpRequest', 'presentationReview', 'presentationSubmission']
+    const transaction = await this.transactionRepository.findOne({
+      where: {
+        transactionId
+      },
+      relations: {
+        vpRequest: true,
+        presentationReview: true,
+        presentationSubmission: true
+      }
     });
+
     if (!transaction) {
       return { errors: [`${transactionId}: no transaction found for this transaction id`] };
     }

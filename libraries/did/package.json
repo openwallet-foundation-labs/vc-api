@@ -20,12 +20,12 @@
   "dependencies": {
     "@trust/keyto": "^1.0.0",
     "ethers": "5.5.1",
-    "did-resolver": "~3.2.0",
+    "did-resolver": "~4.0.0",
     "ethr-did-resolver": "~5.0.0",
     "@spruceid/didkit-wasm-node": "~0.2.0"
   },
   "devDependencies": {
-    "@rushstack/eslint-config": "~2.6.0",
+    "@rushstack/eslint-config": "^3.0.0",
     "@types/jest": "^28.0.0",
     "babel-jest": "26.6.3",
     "eslint": "^8.0.0",

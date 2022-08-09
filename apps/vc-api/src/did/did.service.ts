@@ -66,11 +66,14 @@ export class DIDService {
   }
 
   public async getDID(did: string): Promise<DIDDocument> {
-    return await this.didRepository.findOne(did, { relations: ['verificationMethod'] });
+    return await this.didRepository.findOne({
+      where: { id: did },
+      relations: { verificationMethod: true }
+    });
   }
 
   public async getVerificationMethod(id: string): Promise<VerificationMethod> {
-    return await this.verificationMethodRepository.findOne(id);
+    return await this.verificationMethodRepository.findOneBy({ id });
   }
 
   /**

@@ -56,6 +56,7 @@ describe('ExchangeService', () => {
   let transaction: TransactionEntity;
   const transactionRepositoryMockFactory = jest.fn(() => ({
     findOne: jest.fn(() => transaction),
+    findOneBy: jest.fn(() => transaction),
     save: jest.fn((entity) => {
       transaction = entity;
       return entity;
@@ -67,6 +68,7 @@ describe('ExchangeService', () => {
 
     return {
       findOne: jest.fn(() => exchange),
+      findOneBy: jest.fn(() => exchange),
       save: jest.fn((entity: ExchangeEntity) => {
         exchange = entity;
         return entity;

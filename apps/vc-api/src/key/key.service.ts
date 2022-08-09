@@ -69,7 +69,7 @@ export class KeyService implements IGenerateKey {
    *
    */
   public async getPublicKeyFromKeyId(keyId: string): Promise<JWK> {
-    const keyPair = await this.keyRepository.findOne(keyId);
+    const keyPair = await this.keyRepository.findOneBy({ publicKeyThumbprint: keyId });
     return keyPair?.publicKey;
   }
 
@@ -82,7 +82,7 @@ export class KeyService implements IGenerateKey {
    * @returns private JWK of the key pair
    */
   public async getPrivateKeyFromKeyId(keyId: string): Promise<JWK> {
-    const keyPair = await this.keyRepository.findOne(keyId);
+    const keyPair = await this.keyRepository.findOneBy({ publicKeyThumbprint: keyId });
     return keyPair?.privateKey;
   }
 
@@ -106,7 +106,7 @@ export class KeyService implements IGenerateKey {
   }
 
   public async exportKey(keyDescription: KeyDescriptionDto): Promise<KeyPairDto> {
-    const keyPair = await this.keyRepository.findOne(keyDescription.keyId);
+    const keyPair = await this.keyRepository.findOneBy({ publicKeyThumbprint: keyDescription.keyId });
     return keyPair;
   }
 
