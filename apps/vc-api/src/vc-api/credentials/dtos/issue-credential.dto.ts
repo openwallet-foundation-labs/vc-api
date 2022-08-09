@@ -18,14 +18,17 @@
 import { ValidateNested } from 'class-validator';
 import { CredentialDto } from './credential.dto';
 import { IssueOptionsDto } from './issue-options.dto';
+import { Type } from 'class-transformer';
 
 /**
  * DTO which contains credential and options
  */
 export class IssueCredentialDto {
   @ValidateNested()
+  @Type(() => CredentialDto)
   credential: CredentialDto;
 
+  @Type(() => IssueOptionsDto)
   @ValidateNested()
   options: IssueOptionsDto;
 }

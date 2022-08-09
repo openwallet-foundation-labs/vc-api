@@ -18,14 +18,17 @@
 import { ValidateNested } from 'class-validator';
 import { PresentationDto } from './presentation.dto';
 import { ProvePresentationOptionsDto } from './prove-presentation-options.dto';
+import { Type } from 'class-transformer';
 
 /**
  * DTO which contains presentation and options
  */
 export class ProvePresentationDto {
   @ValidateNested()
+  @Type(() => PresentationDto)
   presentation: PresentationDto;
 
   @ValidateNested()
+  @Type(() => ProvePresentationOptionsDto)
   options: ProvePresentationOptionsDto;
 }

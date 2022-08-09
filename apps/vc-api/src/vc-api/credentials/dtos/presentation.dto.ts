@@ -19,6 +19,7 @@ import { IsString, IsArray, IsOptional, ValidateNested, IsJSON } from 'class-val
 import { VerifiableCredentialDto } from './verifiable-credential.dto';
 import { IsStringOrStringArray } from './custom-class-validator/is-string-or-string-array';
 import { Presentation } from '../../exchanges/types/presentation';
+import { Type } from 'class-transformer';
 
 /**
  * A JSON-LD Verifiable Presentation without a proof.
@@ -56,6 +57,9 @@ export class PresentationDto implements Presentation {
   /**
    * The Verifiable Credentials
    */
-  @ValidateNested()
-  verifiableCredential: VerifiableCredentialDto[];
+  @ValidateNested({ each: true })
+  @Type(() => VerifiableCredentialDto)
+  @IsArray()
+  @IsOptional()
+  verifiableCredential?: VerifiableCredentialDto[];
 }

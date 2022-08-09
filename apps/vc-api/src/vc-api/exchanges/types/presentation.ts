@@ -47,5 +47,5 @@ export interface Presentation {
   /**
    * The Verifiable Credentials
    */
-  verifiableCredential: VerifiableCredential[];
+  verifiableCredential?: VerifiableCredential[];
 }

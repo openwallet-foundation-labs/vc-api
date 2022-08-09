@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsString, IsDate, IsArray, IsObject, IsOptional, IsJSON } from 'class-validator';
+import { IsArray, IsDateString, IsObject, IsOptional, IsString } from 'class-validator';
 
 /**
  * A JSON-LD Verifiable Credential without a proof.
@@ -52,7 +52,7 @@ export class CredentialDto {
   /**
    * The issuanceDate
    */
-  @IsDate()
+  @IsDateString()
   issuanceDate: string;
 
   /**

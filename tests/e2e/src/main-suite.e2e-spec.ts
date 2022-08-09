@@ -130,6 +130,12 @@ describe('E2E Suite', function () {
       constraints: {
         fields: [
           {
+            path: ['$.id'],
+            filter: {
+              const: 'urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e'
+            }
+          },
+          {
             path: ['$.@context'],
             filter: {
               $schema: 'http://json-schema.org/draft-07/schema#',
@@ -227,6 +233,7 @@ describe('E2E Suite', function () {
           it('should contain expected properties', async function () {
             expect(Object.keys(body)).toEqual([
               '@context',
+              'id',
               'type',
               'credentialSubject',
               'issuer',

@@ -36,6 +36,8 @@ import { PresentationSubmissionEntity } from './entities/presentation-submission
 
 @Injectable()
 export class ExchangeService {
+  private readonly logger = new Logger(ExchangeService.name, { timestamp: true });
+
   constructor(
     private vpSubmissionVerifierService: VpSubmissionVerifierService,
     @InjectRepository(TransactionEntity)
@@ -122,12 +124,21 @@ export class ExchangeService {
       } as PresentationSubmissionEntity
     } as TransactionEntity);
 
-    // TODO: react to validation errors
-    const validationErrors = await validate(body, { whitelist: true, forbidUnknownValues: true });
+    const validationErrors = await validate(body, {
+      whitelist: true,
+      forbidUnknownValues: true,
+      forbidNonWhitelisted: false // here we want properties not defined in the CallbackDto to be just stripped out and not sent to a callback endpoint
+    });
+
+    if (validationErrors.length > 0) {
+      this.logger.error('\n' + validationErrors.map((e) => e.toString()).join('\n\n'));
+      throw new Error(validationErrors.toString());
+    }
+
     callback?.forEach((callback) => {
       this.httpService.post(callback.url, body).subscribe({
-        next: (v) => Logger.log(inspect(v)), // inspect used to replace circular references https://stackoverflow.com/a/18354289
-        error: (e) => Logger.error(inspect(e))
+        next: (v) => this.logger.log(inspect(v)), // inspect used to replace circular references https://stackoverflow.com/a/18354289
+        error: (e) => this.logger.error(inspect(e))
       });
     });
 
