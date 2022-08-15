@@ -114,6 +114,11 @@ export class ExchangeService {
       verifiablePresentation,
       this.vpSubmissionVerifierService
     );
+
+    if (response.errors.length > 0) {
+      throw new Error(`processing the presentation failed:\n\t${response.errors.join('\n\t')}`);
+    }
+
     await this.transactionRepository.save(transaction);
 
     const body = CallbackDto.toDto({
