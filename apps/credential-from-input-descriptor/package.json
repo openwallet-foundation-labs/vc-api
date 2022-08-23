@@ -36,7 +36,7 @@
     "class-transformer": "~0.5.0",
     "json-schema-faker": "~0.5.0-rcv.44",
     "type-fest": "~2.16.0",
-    "@ew-did-registry/credentials-interface": "~0.6.3-alpha.527.0"
+    "@ew-did-registry/credentials-interface": "0.6.3-alpha.596.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
