@@ -30,6 +30,14 @@ From a technical point of view, in this tutorial, we have access to the server A
 
 The technical workflow is as follows:
 *TODO* fill in steps once written
+- [1 [Consent-Requesting portal] Configure the consent request exchange](#1-consent-requesting-portal-configure-the-consent-request-exchange)
+- [2 [Consent-Requesting portal] Provide an exchange invitation to the consenter](#2-consent-requesting-portal-provide-an-exchange-invitation-to-the-consenter)
+- [3 [Consenter] Initiate issuance exchange using the request URL](#3-consenter-initiate-issuance-exchange-using-the-request-url)
+- [4 [Consenter] Create a DID](#4-consenter-create-a-did)
+- [5 [Consenter] Convert the input descriptor to a credential](#5-consenter-convert-the-input-descriptor-to-a-credential)
+- [6 [Consenter] Issue a self-signed credential](#6-consenter-issue-a-self-signed-credential)
+- [7 [Consenter] Create a presentation with the self-signed credential](#7-consenter-create-a-presentation-with-the-self-signed-credential)
+- [8 [Consenter] Continue exchange by submitting the presentation](#8-consenter-continue-exchange-by-submitting-the-presentation)
 
 ## Steps
 ### 0. Setup the Postman Collection
@@ -189,7 +197,7 @@ Creating a new request bucket is to help you be sure that you are looking at the
 
 `201 Created`
 
-#### 2 [Consent-Requesting portal] Provide an exchange invitation to the consenter
+### 2 [Consent-Requesting portal] Provide an exchange invitation to the consenter
 
 The consent-requesting portal can communicate to the consenter that they can initiate request for a "PermanentConsenterCard" credential by
 filling the `exchange id` in the json template below and transmitting the json to the consenter.
@@ -206,7 +214,7 @@ They can do this transmission by encoding the json in a QR code and displaying t
 } 
 ```
 
-#### 3 [Consenter] Initiate issuance exchange using the request URL
+### 3 [Consenter] Initiate issuance exchange using the request URL
 
 Initiate a request for a PermanentConsenterCard by POSTing to the `url` directly in Postman or by navigating to the `Vc Api Controller initiate Exchange` request in the collection.
 
@@ -354,7 +362,7 @@ This is providing the location at which we can continue the credential exchange 
 
 `201 Created`
 
-#### 4 [Consenter] Create a DID
+### 4 [Consenter] Create a DID
 
 Let's create a new DID for which the consenter can prove control.
 This DID will be the Subject identifier of the Consenter Card credential.
@@ -405,7 +413,7 @@ Response body should be similar to the one below but with a different `did`.
 
 `201 Created`
 
-#### 5 [Consenter] Convert the input descriptor to a credential
+### 5 [Consenter] Convert the input descriptor to a credential
 
 In order to fulfil the consent request, the consenter can issue themselves a credential.
 However, the consent request is given as a JSON Schema which describes a credential, not a credential itself.
@@ -538,7 +546,7 @@ Send the request as described below.
 
 `201 Created`
 
-#### 6 [Consenter] Issue a self-signed credential
+### 6 [Consenter] Issue a self-signed credential
 
 The consenter can now sign the credential to create a self-signed verifiable credential.
 The consenter should add the following fields to the credential received in the previous step:
@@ -618,7 +626,7 @@ Send the request as described below.
 
 `201 Created`
 
-#### 7 [Consenter] Create a presentation with the self-signed credential
+### 7 [Consenter] Create a presentation with the self-signed credential
 
 The consenter can now create a verifiable presentation for submission.
 
@@ -714,7 +722,7 @@ The `challenge` should be value received from the VP Request obtained when initi
 
 `201 Created`
 
-#### 8 [Consenter] Continue exchange by submitting the presentation
+### 8 [Consenter] Continue exchange by submitting the presentation
 
 Continue the exchange by sending the VP in response to the VP Request that was previously received.
 Open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange Id}` folder.
