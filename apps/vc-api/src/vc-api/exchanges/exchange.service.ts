@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -116,7 +116,7 @@ export class ExchangeService {
     );
 
     if (response.errors.length > 0) {
-      throw new Error(`processing the presentation failed:\n\t${response.errors.join('\n\t')}`);
+      throw new BadRequestException(response.errors);
     }
 
     await this.transactionRepository.save(transaction);
