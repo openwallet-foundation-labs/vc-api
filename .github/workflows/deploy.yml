@@ -118,7 +118,7 @@ jobs:
           BUILD_ID: ${{ steps.tag_version.outputs.new_tag }}
           ECR_REGISTRY: ${{ steps.login-ecr-idc.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_idc }}:$BUILD_ID -f apps/credential-from-input-descriptor/Dockerfile .
+          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_idc }}:$BUILD_ID -f apps/input-descriptor-to-credential/Dockerfile .
           docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_idc }}:$BUILD_ID
       - name: Logout of Amazon ECR
         if: always()

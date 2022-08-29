@@ -1,6 +1,6 @@
 ## Description
 
-This [credential-from-input-descriptor app](./) is a NestJs implementation of a complementary service to
+This [input-descriptor-to-credential app](./) is a NestJs implementation of a complementary service to
 the [vc-api app](../vc-api). It allows converting an input descriptor to a credential to be signed.
 
 ## Installation
@@ -24,7 +24,7 @@ $ npm run start:prod
 
 ### Swagger/OpenAPI
 
-After starting the `credential-from-input-descriptor app` app, the Swagger/OpenAPI test page can be see at `{appURL}/api`
+After starting the `input-descriptor-to-credential app` app, the Swagger/OpenAPI test page can be see at `{appURL}/api`
 ([`http://localhost:3000/api`](http://localhost:3000/api)
 if running locally)
 
@@ -58,7 +58,7 @@ $ npm run test:cov
 To build a docker image, execute the following from the repository root:
 
 ```bash
-docker build -f apps/credential-from-input-descriptor/Dockerfile -t input-descriptor-to-credential-converter .
+docker build -f apps/input-descriptor-to-credential/Dockerfile -t input-descriptor-to-credential-converter .
 ```
 
 ### Starting

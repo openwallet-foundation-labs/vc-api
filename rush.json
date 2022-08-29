@@ -443,8 +443,8 @@
       "projectFolder": "apps/vc-api"
     },
     {
-      "packageName": "@energyweb/credential-from-input-descriptor",
-      "projectFolder": "apps/credential-from-input-descriptor"
+      "packageName": "@energyweb/input-descriptor-to-credential",
+      "projectFolder": "apps/input-descriptor-to-credential"
     },
     {
       "packageName": "@energyweb/ssi-vc-api-tests-e2e",

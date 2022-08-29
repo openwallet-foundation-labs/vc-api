@@ -46,7 +46,7 @@ First, download and install [Postman](https://www.postman.com/downloads/).
 
 Then, from the Postman app, import the following API definitions:
 - [VC-API open-api json](../openapi.json)
-- [Input-descriptor-to-credential](../../../credential-from-input-descriptor/docs/openapi.json)
+- [Input-descriptor-to-credential](../../../input-descriptor-to-credential/docs/openapi.json)
 
 Then, import [the environment](../vc-api.postman_environment.json) for VC-API.
 
@@ -417,7 +417,7 @@ Response body should be similar to the one below but with a different `did`.
 
 In order to fulfil the consent request, the consenter can issue themselves a credential.
 However, the consent request is given as a JSON Schema which describes a credential, not a credential itself.
-The [Credential from Input Descriptor service](../../../credential-from-input-descriptor/) can be used to convert an input descriptor to a credential which can then be self-signed.
+The [Credential from Input Descriptor service](../../../input-descriptor-to-credential/) can be used to convert an input descriptor to a credential which can then be self-signed.
 
 This can be done by providing the `constraints` object from the input descriptor received when initiating the exchange.
 

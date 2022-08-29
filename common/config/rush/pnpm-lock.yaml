@@ -13,7 +13,7 @@ specifiers:
   '@nestjs/swagger': ^6.0.0
   '@nestjs/testing': ^9.0.0
   '@nestjs/typeorm': ^9.0.0
-  '@rush-temp/credential-from-input-descriptor': file:./projects/credential-from-input-descriptor.tgz
+  '@rush-temp/input-descriptor-to-credential': file:./projects/input-descriptor-to-credential.tgz
   '@rush-temp/ssi-did': file:./projects/ssi-did.tgz
   '@rush-temp/ssi-vc-api': file:./projects/ssi-vc-api.tgz
   '@rush-temp/ssi-vc-api-tests-e2e': file:./projects/ssi-vc-api-tests-e2e.tgz
@@ -72,7 +72,7 @@ dependencies:
   '@nestjs/swagger': 6.0.5_455ace13b092fe16f945eab8eefd445d
   '@nestjs/testing': 9.0.11_cf8c7db7707b7c83689046a1dfe5c5ac
   '@nestjs/typeorm': 9.0.1_93f869e541460fae47581883ec425338
-  '@rush-temp/credential-from-input-descriptor': file:projects/credential-from-input-descriptor.tgz_babel-jest@26.6.3
+  '@rush-temp/input-descriptor-to-credential': file:projects/input-descriptor-to-credential.tgz_babel-jest@26.6.3
   '@rush-temp/ssi-did': file:projects/ssi-did.tgz_de01eefa61c11d1f942b55f988c6ed9c
   '@rush-temp/ssi-vc-api': file:projects/ssi-vc-api.tgz_babel-jest@26.6.3
   '@rush-temp/ssi-vc-api-tests-e2e': file:projects/ssi-vc-api-tests-e2e.tgz_b7b331b7a59ccb8b8da4fa24bd67657d
@@ -8054,10 +8054,10 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  file:projects/credential-from-input-descriptor.tgz_babel-jest@26.6.3:
-    resolution: {integrity: sha512-PzUWoxTRerkVH3aDhm2v/4+6WWYXzJJrbdnDyqAj14Ug2VBaNdLBx5Fn0Pjv+fbUEthNqZdOO9ojaMMjbvn2WQ==, tarball: file:projects/credential-from-input-descriptor.tgz}
-    id: file:projects/credential-from-input-descriptor.tgz
-    name: '@rush-temp/credential-from-input-descriptor'
+  file:projects/input-descriptor-to-credential.tgz_babel-jest@26.6.3:
+    resolution: {integrity: sha512-KMkPjtJHUysGkax8yeAx4RVbemQcrsdlXXOr6PSLrTKw7ndgSQ34DovULbhdDioPtUuql8OlvYAhgXpG3jyOvQ==, tarball: file:projects/input-descriptor-to-credential.tgz}
+    id: file:projects/input-descriptor-to-credential.tgz
+    name: '@rush-temp/input-descriptor-to-credential'
     version: 0.0.0
     dependencies:
       '@ew-did-registry/credentials-interface': 0.6.3-alpha.596.0
@@ -8148,7 +8148,7 @@ packages:
     dev: false
 
   file:projects/ssi-vc-api-tests-e2e.tgz_b7b331b7a59ccb8b8da4fa24bd67657d:
-    resolution: {integrity: sha512-MKgkY5v5ETNo8QjzZmMVDpYRAfPql+BLgKVLub3Aoh+AENl3OGuZnfOqDzvbiv5TTmwhRMmHrOfotudfx8Jl5Q==, tarball: file:projects/ssi-vc-api-tests-e2e.tgz}
+    resolution: {integrity: sha512-Xssq0ra07WwYVv6xRDVws07jGJ3JF+vufOCG14zGiMEg243lcWjCdL7S8ck+XfVo//KiHz3CCcajkYT5NQZPfw==, tarball: file:projects/ssi-vc-api-tests-e2e.tgz}
     id: file:projects/ssi-vc-api-tests-e2e.tgz
     name: '@rush-temp/ssi-vc-api-tests-e2e'
     version: 0.0.0

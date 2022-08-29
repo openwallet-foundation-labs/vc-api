@@ -16,7 +16,7 @@
  */
 
 import { AppModule as VcApiAppModule } from '@energyweb/ssi-vc-api';
-import { AppModule as CidAppModule } from '@energyweb/credential-from-input-descriptor';
+import { AppModule as CidAppModule } from '@energyweb/input-descriptor-to-credential';
 import { Test } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
@@ -91,7 +91,7 @@ describe('E2E Suite', function () {
       });
     });
 
-    describe('CREDENTIAL-FROM-INPUT-DESCRIPTOR', function () {
+    describe('INPUT-DESCRIPTOR-TO-CREDENTIAL', function () {
       const validPayload = {
         constraints: {
           fields: [
