@@ -68,8 +68,8 @@ To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/ex
 
 Fill in the `exchangeId` with a unique id, such as a [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier).
 
-Note the `interactService` `type` of `MediatedHttpPresentationService2021`.
-See the [exchanges documentation](../exchanges.md#mediated-exchange-interactions) for information about mediated exchanges.
+Note the `interactService` `type` of `UnmediatedHttpPresentationService2021`.
+See the [exchanges documentation](../exchanges.md#unmediated-exchange-interactions) for information about mediated exchanges.
 
 In order to test the notification functionality, you can use the "[Post Test Server](http://ptsv2.com/)".
 This is a free website which allows you to view sent HTTP POST requests.
