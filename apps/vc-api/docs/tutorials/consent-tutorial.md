@@ -29,7 +29,6 @@ From a technical point of view, in this tutorial, we have access to the server A
 ### Technical workflows
 
 The technical workflow is as follows:
-*TODO* fill in steps once written
 - [1 [Consent-Requesting portal] Configure the consent request exchange](#1-consent-requesting-portal-configure-the-consent-request-exchange)
 - [2 [Consent-Requesting portal] Provide an exchange invitation to the consenter](#2-consent-requesting-portal-provide-an-exchange-invitation-to-the-consenter)
 - [3 [Consenter] Initiate issuance exchange using the request URL](#3-consenter-initiate-issuance-exchange-using-the-request-url)
@@ -80,6 +79,8 @@ Please only use this service for this tutorial (or other non-production applicat
 To use the "Post Test Server" service with this tutorial, create a new request bucket from the website home page.
 Then, in the resulting page, copy the POST URL, including the domain, into the exchange definition below.
 Creating a new request bucket is to help you be sure that you are looking at the requests you (and not others) have created.
+
+For further documentation regarding the `presentationDefinition`, can be seen [here](../exchanges.md#presentation-definition-queries)
 
 ```json
 {

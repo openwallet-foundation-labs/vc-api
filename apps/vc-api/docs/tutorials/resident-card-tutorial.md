@@ -967,7 +967,8 @@ Fill `exchangeId` in the json below.
 
 Note the constraint on the `$.type` path of the credential.
 This is used to require that the presented credential be of type "PermanentResidentCard".
-For more information on credential constraints, see the [Presentation Exchange specification](https://identity.foundation/presentation-exchange).
+For further documentation regarding the `presentationDefinition`, can be seen [here](../exchanges.md#presentation-definition-queries)
+
 
 ```json
 {

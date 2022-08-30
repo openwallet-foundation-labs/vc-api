@@ -22,12 +22,12 @@ import { VpRequestDidAuthQueryDto } from './vp-request-did-auth-query.dto';
 import { VpRequestPresentationDefinitionQueryDto } from './vp-request-presentation-defintion-query.dto';
 
 /**
- * https://w3c-ccg.github.io/vp-request-spec/#query-types
+ * https://w3c-ccg.github.io/vp-request-spec/#query-and-response-types
  */
 export class VpRequestQueryDto {
   /**
    * Query types as listed in the VP Request spec.
-   * https://w3c-ccg.github.io/vp-request-spec/#query-types
+   * https://w3c-ccg.github.io/vp-request-spec/#query-and-response-types
    *
    * The "PresentationDefinition" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7
    */

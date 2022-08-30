@@ -42,6 +42,9 @@ export class ExchangeDefinitionDto {
   @Type(() => ExchangeInteractServiceDefinitionDto)
   interactServices: ExchangeInteractServiceDefinitionDto[];
 
+  /**
+   * Defines requests for data in the Verifiable Presentation
+   */
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => VpRequestQueryDto)
