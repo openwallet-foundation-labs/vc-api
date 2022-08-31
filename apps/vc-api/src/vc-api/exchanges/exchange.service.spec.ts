@@ -28,6 +28,7 @@ import { ConfigService } from '@nestjs/config';
 import { ReviewResult, SubmissionReviewDto } from './dtos/submission-review.dto';
 import { VpSubmissionVerifierService } from './vp-submission-verifier.service';
 import { SubmissionVerifier } from './types/submission-verifier';
+import { BadRequestException } from '@nestjs/common';
 
 const baseUrl = 'https://test-exchange.com';
 const exchangeId = 'test-exchange';
@@ -46,7 +47,7 @@ const submissionVerificationResult = {
 };
 
 const mockSubmissionVerifier: SubmissionVerifier = {
-  verifyVpRequestSubmission: jest.fn().mockResolvedValue(submissionVerificationResult)
+  verifyVpRequestSubmission: jest.fn()
 };
 
 describe('ExchangeService', () => {
@@ -63,7 +64,7 @@ describe('ExchangeService', () => {
     })
   }));
 
-  const repositoryMockFactory = jest.fn(() => {
+  const exchangeRepositoryMockFactory = jest.fn(() => {
     let exchange: ExchangeEntity;
 
     return {
@@ -105,9 +106,13 @@ describe('ExchangeService', () => {
           }
         },
         { provide: getRepositoryToken(TransactionEntity), useFactory: transactionRepositoryMockFactory },
-        { provide: getRepositoryToken(ExchangeEntity), useFactory: repositoryMockFactory }
+        { provide: getRepositoryToken(ExchangeEntity), useFactory: exchangeRepositoryMockFactory }
       ]
     }).compile();
+
+    jest
+      .spyOn(mockSubmissionVerifier, 'verifyVpRequestSubmission')
+      .mockResolvedValue(submissionVerificationResult);
 
     service = module.get<ExchangeService>(ExchangeService);
   });
@@ -199,93 +204,134 @@ describe('ExchangeService', () => {
       await service.createExchange(exchangeDef);
       exchangeResponse = await service.startExchange(exchangeId);
       transactionId = exchangeResponse.vpRequest.interact.service[0].serviceEndpoint.split('/').pop();
-      await service.continueExchange(vp, transactionId);
-
-      [actualCallbackUrl, actualCallbackBody] = mockHttpService.post.mock.calls[0] as unknown as [
-        string,
-        Record<string, unknown>
-      ];
     });
 
-    it('should send callback request', async () => {
-      expect(mockHttpService.post.mock.calls).toHaveLength(1);
-    });
+    describe('when no VP submission verification errors', function () {
+      beforeEach(async function () {
+        await service.continueExchange(vp, transactionId);
 
-    it('should send callback request to a correct url', async () => {
-      expect(actualCallbackUrl).toBe('http://example.com');
-    });
-
-    describe('and callback request body', function () {
-      it('should contain expected properties', async function () {
-        expect(Object.keys(actualCallbackBody)).toEqual([
-          'transactionId',
-          'exchangeId',
-          'vpRequest',
-          'presentationSubmission'
-        ]);
+        [actualCallbackUrl, actualCallbackBody] = mockHttpService.post.mock.calls[0] as unknown as [
+          string,
+          Record<string, unknown>
+        ];
       });
 
-      it('should contain correct exchangeId', async function () {
-        expect(actualCallbackBody.exchangeId).toBe('test-exchange');
+      it('should send callback request', async () => {
+        expect(mockHttpService.post.mock.calls).toHaveLength(1);
       });
 
-      it('should contain correct transactionId', async function () {
-        expect(actualCallbackBody.transactionId).toBe(transactionId);
+      it('should send callback request to a correct url', async () => {
+        expect(actualCallbackUrl).toBe('http://example.com');
       });
 
-      describe('and presentationSubmission', function () {
-        let presentationSubmission;
-
-        beforeEach(async function () {
-          presentationSubmission = actualCallbackBody.presentationSubmission;
-        });
-
+      describe('and callback request body', function () {
         it('should contain expected properties', async function () {
-          expect(Object.keys(presentationSubmission).sort()).toEqual(['verificationResult', 'vp'].sort());
+          expect(Object.keys(actualCallbackBody)).toEqual([
+            'transactionId',
+            'exchangeId',
+            'vpRequest',
+            'presentationSubmission'
+          ]);
         });
 
-        it('should contain correct verificationResult', async function () {
-          expect(presentationSubmission.verificationResult).toEqual({
-            checks: ['proof'],
-            errors: [],
-            warnings: []
+        it('should contain correct exchangeId', async function () {
+          expect(actualCallbackBody.exchangeId).toBe('test-exchange');
+        });
+
+        it('should contain correct transactionId', async function () {
+          expect(actualCallbackBody.transactionId).toBe(transactionId);
+        });
+
+        describe('and presentationSubmission', function () {
+          let presentationSubmission;
+
+          beforeEach(async function () {
+            presentationSubmission = actualCallbackBody.presentationSubmission;
+          });
+
+          it('should contain expected properties', async function () {
+            expect(Object.keys(presentationSubmission).sort()).toEqual(['verificationResult', 'vp'].sort());
+          });
+
+          it('should contain correct verificationResult', async function () {
+            expect(presentationSubmission.verificationResult).toEqual({
+              checks: ['proof'],
+              errors: [],
+              warnings: []
+            });
+          });
+
+          it('should contain correct vp', async function () {
+            expect(presentationSubmission.vp).toEqual(vp);
           });
         });
 
-        it('should contain correct vp', async function () {
-          expect(presentationSubmission.vp).toEqual(vp);
+        describe('and vpRequest', function () {
+          let vpRequest;
+
+          beforeEach(async function () {
+            vpRequest = actualCallbackBody.vpRequest;
+          });
+
+          it('should contain expected properties', async function () {
+            expect(Object.keys(vpRequest).sort()).toEqual(['challenge', 'interact', 'query'].sort());
+          });
+
+          it('should contain correct challenge property', async function () {
+            expect(vpRequest.challenge).toBe(exchangeResponse.vpRequest.challenge);
+          });
+
+          it('should contain correct interact property', async function () {
+            expect(vpRequest.interact).toEqual({
+              service: [
+                {
+                  serviceEndpoint: exchangeResponse.vpRequest.interact.service[0].serviceEndpoint,
+                  type: 'UnmediatedHttpPresentationService2021'
+                }
+              ]
+            });
+          });
+
+          it('should contain correct query property', async function () {
+            expect(vpRequest.query).toEqual([]);
+          });
+        });
+      });
+    });
+
+    describe('when unsuccessful VP submission', function () {
+      let exceptionThrown: Error;
+
+      beforeEach(async function () {
+        jest.spyOn(mockSubmissionVerifier, 'verifyVpRequestSubmission').mockResolvedValue({
+          checks: [],
+          warnings: [],
+          errors: ['error 1', 'error 2', 'error 3']
+        });
+
+        try {
+          await service.continueExchange(vp, transactionId);
+        } catch (err) {
+          exceptionThrown = err;
+        }
+      });
+
+      it('should throw exception', async function () {
+        expect(exceptionThrown).toBeDefined();
+      });
+
+      describe('and exception thrown', function () {
+        it('should be a BadRequestException', async function () {
+          expect(exceptionThrown).toBeInstanceOf(BadRequestException);
+        });
+
+        it('should contain errors details', async function () {
+          expect(exceptionThrown['response'].message).toEqual(['error 1', 'error 2', 'error 3']);
         });
       });
 
-      describe('and vpRequest', function () {
-        let vpRequest;
-
-        beforeEach(async function () {
-          vpRequest = actualCallbackBody.vpRequest;
-        });
-
-        it('should contain expected properties', async function () {
-          expect(Object.keys(vpRequest).sort()).toEqual(['challenge', 'interact', 'query'].sort());
-        });
-
-        it('should contain correct challenge property', async function () {
-          expect(vpRequest.challenge).toBe(exchangeResponse.vpRequest.challenge);
-        });
-
-        it('should contain correct interact property', async function () {
-          expect(vpRequest.interact).toEqual({
-            service: [
-              {
-                serviceEndpoint: exchangeResponse.vpRequest.interact.service[0].serviceEndpoint,
-                type: 'UnmediatedHttpPresentationService2021'
-              }
-            ]
-          });
-        });
-
-        it('should contain correct query property', async function () {
-          expect(vpRequest.query).toEqual([]);
-        });
+      it('should make no callback requests', async function () {
+        expect(mockHttpService.post.mock.calls.length).toBe(0);
       });
     });
   });
