@@ -42,7 +42,7 @@ export class IsValidJsonSchemaConstraint implements ValidatorConstraintInterface
 }
 
 export function IsValidJsonSchema(options?: ValidationOptions) {
-  return function (object: any, propertyName: string) {
+  return function (object: unknown, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName,

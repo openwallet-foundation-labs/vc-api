@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ProofPurpose } from '@sphereon/pex';
 import { IsString, IsObject, IsOptional } from 'class-validator';
 
 /**

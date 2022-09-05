@@ -1,6 +1,6 @@
 import { DIDEthrFactory } from './did-ethr-factory';
 
-describe.only('DIDEthrFactory', () => {
+describe('DIDEthrFactory', () => {
   it('should create did', async () => {
     // copied this JWK from https://w3c-ccg.github.io/lds-ecdsa-secp256k1-2019/#example-1
     const publicKeyJWK = {

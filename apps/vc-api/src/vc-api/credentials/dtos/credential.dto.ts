@@ -28,7 +28,7 @@ export class CredentialDto {
    * The JSON-LD context of the credential.
    */
   @IsArray()
-  '@context': Array<string | Record<string, any>>;
+  '@context': Array<string | Record<string, unknown>>;
 
   /**
    * The ID of the credential.

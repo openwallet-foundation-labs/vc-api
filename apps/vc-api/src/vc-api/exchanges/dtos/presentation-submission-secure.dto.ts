@@ -17,7 +17,6 @@
 
 import { VerificationResultDto } from '../../credentials/dtos/verification-result.dto';
 import { ValidateNested } from 'class-validator';
-import { VerifiablePresentationDto } from '../../credentials/dtos/verifiable-presentation.dto';
 import { Type } from 'class-transformer';
 
 /**

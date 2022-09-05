@@ -1,6 +1,6 @@
 import { DIDKeyFactory } from './did-key-factory';
 
-describe.only('DIDKeyFactory', () => {
+describe('DIDKeyFactory', () => {
   it('should create did', async () => {
     const publicKeyJWK = {
       kty: 'OKP',

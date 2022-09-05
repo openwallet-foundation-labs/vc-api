@@ -71,7 +71,7 @@ describe('App (e2e)', () => {
  */
 export function getContinuationEndpoint(vpRequest: VpRequestDto): string {
   const exchangeContinuationEndpoint = vpRequest.interact.service[0].serviceEndpoint.replace(
-    /https?:\/\/[^\/]+/i,
+    /https?:\/\/[^/]+/i,
     ''
   );
   return exchangeContinuationEndpoint;

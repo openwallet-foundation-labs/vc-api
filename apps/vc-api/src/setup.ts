@@ -21,8 +21,8 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { TransactionEntityExceptionFilter } from './exception-filters/transaction-entity-exception.filter';
 
-export const API_DEFAULT_VERSION: string = '1';
-export const API_DEFAULT_VERSION_PREFIX: string = `/v${API_DEFAULT_VERSION}`;
+export const API_DEFAULT_VERSION = '1';
+export const API_DEFAULT_VERSION_PREFIX = `/v${API_DEFAULT_VERSION}`;
 
 async function setupApp(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);

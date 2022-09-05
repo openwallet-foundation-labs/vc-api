@@ -51,7 +51,7 @@ export class IsAllowedFieldJsonPathKeyConstraint implements ValidatorConstraintI
 }
 
 export function IsAllowedFieldJsonPathKey(options?: ValidationOptions) {
-  return function (object: any, propertyName: string) {
+  return function (object: unknown, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName,

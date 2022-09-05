@@ -48,7 +48,7 @@ describe('DidController', () => {
 
   describe('create', () => {
     it('should create an ethr DID', async () => {
-      const did = await controller.create({ method: DidMethod.ethr });
+      await controller.create({ method: DidMethod.ethr });
     });
   });
 });

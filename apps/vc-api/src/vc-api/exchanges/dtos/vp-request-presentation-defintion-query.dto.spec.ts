@@ -37,7 +37,7 @@ describe('VpRequestPresentationDefinitionQueryDto', () => {
   it('should validate invalid presentation definition', async () => {
     const query = new VpRequestPresentationDefinitionQueryDto();
     query.presentationDefinition = {
-      //@ts-expect-error
+      //@ts-expect-error: [justification is needed here]
       input_descriptors: 10
     };
     const result = await validate(query);

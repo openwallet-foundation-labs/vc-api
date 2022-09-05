@@ -133,7 +133,7 @@ export class WalletClient {
     exchangeContinuationEndpoint: string,
     vp: VerifiablePresentationDto,
     expectsVpRequest: boolean,
-    expectsProcessionInProgress: boolean = false
+    expectsProcessionInProgress = false
   ) {
     const continueExchangeResponse = await request(this.#app.getHttpServer())
       .put(exchangeContinuationEndpoint)

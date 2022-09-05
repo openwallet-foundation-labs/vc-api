@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 
 /**
  * A custom validator to check if a value is a string or a array or strings
@@ -27,7 +27,7 @@ import { registerDecorator, ValidationOptions, ValidationArguments } from 'class
  * @returns
  */
 export function IsStringOrStringArray(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: unknown, propertyName: string) {
     registerDecorator({
       name: 'isStringOrStringArray',
       target: object.constructor,
@@ -35,7 +35,7 @@ export function IsStringOrStringArray(validationOptions?: ValidationOptions) {
       constraints: [],
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
+        validate(value: unknown) {
           return typeof value === 'string' || Array.isArray(value);
         }
       }

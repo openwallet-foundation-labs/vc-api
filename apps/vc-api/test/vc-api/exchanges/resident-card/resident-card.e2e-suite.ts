@@ -28,9 +28,9 @@ import { ResidentCardPresentation } from './resident-card-presentation.exchange'
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
 import { ProvePresentationOptionsDto } from 'src/vc-api/credentials/dtos/prove-presentation-options.dto';
 
-const callbackUrlBase: string = 'http://example.com';
-const callbackUrlPath: string = '/endpoint';
-const callbackUrl: string = `${callbackUrlBase}${callbackUrlPath}`;
+const callbackUrlBase = 'http://example.com';
+const callbackUrlPath = '/endpoint';
+const callbackUrl = `${callbackUrlBase}${callbackUrlPath}`;
 
 export const residentCardExchangeSuite = () => {
   it('should support Resident Card issuance and presentation', async () => {

@@ -16,7 +16,7 @@
  */
 
 import { classToPlain, plainToClass, Type } from 'class-transformer';
-import { IsArray, IsObject, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsString, ValidateNested } from 'class-validator';
 import { VpRequestEntity } from '../entities/vp-request.entity';
 import { VpRequestInteractDto } from './vp-request-interact.dto';
 import { VpRequestQueryDto } from './vp-request-query.dto';

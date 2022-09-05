@@ -70,7 +70,7 @@ describe('TransactionEntity', () => {
       });
       it('should process a presentation submission', async () => {
         const transaction = new TransactionEntity(transactionId, exchangeId, vpRequest, configuredCallback);
-        const { callback, response } = await transaction.processPresentation(vp, mockSubmissionVerifier);
+        const { callback } = await transaction.processPresentation(vp, mockSubmissionVerifier);
         expect(transaction.presentationSubmission.vpHolder).toEqual(vp.holder);
         expect(transaction.presentationSubmission.verificationResult).toEqual(submissionVerificationResult);
         expect(transaction.presentationReview.reviewStatus).toEqual(PresentationReviewStatus.pendingReview);

@@ -56,7 +56,7 @@ export class IsValidConstraintsFieldsPathsConstraint implements ValidatorConstra
 }
 
 export function IsValidConstraintsFieldsPaths(options?: ValidationOptions) {
-  return function (object: any, propertyName: string) {
+  return function (object: unknown, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName,

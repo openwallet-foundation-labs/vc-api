@@ -100,7 +100,7 @@ describe('ExchangeService', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn((key: string) => {
+            get: jest.fn(() => {
               return baseUrl;
             })
           }

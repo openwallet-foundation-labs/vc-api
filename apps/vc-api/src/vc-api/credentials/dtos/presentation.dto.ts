@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsString, IsArray, IsOptional, ValidateNested, IsJSON } from 'class-validator';
+import { IsString, IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { VerifiableCredentialDto } from './verifiable-credential.dto';
 import { IsStringOrStringArray } from './custom-class-validator/is-string-or-string-array';
 import { Presentation } from '../../exchanges/types/presentation';
@@ -30,7 +30,7 @@ export class PresentationDto implements Presentation {
    * The JSON-LD context of the presentation.
    */
   @IsArray()
-  '@context': Array<string | Record<string, any>>;
+  '@context': Array<string | Record<string, unknown>>;
 
   /**
    * The ID of the presentation.

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { VerificationMethodEntity } from './verification-method.entity';
 
 /**
@@ -38,7 +38,7 @@ export class DIDDocumentEntity {
    *  which can be used to authenticate or authorize interactions with the DID subject or associated parties.
    *  For example, a cryptographic public key can be used as a verification method with respect to a digital signature;"
    */
-  @OneToMany((type) => VerificationMethodEntity, (verificationMethod) => verificationMethod.didDoc, {
+  @OneToMany(() => VerificationMethodEntity, (verificationMethod) => verificationMethod.didDoc, {
     cascade: true
   })
   verificationMethod: VerificationMethodEntity[];

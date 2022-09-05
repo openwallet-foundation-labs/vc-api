@@ -54,6 +54,6 @@ export class VerificationMethodEntity implements VerificationMethod {
    * The DID Documents that reference this verification method
    * In principle, a verification method could be used by many DIDs? (to be confirmed)
    */
-  @ManyToOne((type) => DIDDocumentEntity, (didDoc) => didDoc.verificationMethod)
+  @ManyToOne(() => DIDDocumentEntity, (didDoc) => didDoc.verificationMethod)
   didDoc: DIDDocumentEntity;
 }

@@ -22,7 +22,7 @@ import { registerDecorator, ValidationOptions, ValidationArguments } from 'class
  * https://github.com/typestack/class-validator#custom-validation-decorators
  */
 export function IsPresentationDefinitionCredentialQuery(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: unknown, propertyName: string) {
     registerDecorator({
       name: 'isPresentationDefinitionCredentialQuery',
       target: object.constructor,
@@ -30,7 +30,7 @@ export function IsPresentationDefinitionCredentialQuery(validationOptions?: Vali
       constraints: [],
       options: validationOptions,
       validator: {
-        validate(value: IPresentationDefinition, args: ValidationArguments) {
+        validate(value: IPresentationDefinition) {
           const pex = new PEX();
           try {
             const validated = pex.validateDefinition(value);
