@@ -272,6 +272,96 @@ describe('VpSubmissionVerifierService', () => {
         );
       });
 
+      describe('when subject_is_issuer is set to "required"', function () {
+        const query = [
+          {
+            type: VpRequestQueryType.presentationDefinition,
+            credentialQuery: [
+              {
+                presentationDefinition: {
+                  id: '286bc1e0-f1bd-488a-a873-8d71be3c690e',
+                  input_descriptors: [
+                    {
+                      id: 'consent_agreement',
+                      name: 'Consent Agreement',
+                      constraints: {
+                        subject_is_issuer: 'required',
+                        fields: [
+                          {
+                            path: ['$.credentialSubject'],
+                            filter: {
+                              type: 'object',
+                              properties: {
+                                consent: {
+                                  const: 'I consent to such and such'
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ];
+
+        it('should throw an error when subject is not equal to the issuer', async function () {
+          const vp = {
+            '@context': [],
+            type: [],
+            verifiableCredential: [
+              {
+                '@context': ['https://www.w3.org/2018/credentials/v1'],
+                id: 'urn:uuid:7f94d397-3e70-4a43-945e-1a13069e636f',
+                type: ['VerifiableCredential', 'EWFRole'],
+                credentialSubject: {
+                  id: 'did:example:00000000000000001'
+                },
+                issuer: 'did:example:00000000000000002',
+                issuanceDate: '2022-03-18T08:57:32.477Z'
+              }
+            ],
+            proof: {
+              challenge
+            }
+          };
+
+          const response = await getVerificationResult(query, vp as any);
+          expect(response.errors).toEqual([
+            'Presentation definition (1) validation failed, reason: subject is not issuer: $.input_descriptors[0]: $.verifiableCredential[0]',
+            'Presentation definition (1) validation failed, reason: The input candidate is not eligible for submission: $.input_descriptors[0]: $.verifiableCredential[0]'
+          ]);
+        });
+
+        it('should succeed when subject is equal to the issuer', async function () {
+          const vp = {
+            '@context': [],
+            type: [],
+            verifiableCredential: [
+              {
+                '@context': ['https://www.w3.org/2018/credentials/v1'],
+                id: 'urn:uuid:7f94d397-3e70-4a43-945e-1a13069e636f',
+                type: ['VerifiableCredential', 'EWFRole'],
+                credentialSubject: {
+                  id: 'did:example:00000000000000001'
+                },
+                issuer: 'did:example:00000000000000001',
+                issuanceDate: '2022-03-18T08:57:32.477Z'
+              }
+            ],
+            proof: {
+              challenge
+            }
+          };
+
+          const response = await getVerificationResult(query, vp as any);
+          expect(response.errors).toEqual([]);
+        });
+      });
+
       it('should success when presentation meet request requirements', async () => {
         const vp = {
           '@context': [],
