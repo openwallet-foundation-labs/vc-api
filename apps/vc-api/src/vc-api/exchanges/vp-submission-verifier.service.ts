@@ -113,10 +113,20 @@ export class VpSubmissionVerifierService implements SubmissionVerifier {
     const pex: PEX = new PEX();
 
     credentialQuery.forEach(({ presentationDefinition }, index) => {
-      const { errors: partialErrors } = pex.evaluatePresentation(
-        presentationDefinition,
-        presentation as IPresentation
-      );
+      let partialErrors;
+
+      try {
+        ({ errors: partialErrors } = pex.evaluatePresentation(
+          presentationDefinition,
+          presentation as IPresentation
+        ));
+      } catch (err) {
+        if (typeof err === 'string') {
+          partialErrors = [{ message: err }];
+        } else {
+          throw err;
+        }
+      }
 
       errors.push(
         ...partialErrors.map(
