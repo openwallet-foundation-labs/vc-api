@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021, 2022 Energy Web Foundation
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,30 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Type } from 'class-transformer';
-import { IsEnum, IsOptional, ValidateNested } from 'class-validator';
-import { VerifiablePresentationDto } from '../../credentials/dtos/verifiable-presentation.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { VerificationMethodDto } from './verification-method.dto';
+import { Type } from 'class-transformer';
 
-export enum ReviewResult {
-  approved = 'approved',
-  rejected = 'rejected'
-}
+export class CreateDidResponseDto {
+  @ApiProperty()
+  id: string;
 
-export class SubmissionReviewDto {
-  @IsEnum(ReviewResult)
-  @ApiProperty({
-    description: 'The judgement made by the reviewer',
-    enum: ReviewResult,
-    enumName: 'ReviewResult'
-  })
-  result: ReviewResult;
+  @ApiPropertyOptional({ type: VerificationMethodDto, isArray: true })
+  @Type(() => VerificationMethodDto)
+  verificationMethod?: VerificationMethodDto[];
 
-  @ValidateNested()
-  @IsOptional()
-  @Type(() => VerifiablePresentationDto)
-  @ApiPropertyOptional({
-    description: 'A reviewer may want to include credentials (wrapped in a VP) to the holder'
-  })
-  vp?: VerifiablePresentationDto;
+  constructor(partial: Partial<CreateDidResponseDto>) {
+    Object.assign(this, partial);
+  }
 }

@@ -17,14 +17,13 @@
 
 import { IKeyDescription } from '@energyweb/w3c-ccg-webkms';
 import { IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * KeyPair
  */
 export class KeyDescriptionDto implements IKeyDescription {
-  /**
-   * id of key (for example, JWK thumbprint)
-   */
   @IsString()
+  @ApiProperty({ description: 'id of key (for example, JWK thumbprint)' })
   public keyId: string;
 }

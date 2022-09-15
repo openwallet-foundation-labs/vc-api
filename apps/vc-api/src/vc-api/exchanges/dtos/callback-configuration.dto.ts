@@ -17,18 +17,21 @@
 
 import { IsUrl } from 'class-validator';
 import { CallbackConfiguration } from '../types/callback-configuration';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * An exchange result callback
  */
 export class CallbackConfigurationDto implements CallbackConfiguration {
-  /**
-   * URL at a callback notification will be sent:
-   * - when a VP is submitted to a "mediated" exchange
-   * - after the exchange has completed
-   *
-   * `require_tld: false` to allow localhost, see https://github.com/validatorjs/validator.js/issues/754
-   */
-  @IsUrl({ require_tld: false, require_protocol: true })
+  @IsUrl({
+    require_tld: false, //to allow localhost, see https://github.com/validatorjs/validator.js/issues/754
+    require_protocol: true
+  })
+  @ApiProperty({
+    description:
+      'URL at a callback notification will be sent:\n' +
+      '- when a VP is submitted to a "mediated" exchange\n' +
+      '- after the exchange has completed'
+  })
   url: string;
 }

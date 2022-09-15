@@ -15,39 +15,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { DIDService } from './did.service';
-import { DIDDocument, VerificationMethod } from 'did-resolver';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags
+} from '@nestjs/swagger';
 import { CreateDidOptionsDto } from './dto/create-did-options.dto';
 import { DidMethod } from './types/did-method';
+import { CreateDidResponseDto } from './dto/create-did-response.dto';
 
 @ApiTags('did')
 @Controller('did')
 export class DIDController {
   constructor(private didService: DIDService) {}
 
-  /**
-   * Generate a new DID
-   * @param body options for DID creation
-   * @returns DIDDocument of new DID
-   */
   @Post()
-  async create(@Body() body: CreateDidOptionsDto): Promise<DIDDocument> {
+  @ApiBody({ type: CreateDidOptionsDto })
+  @ApiCreatedResponse({ type: CreateDidResponseDto })
+  @ApiOperation({ description: 'Generate a new DID' })
+  async create(@Body() body: CreateDidOptionsDto): Promise<CreateDidResponseDto> {
     if (body.method === DidMethod.ethr) {
-      return await this.didService.generateEthrDID();
+      return new CreateDidResponseDto(await this.didService.generateEthrDID());
     }
     if (body.method === DidMethod.key) {
       if (body.keyId) {
         return await this.didService.registerKeyDID(body.keyId);
       }
-      return await this.didService.generateKeyDID();
+      return new CreateDidResponseDto(await this.didService.generateKeyDID());
     }
-    throw new Error('Requested DID method not supported');
+    throw new BadRequestException('Requested DID method not supported');
   }
 
   @Get('/:did')
-  async getByDID(@Param('did') did: string): Promise<DIDDocument> {
-    return await this.didService.getDID(did);
+  @ApiOkResponse({ type: CreateDidResponseDto })
+  @ApiNotFoundResponse()
+  @ApiOperation({ description: 'Retrieve exisiting DID' })
+  async getByDID(@Param('did') did: string): Promise<CreateDidResponseDto> {
+    const didDoc = await this.didService.getDID(did);
+
+    if (!didDoc) {
+      throw new NotFoundException(`${did} not found`);
+    }
+
+    return new CreateDidResponseDto(didDoc);
   }
 }

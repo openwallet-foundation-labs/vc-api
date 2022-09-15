@@ -15,32 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsString, IsArray } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 import { VerificationResult } from '../types/verification-result';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * A response object from verification of a credential or a presentation.
  * https://w3c-ccg.github.io/vc-api/verifier.html
  */
 export class VerificationResultDto implements VerificationResult {
-  /**
-   * The checks performed
-   */
   @IsArray()
   @IsString({ each: true })
+  @ApiProperty({ description: 'The checks performed' })
   checks: string[];
 
-  /**
-   * Warnings
-   */
   @IsArray()
   @IsString({ each: true })
+  @ApiProperty({ description: 'Warnings' })
   warnings: string[];
 
-  /**
-   * Errors
-   */
   @IsArray()
   @IsString({ each: true })
+  @ApiProperty({ description: 'Errors' })
   errors: string[];
 }

@@ -19,6 +19,7 @@ import { ValidateNested } from 'class-validator';
 import { CredentialDto } from './credential.dto';
 import { IssueOptionsDto } from './issue-options.dto';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * DTO which contains credential and options
@@ -26,9 +27,11 @@ import { Type } from 'class-transformer';
 export class IssueCredentialDto {
   @ValidateNested()
   @Type(() => CredentialDto)
+  @ApiProperty({ type: CredentialDto })
   credential: CredentialDto;
 
   @Type(() => IssueOptionsDto)
   @ValidateNested()
+  @ApiProperty({ type: IssueOptionsDto })
   options: IssueOptionsDto;
 }

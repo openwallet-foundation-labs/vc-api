@@ -16,29 +16,32 @@
  */
 
 import { VerifyOptionsDto } from './verify-options.dto';
-import { IsObject, ValidateNested, IsDefined } from 'class-validator';
+import { IsDefined, IsObject, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { VerifiablePresentationDto } from './verifiable-presentation.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class VerifyPresentationDto {
-  /**
-   * A JSON-LD Verifiable Credential with a proof.
-   * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
-   */
   @IsObject()
   @IsDefined()
   @ValidateNested()
   @Type(() => VerifiablePresentationDto)
+  @ApiProperty({
+    description:
+      'A JSON-LD Verifiable Credential with a proof. ' +
+      'https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential'
+  })
   vp: VerifiablePresentationDto;
 
-  /**
-   * Parameters for verifying a verifiable credential or a verifiable presentation
-   * https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyCredential
-   * https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyPresentation
-   */
   @IsObject()
   @IsDefined()
   @ValidateNested()
   @Type(() => VerifyOptionsDto)
+  @ApiProperty({
+    description:
+      'Parameters for verifying a verifiable credential or a verifiable presentation ' +
+      'https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyCredential ' +
+      'https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyPresentation'
+  })
   options: VerifyOptionsDto;
 }

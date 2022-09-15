@@ -4,12 +4,21 @@
     "/v1/key": {
       "post": {
         "operationId": "KeyController_import",
+        "summary": "",
+        "description": "Import a key",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeyPairDto" } } }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/KeyDescriptionDto" } }
+            }
+          }
+        },
         "tags": ["key"]
       }
     },
@@ -17,13 +26,20 @@
       "get": {
         "operationId": "KeyController_export",
         "parameters": [{ "name": "keyId", "required": true, "in": "path", "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeyPairDto" } } }
+          }
+        },
         "tags": ["key"]
       }
     },
     "/v1/did": {
       "post": {
         "operationId": "DIDController_create",
+        "summary": "",
+        "description": "Generate a new DID",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -31,21 +47,40 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/CreateDidOptionsDto" } }
           }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CreateDidResponseDto" } }
+            }
+          }
+        },
         "tags": ["did"]
       }
     },
     "/v1/did/{did}": {
       "get": {
         "operationId": "DIDController_getByDID",
+        "summary": "",
+        "description": "Retrieve exisiting DID",
         "parameters": [{ "name": "did", "required": true, "in": "path", "schema": { "type": "string" } }],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CreateDidResponseDto" } }
+            }
+          },
+          "404": { "description": "" }
+        },
         "tags": ["did"]
       }
     },
     "/v1/vc-api/credentials/issue": {
       "post": {
         "operationId": "VcApiController_issueCredential",
+        "summary": "",
+        "description": "Issues a credential and returns it in the response body. Conforms to https://w3c-ccg.github.io/vc-api/issuer.html",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -53,13 +88,22 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/IssueCredentialDto" } }
           }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/VerifiableCredentialDto" } }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/credentials/verify": {
       "post": {
         "operationId": "VcApiController_verifyCredential",
+        "summary": "",
+        "description": "Verify a credential. Conforms to https://w3c-ccg.github.io/vc-api/#verify-credential",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -68,7 +112,12 @@
           }
         },
         "responses": {
-          "200": { "description": "Verifiable Credential successfully verified" },
+          "200": {
+            "description": "Verifiable Credential successfully verified",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/VerificationResultDto" } }
+            }
+          },
           "400": { "description": "Invalid input" }
         },
         "tags": ["vc-api"]
@@ -77,20 +126,38 @@
     "/v1/vc-api/presentations/prove/authentication": {
       "post": {
         "operationId": "VcApiController_proveAuthenticationPresentation",
+        "summary": "",
+        "description": "Issue a DIDAuth presentation that authenticates a DID.\nNot a part of VC-API? Maybe there is a DID Auth spec though?\nA NON-STANDARD endpoint currently.",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuthenticateDto" } } }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/presentations/from": {
       "post": {
         "operationId": "VcApiController_presentationFrom",
+        "summary": "",
+        "description": "Creates a Presentation without Proof by passing in the Presentation Definition, selected Verifiable Credentials (TODO: and an optional holder (DID)).\nThe presentation contains the [presentation submission](https://identity.foundation/presentation-exchange/#presentation-submission) data that the verifier can use.",
         "parameters": [],
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/PresentationDto" } }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     },
@@ -104,13 +171,22 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/ProvePresentationDto" } }
           }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/presentations/verify": {
       "post": {
         "operationId": "VcApiController_verifyPresentation",
+        "summary": "",
+        "description": "Verify a presentation. Conforms to https://w3c-ccg.github.io/vc-api/#verify-presentation",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -119,7 +195,12 @@
           }
         },
         "responses": {
-          "200": { "description": "Verifiable Presentation successfully verified!" },
+          "200": {
+            "description": "Verifiable Presentation successfully verified!",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/VerificationResultDto" } }
+            }
+          },
           "400": { "description": "Invalid or malformed input" }
         },
         "tags": ["vc-api"]
@@ -128,6 +209,8 @@
     "/v1/vc-api/exchanges": {
       "post": {
         "operationId": "VcApiController_createExchange",
+        "summary": "",
+        "description": "Allows the creation of a new exchange by providing the credential query and interaction endpoints\nA NON-STANDARD endpoint currently.\n\nSimilar to https://gataca-io.github.io/vui-core/#/Presentations/post_api_v2_presentations",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -142,16 +225,27 @@
     "/v1/vc-api/exchanges/{exchangeId}": {
       "post": {
         "operationId": "VcApiController_initiateExchange",
+        "summary": "",
+        "description": "Initiates an exchange of information.\nhttps://w3c-ccg.github.io/vc-api/#initiate-exchange",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeResponseDto" } }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/exchanges/{exchangeId}/{transactionId}": {
       "put": {
         "operationId": "VcApiController_continueExchange",
+        "summary": "",
+        "description": "Receives information related to an existing exchange.\nhttps://w3c-ccg.github.io/vc-api/#continue-exchange",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
@@ -163,7 +257,12 @@
           }
         },
         "responses": {
-          "200": { "description": "Verifiable Presentation successfully submitted and verified" },
+          "200": {
+            "description": "Verifiable Presentation successfully submitted and verified",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeResponseDto" } }
+            }
+          },
           "202": {
             "description": "Verifiable Presentation successfully submitted. Further review in progress."
           }
@@ -172,18 +271,30 @@
       },
       "get": {
         "operationId": "VcApiController_getTransaction",
+        "summary": "",
+        "description": "Get exchange transaction by id\nA NON-STANDARD endpoint currently.\nSimilar to https://identitycache.energyweb.org/api/#/Claims/ClaimController_getByIssuerDid",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
-        "responses": { "200": { "description": "" } },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/GetTransactionDto" } }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/exchanges/{exchangeId}/{transactionId}/review": {
       "post": {
         "operationId": "VcApiController_addSubmissionReview",
+        "summary": "",
+        "description": "Update a transaction review\nA NON-STANDARD endpoint currently.\nSimilar to https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.controller.ts#L80",
         "parameters": [
+          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
         "requestBody": {
@@ -202,16 +313,507 @@
   "servers": [],
   "components": {
     "schemas": {
-      "KeyPairDto": { "type": "object", "properties": {} },
-      "CreateDidOptionsDto": { "type": "object", "properties": {} },
-      "IssueCredentialDto": { "type": "object", "properties": {} },
-      "VerifyCredentialDto": { "type": "object", "properties": {} },
-      "AuthenticateDto": { "type": "object", "properties": {} },
-      "ProvePresentationDto": { "type": "object", "properties": {} },
-      "VerifyPresentationDto": { "type": "object", "properties": {} },
-      "ExchangeDefinitionDto": { "type": "object", "properties": {} },
-      "VerifiablePresentationDto": { "type": "object", "properties": {} },
-      "SubmissionReviewDto": { "type": "object", "properties": {} }
+      "KeyPairDto": {
+        "type": "object",
+        "properties": {
+          "privateKey": { "type": "object", "description": "private key JWK" },
+          "publicKey": { "type": "object", "description": "public key JWK" }
+        },
+        "required": ["privateKey", "publicKey"]
+      },
+      "KeyDescriptionDto": {
+        "type": "object",
+        "properties": {
+          "keyId": { "type": "string", "description": "id of key (for example, JWK thumbprint)" }
+        },
+        "required": ["keyId"]
+      },
+      "DidMethod": { "type": "string", "enum": ["key", "ethr"] },
+      "CreateDidOptionsDto": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "description": "DID Method to create.\nMust be one of \"key\" or \"ethr\"",
+            "$ref": "#/components/schemas/DidMethod"
+          },
+          "keyId": {
+            "type": "string",
+            "description": "id of key (for example, JWK thumbprint).\nThis key must be known to the server already.\nIf provided, DID will be created using this key.\nCurrently only supported for did:key."
+          }
+        },
+        "required": ["method"]
+      },
+      "JsonWebKeyDto": {
+        "type": "object",
+        "properties": {
+          "alg": { "type": "string" },
+          "crv": { "type": "string" },
+          "e": { "type": "string" },
+          "ext": { "type": "boolean" },
+          "key_ops": { "type": "array", "items": { "type": "string" } },
+          "kid": { "type": "string" },
+          "kty": { "type": "string" },
+          "n": { "type": "string" },
+          "use": { "type": "string" },
+          "x": { "type": "string" },
+          "y": { "type": "string" }
+        },
+        "required": ["kty"]
+      },
+      "VerificationMethodDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "controller": { "type": "string" },
+          "publicKeyJwk": { "$ref": "#/components/schemas/JsonWebKeyDto" }
+        },
+        "required": ["id", "type", "controller"]
+      },
+      "CreateDidResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "verificationMethod": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VerificationMethodDto" }
+          }
+        },
+        "required": ["id"]
+      },
+      "CredentialDto": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "description": "The JSON-LD context of the credential.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "id": { "type": "string", "description": "The ID of the credential." },
+          "type": {
+            "description": "The JSON-LD type of the credential.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "issuer": { "type": "string", "description": "A JSON-LD Verifiable Credential Issuer." },
+          "issuanceDate": { "type": "string", "description": "The issuanceDate" },
+          "expirationDate": { "type": "string", "description": "The expirationDate" },
+          "credentialSubject": { "type": "object", "description": "The subject" }
+        },
+        "required": ["@context", "id", "type", "issuer", "issuanceDate", "credentialSubject"]
+      },
+      "IssueOptionsDto": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "string",
+            "description": "The date and time of the proof (with a maximum accuracy in seconds). Default current system time."
+          },
+          "challenge": {
+            "type": "string",
+            "description": "A challenge provided by the requesting party of the proof. For example 6e62f66e-67de-11eb-b490-ef3eeefa55f2"
+          },
+          "domain": {
+            "type": "string",
+            "description": "The intended domain of validity for the proof. For example website.example"
+          },
+          "credentialStatus": {
+            "type": "object",
+            "description": "The method of credential status to issue the credential including. If omitted credential status will be included."
+          }
+        }
+      },
+      "IssueCredentialDto": {
+        "type": "object",
+        "properties": {
+          "credential": { "$ref": "#/components/schemas/CredentialDto" },
+          "options": { "$ref": "#/components/schemas/IssueOptionsDto" }
+        },
+        "required": ["credential", "options"]
+      },
+      "VerifiableCredentialDto": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "description": "The JSON-LD context of the credential.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "id": { "type": "string", "description": "The ID of the credential." },
+          "type": {
+            "description": "The JSON-LD type of the credential.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "issuer": { "type": "string", "description": "A JSON-LD Verifiable Credential Issuer." },
+          "issuanceDate": { "type": "string", "description": "The issuanceDate" },
+          "expirationDate": { "type": "string", "description": "The expirationDate" },
+          "credentialSubject": { "type": "object", "description": "The subject" },
+          "proof": { "type": "object", "description": "A JSON-LD Linked Data proof." }
+        },
+        "required": ["@context", "id", "type", "issuer", "issuanceDate", "credentialSubject", "proof"]
+      },
+      "ProofPurpose": {
+        "type": "string",
+        "enum": [
+          "assertionMethod",
+          "authentication",
+          "keyAgreement",
+          "contactAgreement",
+          "capabilityInvocation",
+          "capabilityDelegation"
+        ]
+      },
+      "VerifyOptionsDto": {
+        "type": "object",
+        "properties": {
+          "verificationMethod": {
+            "type": "string",
+            "description": "The URI of the verificationMethod used for the proof. Default assertionMethod URI."
+          },
+          "proofPurpose": {
+            "description": "The purpose of the proof. Default 'assertionMethod'.",
+            "$ref": "#/components/schemas/ProofPurpose"
+          },
+          "created": {
+            "type": "string",
+            "description": "The date and time of the proof (with a maximum accuracy in seconds). Default current system time."
+          },
+          "challenge": {
+            "type": "string",
+            "description": "A challenge provided by the requesting party of the proof. For example 6e62f66e-67de-11eb-b490-ef3eeefa55f2"
+          },
+          "domain": {
+            "type": "string",
+            "description": "The intended domain of validity for the proof. For example website.example"
+          }
+        }
+      },
+      "VerifyCredentialDto": {
+        "type": "object",
+        "properties": {
+          "vc": {
+            "description": "A JSON-LD Verifiable Credential with a proof. https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential",
+            "allOf": [{ "$ref": "#/components/schemas/VerifiableCredentialDto" }]
+          },
+          "options": {
+            "description": "Parameters for verifying a verifiable credential or a verifiable presentation https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyCredential https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyPresentation",
+            "allOf": [{ "$ref": "#/components/schemas/VerifyOptionsDto" }]
+          }
+        },
+        "required": ["vc", "options"]
+      },
+      "VerificationResultDto": {
+        "type": "object",
+        "properties": {
+          "checks": { "description": "The checks performed", "type": "array", "items": { "type": "string" } },
+          "warnings": { "description": "Warnings", "type": "array", "items": { "type": "string" } },
+          "errors": { "description": "Errors", "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["checks", "warnings", "errors"]
+      },
+      "ProvePresentationOptionsDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The type of the proof. Default is an appropriate proof type corresponding to the verification method."
+          },
+          "verificationMethod": {
+            "type": "string",
+            "description": "The URI of the verificationMethod used for the proof. Default assertionMethod URI."
+          },
+          "proofPurpose": {
+            "description": "The purpose of the proof. Default 'assertionMethod'.",
+            "$ref": "#/components/schemas/ProofPurpose"
+          },
+          "created": {
+            "type": "string",
+            "description": "The date and time of the proof (with a maximum accuracy in seconds). Default current system time."
+          },
+          "challenge": {
+            "type": "string",
+            "description": "A challenge provided by the requesting party of the proof. For example 6e62f66e-67de-11eb-b490-ef3eeefa55f2"
+          },
+          "domain": {
+            "type": "string",
+            "description": "The intended domain of validity for the proof. For example website.example"
+          },
+          "credentialStatus": {
+            "type": "object",
+            "description": "The method of credential status to issue the credential including. If omitted credential status will be included."
+          }
+        },
+        "required": ["verificationMethod"]
+      },
+      "AuthenticateDto": {
+        "type": "object",
+        "properties": {
+          "did": { "type": "string" },
+          "options": { "$ref": "#/components/schemas/ProvePresentationOptionsDto" }
+        },
+        "required": ["did", "options"]
+      },
+      "VerifiablePresentationDto": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "description": "The JSON-LD context of the presentation.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "id": {
+            "type": "string",
+            "description": "The ID of the presentation. The id property is optional and MAY be used to provide a unique identifier for the presentation. https://www.w3.org/TR/vc-data-model/#presentations-0"
+          },
+          "type": {
+            "description": "The JSON-LD type of the presentation.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "holder": {
+            "type": "string",
+            "description": "The holder - will be ignored if no proof is present since there is no proof of authority over the credentials"
+          },
+          "verifiableCredential": {
+            "description": "The Verifiable Credentials",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VerifiableCredentialDto" }
+          },
+          "proof": { "type": "object", "description": "A JSON-LD Linked Data proof." }
+        },
+        "required": ["@context", "type", "proof"]
+      },
+      "PresentationDto": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "description": "The JSON-LD context of the presentation.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "id": {
+            "type": "string",
+            "description": "The ID of the presentation. The id property is optional and MAY be used to provide a unique identifier for the presentation. https://www.w3.org/TR/vc-data-model/#presentations-0"
+          },
+          "type": {
+            "description": "The JSON-LD type of the presentation.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "holder": {
+            "type": "string",
+            "description": "The holder - will be ignored if no proof is present since there is no proof of authority over the credentials"
+          },
+          "verifiableCredential": {
+            "description": "The Verifiable Credentials",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VerifiableCredentialDto" }
+          }
+        },
+        "required": ["@context", "type"]
+      },
+      "ProvePresentationDto": {
+        "type": "object",
+        "properties": {
+          "presentation": { "$ref": "#/components/schemas/PresentationDto" },
+          "options": { "$ref": "#/components/schemas/ProvePresentationOptionsDto" }
+        },
+        "required": ["presentation", "options"]
+      },
+      "VerifyPresentationDto": {
+        "type": "object",
+        "properties": {
+          "vp": {
+            "description": "A JSON-LD Verifiable Credential with a proof. https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential",
+            "allOf": [{ "$ref": "#/components/schemas/VerifiablePresentationDto" }]
+          },
+          "options": {
+            "description": "Parameters for verifying a verifiable credential or a verifiable presentation https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyCredential https://w3c-ccg.github.io/vc-api/verifier.html#operation/verifyPresentation",
+            "allOf": [{ "$ref": "#/components/schemas/VerifyOptionsDto" }]
+          }
+        },
+        "required": ["vp", "options"]
+      },
+      "VpRequestInteractServiceType": {
+        "type": "string",
+        "enum": ["UnmediatedHttpPresentationService2021", "MediatedHttpPresentationService2021"]
+      },
+      "ExchangeInteractServiceDefinitionDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "The \"type\" of the interact service.\nSee Verifiable Presentation Request [Interaction Types](https://w3c-ccg.github.io/vp-request-spec/#interaction-types) for background.",
+            "$ref": "#/components/schemas/VpRequestInteractServiceType"
+          }
+        },
+        "required": ["type"]
+      },
+      "VpRequestQueryType": { "type": "string", "enum": ["DIDAuth", "PresentationDefinition"] },
+      "VpRequestQueryDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Query types as listed in the VP Request spec.\nhttps://w3c-ccg.github.io/vp-request-spec/#query-and-response-types\n\nThe \"PresentationDefinition\" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7",
+            "$ref": "#/components/schemas/VpRequestQueryType"
+          },
+          "credentialQuery": {
+            "description": "The credential query.\nIt should correspond to the query type.",
+            "type": "array",
+            "items": { "type": "object" }
+          }
+        },
+        "required": ["type", "credentialQuery"]
+      },
+      "CallbackConfigurationDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "URL at a callback notification will be sent:\n- when a VP is submitted to a \"mediated\" exchange\n- after the exchange has completed"
+          }
+        },
+        "required": ["url"]
+      },
+      "ExchangeDefinitionDto": {
+        "type": "object",
+        "properties": {
+          "exchangeId": {
+            "type": "string",
+            "description": "The id of the exchange. It must be unique in the context of each VC API instance."
+          },
+          "interactServices": {
+            "description": "The Interact Service Definitions are related to the Interaction Types of the Verifiable Presentation Request (VPR) specification.\nHowever, as it is a configuration object, it not identical to a VPR interact services.\nIt can be see as the input data that the application uses to generate VPR interact services during the exchanges.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ExchangeInteractServiceDefinitionDto" }
+          },
+          "query": {
+            "description": "Defines requests for data in the Verifiable Presentation",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VpRequestQueryDto" }
+          },
+          "isOneTime": {
+            "type": "boolean",
+            "description": "Indicates whether or not the exchange should only be used once.\n\nIf wanting to ensure that the exchange will only be used once, this should be true.\nThis could be useful to, for example, associate the exchange is a specific instance of a business process.\n\nIf wanting to generated an exchange endpoint that can be reused, this should be false.\nThis could be useful to, for example, generate an exchange url that be put on a QR code sticker and distributed"
+          },
+          "callback": {
+            "description": "An array of \"callbacks\" that will be used by VC API to send notifications on the status/result of the exchange.",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CallbackConfigurationDto" }
+          }
+        },
+        "required": ["exchangeId", "interactServices", "query", "isOneTime", "callback"]
+      },
+      "VpRequestInteractServiceDto": {
+        "type": "object",
+        "properties": {
+          "type": { "$ref": "#/components/schemas/VpRequestInteractServiceType" },
+          "serviceEndpoint": {
+            "type": "string",
+            "description": "URL at which the credential exchange can be continued"
+          }
+        },
+        "required": ["type", "serviceEndpoint"]
+      },
+      "VpRequestInteractDto": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VpRequestInteractServiceDto" }
+          }
+        },
+        "required": ["service"]
+      },
+      "VpRequestDto": {
+        "type": "object",
+        "properties": {
+          "challenge": {
+            "type": "string",
+            "description": "From https://w3c-ccg.github.io/vp-request-spec/#format :\n\"Challenge that will be digitally signed in the authentication proof\nthat will be attached to the VerifiablePresentation response\""
+          },
+          "query": {
+            "description": "From https://w3c-ccg.github.io/vp-request-spec/#format :\n\"To make a request for one or more objects wrapped in a Verifiable Presentation,\na client constructs a JSON request describing one or more queries that it wishes to perform from the receiver.\"\n\"The query type serves as the main extension point mechanism for requests for data in the presentation.\nThis document defines several common query types.\"",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VpRequestQueryDto" }
+          },
+          "interact": { "$ref": "#/components/schemas/VpRequestInteractDto" }
+        },
+        "required": ["challenge", "query", "interact"]
+      },
+      "ExchangeResponseDto": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "description": "Any errors encountered during exchange",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "vpRequest": {
+            "description": "Verifiable Presentation Request.\nShould conform to VP-Request specification.\nWill be returned if a VP is required to obtain more information from requester\nMay not be returned if no further information is required (for example, at the end of the workflow)",
+            "allOf": [{ "$ref": "#/components/schemas/VpRequestDto" }]
+          },
+          "vp": {
+            "description": "If it is an issuance response, then a vp may be provided",
+            "allOf": [{ "$ref": "#/components/schemas/VerifiablePresentationDto" }]
+          },
+          "processingInProgress": {
+            "type": "boolean",
+            "description": "True if an exchange submission is currently being processed or reviewed asyncronously"
+          }
+        },
+        "required": ["errors", "processingInProgress"]
+      },
+      "PresentationSubmissionSecureDto": { "type": "object", "properties": {} },
+      "TransactionDto": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string", "description": "An id for the transaction" },
+          "exchangeId": {
+            "type": "string",
+            "description": "Each transaction is a part of an exchange\nhttps://w3c-ccg.github.io/vc-api/#exchange-examples"
+          },
+          "vpRequest": {
+            "description": "https://w3c-ccg.github.io/vp-request-spec",
+            "allOf": [{ "$ref": "#/components/schemas/VpRequestDto" }]
+          },
+          "presentationSubmission": {
+            "description": "The submission to the VP Request\nIs optional because submission may not have occured yet",
+            "allOf": [{ "$ref": "#/components/schemas/PresentationSubmissionSecureDto" }]
+          }
+        },
+        "required": ["transactionId", "exchangeId", "vpRequest"]
+      },
+      "GetTransactionDto": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "description": "Any errors encountered querying transaction",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "transaction": {
+            "description": "The returned transaction",
+            "allOf": [{ "$ref": "#/components/schemas/TransactionDto" }]
+          }
+        },
+        "required": ["errors", "transaction"]
+      },
+      "ReviewResult": { "type": "string", "enum": ["approved", "rejected"] },
+      "SubmissionReviewDto": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "description": "The judgement made by the reviewer",
+            "$ref": "#/components/schemas/ReviewResult"
+          },
+          "vp": {
+            "description": "A reviewer may want to include credentials (wrapped in a VP) to the holder",
+            "allOf": [{ "$ref": "#/components/schemas/VerifiablePresentationDto" }]
+          }
+        },
+        "required": ["result"]
+      }
     }
   }
 }

@@ -20,18 +20,21 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsEnum, ValidateNested } from 'cla
 import { VpRequestQueryType } from '../types/vp-request-query-type';
 import { VpRequestDidAuthQueryDto } from './vp-request-did-auth-query.dto';
 import { VpRequestPresentationDefinitionQueryDto } from './vp-request-presentation-defintion-query.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * https://w3c-ccg.github.io/vp-request-spec/#query-and-response-types
  */
 export class VpRequestQueryDto {
-  /**
-   * Query types as listed in the VP Request spec.
-   * https://w3c-ccg.github.io/vp-request-spec/#query-and-response-types
-   *
-   * The "PresentationDefinition" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7
-   */
   @IsEnum(VpRequestQueryType)
+  @ApiProperty({
+    description:
+      'Query types as listed in the VP Request spec.\n' +
+      'https://w3c-ccg.github.io/vp-request-spec/#query-and-response-types\n\n' +
+      'The "PresentationDefinition" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7',
+    enum: VpRequestQueryType,
+    enumName: 'VpRequestQueryType'
+  })
   type: VpRequestQueryType;
 
   /**
@@ -50,6 +53,12 @@ export class VpRequestQueryDto {
         { value: VpRequestDidAuthQueryDto, name: VpRequestQueryType.didAuth }
       ]
     }
+  })
+  @ApiProperty({
+    description: 'The credential query.\nIt should correspond to the query type.',
+    // TODO: figure out how to define a type for Swagger
+    type: 'object',
+    isArray: true
   })
   credentialQuery: Array<VpRequestPresentationDefinitionQueryDto | VpRequestDidAuthQueryDto>;
 }

@@ -20,53 +20,61 @@ import { VpRequestQueryDto } from './vp-request-query.dto';
 import { ExchangeInteractServiceDefinitionDto } from './exchange-interact-service-definition.dto';
 import { CallbackConfigurationDto } from './callback-configuration.dto';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * In order to keep the VC-API implementation generic (not specific to any use-cases), exchanges are configured rather than coded into the application.
  * This configuration is done at runtime via the use of Exchange Definitions.
  */
 export class ExchangeDefinitionDto {
-  /**
-   * The id of the exchange. It must be unique in the context of each VC API instance.
-   */
   @IsString()
+  @ApiProperty({
+    description: 'The id of the exchange. It must be unique in the context of each VC API instance.'
+  })
   exchangeId: string;
 
-  /**
-   * The Interact Service Definitions are related to the Interaction Types of the Verifiable Presentation Request (VPR) specification.
-   * However, as it is a configuration object, it not identical to a VPR interact services.
-   * It can be see as the input data that the application uses to generate VPR interact services during the exchanges.
-   */
   @ValidateNested()
   @IsArray()
   @Type(() => ExchangeInteractServiceDefinitionDto)
+  @ApiProperty({
+    description:
+      'The Interact Service Definitions are related to the Interaction Types of the Verifiable Presentation Request (VPR) specification.\n' +
+      'However, as it is a configuration object, it not identical to a VPR interact services.\n' +
+      'It can be see as the input data that the application uses to generate VPR interact services during the exchanges.',
+    type: ExchangeInteractServiceDefinitionDto,
+    isArray: true
+  })
   interactServices: ExchangeInteractServiceDefinitionDto[];
 
-  /**
-   * Defines requests for data in the Verifiable Presentation
-   */
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => VpRequestQueryDto)
+  @ApiProperty({
+    description: 'Defines requests for data in the Verifiable Presentation',
+    type: VpRequestQueryDto,
+    isArray: true
+  })
   query: VpRequestQueryDto[];
 
-  /**
-   * Indicates whether or not the exchange should only be used once.
-   *
-   * If wanting to ensure that the exchange will only be used once, this should be true.
-   * This could be useful to, for example, associate the exchange is a specific instance of a business process.
-   *
-   * If wanting to generated an exchange endpoint that can be reused, this should be false.
-   * This could be useful to, for example, generate an exchange url that be put on a QR code sticker and distributed
-   */
   @IsBoolean()
+  @ApiProperty({
+    description:
+      'Indicates whether or not the exchange should only be used once.\n\n' +
+      'If wanting to ensure that the exchange will only be used once, this should be true.\n' +
+      'This could be useful to, for example, associate the exchange is a specific instance of a business process.\n\n' +
+      'If wanting to generated an exchange endpoint that can be reused, this should be false.\n' +
+      'This could be useful to, for example, generate an exchange url that be put on a QR code sticker and distributed'
+  })
   isOneTime: boolean;
 
-  /**
-   * An array of "callbacks" that will be used by VC API to send notifications on the status/result of the exchange.
-   */
   @ValidateNested({ each: true })
   @IsArray()
   @Type(() => CallbackConfigurationDto)
+  @ApiProperty({
+    description:
+      'An array of "callbacks" that will be used by VC API to send notifications on the status/result of the exchange.',
+    type: CallbackConfigurationDto,
+    isArray: true
+  })
   callback: CallbackConfigurationDto[];
 }

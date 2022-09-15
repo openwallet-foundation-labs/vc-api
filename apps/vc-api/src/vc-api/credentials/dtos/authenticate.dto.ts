@@ -18,15 +18,18 @@
 import { IsString, ValidateNested } from 'class-validator';
 import { ProvePresentationOptionsDto } from './prove-presentation-options.dto';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * DTO which contains DID holder to authenticate and options
  */
 export class AuthenticateDto {
   @IsString()
+  @ApiProperty()
   did: string;
 
   @ValidateNested()
   @Type(() => ProvePresentationOptionsDto)
+  @ApiProperty()
   options: ProvePresentationOptionsDto;
 }

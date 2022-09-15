@@ -16,6 +16,7 @@
  */
 
 import { IsArray, IsDateString, IsObject, IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
  * A JSON-LD Verifiable Credential without a proof.
@@ -24,47 +25,34 @@ import { IsArray, IsDateString, IsObject, IsOptional, IsString } from 'class-val
 export class CredentialDto {
   [key: string]: unknown;
 
-  /**
-   * The JSON-LD context of the credential.
-   */
   @IsArray()
+  //TODO: figure out how to define Swagger type correctly
+  @ApiProperty({ description: 'The JSON-LD context of the credential.' })
   '@context': Array<string | Record<string, unknown>>;
 
-  /**
-   * The ID of the credential.
-   */
   @IsString()
+  @ApiProperty({ description: 'The ID of the credential.' })
   id: string;
 
-  /**
-   * The JSON-LD type of the credential.
-   */
   @IsArray()
   @IsString({ each: true })
+  @ApiProperty({ description: 'The JSON-LD type of the credential.' })
   type: string[];
 
-  /**
-   * A JSON-LD Verifiable Credential Issuer.
-   */
   @IsString()
+  @ApiProperty({ description: 'A JSON-LD Verifiable Credential Issuer.' })
   issuer: string;
 
-  /**
-   * The issuanceDate
-   */
   @IsDateString()
+  @ApiProperty({ description: 'The issuanceDate' })
   issuanceDate: string;
 
-  /**
-   * The expirationDate
-   */
   @IsString()
   @IsOptional()
+  @ApiPropertyOptional({ description: 'The expirationDate' })
   expirationDate?: string;
 
-  /**
-   * The subject
-   */
   @IsObject()
+  @ApiProperty({ description: 'The subject' })
   credentialSubject: Record<string, unknown>;
 }

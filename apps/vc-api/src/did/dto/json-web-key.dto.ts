@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021, 2022 Energy Web Foundation
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,30 +15,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Type } from 'class-transformer';
-import { IsEnum, IsOptional, ValidateNested } from 'class-validator';
-import { VerifiablePresentationDto } from '../../credentials/dtos/verifiable-presentation.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export enum ReviewResult {
-  approved = 'approved',
-  rejected = 'rejected'
-}
+export class JsonWebKeyDto {
+  @ApiPropertyOptional()
+  alg?: string;
 
-export class SubmissionReviewDto {
-  @IsEnum(ReviewResult)
-  @ApiProperty({
-    description: 'The judgement made by the reviewer',
-    enum: ReviewResult,
-    enumName: 'ReviewResult'
-  })
-  result: ReviewResult;
+  @ApiPropertyOptional()
+  crv?: string;
 
-  @ValidateNested()
-  @IsOptional()
-  @Type(() => VerifiablePresentationDto)
-  @ApiPropertyOptional({
-    description: 'A reviewer may want to include credentials (wrapped in a VP) to the holder'
-  })
-  vp?: VerifiablePresentationDto;
+  @ApiPropertyOptional()
+  e?: string;
+
+  @ApiPropertyOptional()
+  ext?: boolean;
+
+  @ApiPropertyOptional()
+  key_ops?: string[];
+
+  @ApiPropertyOptional()
+  kid?: string;
+
+  @ApiProperty()
+  kty: string;
+
+  @ApiPropertyOptional()
+  n?: string;
+
+  @ApiPropertyOptional()
+  use?: string;
+
+  @ApiPropertyOptional()
+  x?: string;
+
+  @ApiPropertyOptional()
+  y?: string;
+
+  constructor(partial: Partial<JsonWebKeyDto>) {
+    Object.assign(this, partial);
+  }
 }

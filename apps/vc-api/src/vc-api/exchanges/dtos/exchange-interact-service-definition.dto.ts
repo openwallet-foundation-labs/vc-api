@@ -17,15 +17,19 @@
 
 import { IsEnum } from 'class-validator';
 import { VpRequestInteractServiceType } from '../types/vp-request-interact-service-type';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * A definition of an interact service to be used in a workflow
  */
 export class ExchangeInteractServiceDefinitionDto {
-  /**
-   * The "type" of the interact service.
-   * See Verifiable Presentation Request [Interaction Types](https://w3c-ccg.github.io/vp-request-spec/#interaction-types) for background.
-   */
   @IsEnum(VpRequestInteractServiceType)
+  @ApiProperty({
+    description:
+      'The "type" of the interact service.\n' +
+      'See Verifiable Presentation Request [Interaction Types](https://w3c-ccg.github.io/vp-request-spec/#interaction-types) for background.',
+    enum: VpRequestInteractServiceType,
+    enumName: 'VpRequestInteractServiceType'
+  })
   type: VpRequestInteractServiceType;
 }

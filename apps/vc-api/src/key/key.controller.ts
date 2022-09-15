@@ -16,7 +16,7 @@
  */
 
 import { BadRequestException, Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { validate } from 'class-validator';
 import { KeyDescriptionDto } from './dtos/key-description.dto';
 import { KeyPairDto } from './dtos/key-pair.dto';
@@ -33,11 +33,15 @@ export class KeyController {
    * @returns KeyDescription of imported key
    */
   @Post()
+  @ApiBody({ type: KeyPairDto })
+  @ApiCreatedResponse({ type: KeyDescriptionDto })
+  @ApiOperation({ description: 'Import a key' })
   async import(@Body() body: KeyPairDto): Promise<KeyDescriptionDto> {
     return await this.keyService.importKey(body);
   }
 
   @Get('/:keyId')
+  @ApiOkResponse({ type: KeyPairDto })
   async export(@Param('keyId') keyId: string): Promise<KeyPairDto> {
     const keyDescription = new KeyDescriptionDto();
     keyDescription.keyId = keyId;

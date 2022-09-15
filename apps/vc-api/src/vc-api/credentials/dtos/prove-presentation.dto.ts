@@ -19,6 +19,7 @@ import { ValidateNested } from 'class-validator';
 import { PresentationDto } from './presentation.dto';
 import { ProvePresentationOptionsDto } from './prove-presentation-options.dto';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * DTO which contains presentation and options
@@ -26,9 +27,11 @@ import { Type } from 'class-transformer';
 export class ProvePresentationDto {
   @ValidateNested()
   @Type(() => PresentationDto)
+  @ApiProperty()
   presentation: PresentationDto;
 
   @ValidateNested()
   @Type(() => ProvePresentationOptionsDto)
+  @ApiProperty()
   options: ProvePresentationOptionsDto;
 }

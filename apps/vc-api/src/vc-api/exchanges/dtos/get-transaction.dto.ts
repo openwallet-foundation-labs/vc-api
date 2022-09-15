@@ -18,22 +18,19 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsString, ValidateNested } from 'class-validator';
 import { TransactionDto } from './transaction.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * Response to a GET Transaction query
  */
 export class GetTransactionDto {
-  /**
-   * Any errors encountered querying transaction
-   */
   @IsArray()
   @IsString({ each: true })
+  @ApiProperty({ description: 'Any errors encountered querying transaction' })
   errors: string[];
 
-  /**
-   * The returned transaction
-   */
   @ValidateNested()
   @Type(() => TransactionDto)
+  @ApiProperty({ description: 'The returned transaction' })
   transaction: TransactionDto;
 }
