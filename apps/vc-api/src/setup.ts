@@ -33,6 +33,7 @@ async function setupApp(): Promise<INestApplication> {
     type: VersioningType.URI,
     defaultVersion: [API_DEFAULT_VERSION]
   });
+  app.enableShutdownHooks();
   return app;
 }
 

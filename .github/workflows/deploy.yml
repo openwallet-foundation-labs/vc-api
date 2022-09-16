@@ -82,7 +82,7 @@ jobs:
           BUILD_ID: ${{ steps.tag_version.outputs.new_tag }}
           ECR_REGISTRY: ${{ steps.login-ecr-ssi.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}:$BUILD_ID -f Dockerfile .
+          docker build -t $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}:$BUILD_ID -f apps/vc-api/Dockerfile .
           docker push $ECR_REGISTRY/${{ steps.env_vars.outputs.aws_ecr_repository_ssi }}:$BUILD_ID
       - name: Logout of Amazon ECR
         if: always()
