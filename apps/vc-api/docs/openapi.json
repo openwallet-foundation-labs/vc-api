@@ -385,9 +385,9 @@
         "type": "object",
         "properties": {
           "@context": {
-            "description": "The JSON-LD context of the credential.",
             "type": "array",
-            "items": { "type": "string" }
+            "description": "The JSON-LD context of the credential.",
+            "items": { "oneOf": [{ "type": "string" }, { "type": "object" }] }
           },
           "id": { "type": "string", "description": "The ID of the credential." },
           "type": {
@@ -435,9 +435,9 @@
         "type": "object",
         "properties": {
           "@context": {
-            "description": "The JSON-LD context of the credential.",
             "type": "array",
-            "items": { "type": "string" }
+            "description": "The JSON-LD context of the credential.",
+            "items": { "oneOf": [{ "type": "string" }, { "type": "object" }] }
           },
           "id": { "type": "string", "description": "The ID of the credential." },
           "type": {
@@ -558,9 +558,9 @@
         "type": "object",
         "properties": {
           "@context": {
-            "description": "The JSON-LD context of the presentation.",
             "type": "array",
-            "items": { "type": "string" }
+            "description": "The JSON-LD context of the presentation.",
+            "items": { "oneOf": [{ "type": "string" }, { "type": "object" }] }
           },
           "id": {
             "type": "string",
@@ -588,9 +588,9 @@
         "type": "object",
         "properties": {
           "@context": {
-            "description": "The JSON-LD context of the presentation.",
             "type": "array",
-            "items": { "type": "string" }
+            "description": "The JSON-LD context of the presentation.",
+            "items": { "oneOf": [{ "type": "string" }, { "type": "object" }] }
           },
           "id": {
             "type": "string",
@@ -649,6 +649,17 @@
         },
         "required": ["type"]
       },
+      "VpRequestPresentationDefinitionQueryDto": {
+        "type": "object",
+        "properties": {
+          "presentationDefinition": {
+            "type": "object",
+            "description": "An object conforming to the Presentation Definition specification\nhttps://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904"
+          }
+        },
+        "required": ["presentationDefinition"]
+      },
+      "VpRequestDidAuthQueryDto": { "type": "object", "properties": {} },
       "VpRequestQueryType": { "type": "string", "enum": ["DIDAuth", "PresentationDefinition"] },
       "VpRequestQueryDto": {
         "type": "object",
@@ -658,9 +669,14 @@
             "$ref": "#/components/schemas/VpRequestQueryType"
           },
           "credentialQuery": {
-            "description": "The credential query.\nIt should correspond to the query type.",
             "type": "array",
-            "items": { "type": "object" }
+            "description": "The credential query.\nIt should correspond to the query type.",
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/VpRequestPresentationDefinitionQueryDto" },
+                { "$ref": "#/components/schemas/VpRequestDidAuthQueryDto" }
+              ]
+            }
           }
         },
         "required": ["type", "credentialQuery"]

@@ -20,11 +20,12 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsEnum, ValidateNested } from 'cla
 import { VpRequestQueryType } from '../types/vp-request-query-type';
 import { VpRequestDidAuthQueryDto } from './vp-request-did-auth-query.dto';
 import { VpRequestPresentationDefinitionQueryDto } from './vp-request-presentation-defintion-query.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
 /**
  * https://w3c-ccg.github.io/vp-request-spec/#query-and-response-types
  */
+@ApiExtraModels(VpRequestPresentationDefinitionQueryDto, VpRequestDidAuthQueryDto)
 export class VpRequestQueryDto {
   @IsEnum(VpRequestQueryType)
   @ApiProperty({
@@ -56,9 +57,13 @@ export class VpRequestQueryDto {
   })
   @ApiProperty({
     description: 'The credential query.\nIt should correspond to the query type.',
-    // TODO: figure out how to define a type for Swagger
-    type: 'object',
-    isArray: true
+    type: 'array',
+    items: {
+      oneOf: [
+        { $ref: getSchemaPath(VpRequestPresentationDefinitionQueryDto) },
+        { $ref: getSchemaPath(VpRequestDidAuthQueryDto) }
+      ]
+    }
   })
   credentialQuery: Array<VpRequestPresentationDefinitionQueryDto | VpRequestDidAuthQueryDto>;
 }

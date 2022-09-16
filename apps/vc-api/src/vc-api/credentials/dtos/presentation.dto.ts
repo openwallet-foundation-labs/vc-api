@@ -28,7 +28,11 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
  */
 export class PresentationDto implements Presentation {
   @IsArray()
-  @ApiProperty({ description: 'The JSON-LD context of the presentation.' })
+  @ApiProperty({
+    description: 'The JSON-LD context of the presentation.',
+    type: 'array',
+    items: { oneOf: [{ type: 'string' }, { type: 'object' }] }
+  })
   '@context': Array<string | Record<string, unknown>>;
 
   @IsString()

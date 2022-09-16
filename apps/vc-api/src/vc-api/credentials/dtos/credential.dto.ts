@@ -26,8 +26,11 @@ export class CredentialDto {
   [key: string]: unknown;
 
   @IsArray()
-  //TODO: figure out how to define Swagger type correctly
-  @ApiProperty({ description: 'The JSON-LD context of the credential.' })
+  @ApiProperty({
+    description: 'The JSON-LD context of the credential.',
+    type: 'array',
+    items: { oneOf: [{ type: 'string' }, { type: 'object' }] }
+  })
   '@context': Array<string | Record<string, unknown>>;
 
   @IsString()

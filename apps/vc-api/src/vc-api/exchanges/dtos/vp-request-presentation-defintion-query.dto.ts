@@ -17,15 +17,18 @@
 
 import { IPresentationDefinition } from '@sphereon/pex';
 import { IsPresentationDefinitionCredentialQuery } from './custom-validators/presentation-definition-credential-query.validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * https://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904
  */
 export class VpRequestPresentationDefinitionQueryDto {
-  /**
-   * An object conforming to the Presentation Definition specification
-   * https://identity.foundation/presentation-exchange/#presentation-definition
-   */
   @IsPresentationDefinitionCredentialQuery()
+  @ApiProperty({
+    description:
+      'An object conforming to the Presentation Definition specification\n' +
+      'https://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904'
+  })
+  // TODO: define DTO
   presentationDefinition: IPresentationDefinition;
 }
