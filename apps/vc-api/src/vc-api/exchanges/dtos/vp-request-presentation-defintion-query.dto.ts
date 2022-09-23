@@ -15,20 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IPresentationDefinition } from '@sphereon/pex';
 import { IsPresentationDefinitionCredentialQuery } from './custom-validators/presentation-definition-credential-query.validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmptyObject, ValidateNested } from 'class-validator';
+import { PresentationDefinitionDto } from './presentation-definition.dto';
+import { Type } from 'class-transformer';
 
 /**
  * https://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904
  */
 export class VpRequestPresentationDefinitionQueryDto {
+  @ValidateNested()
   @IsPresentationDefinitionCredentialQuery()
+  @IsNotEmptyObject()
+  @Type(() => PresentationDefinitionDto)
   @ApiProperty({
     description:
       'An object conforming to the Presentation Definition specification\n' +
-      'https://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904'
+      'https://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904',
+    type: PresentationDefinitionDto
   })
-  // TODO: define DTO
-  presentationDefinition: IPresentationDefinition;
+  presentationDefinition: PresentationDefinitionDto;
 }

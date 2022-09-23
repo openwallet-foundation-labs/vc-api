@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021, 2022 Energy Web Foundation
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,24 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setupApp, setupSwaggerDocument } from './setup';
-import { readFile } from 'fs/promises';
-import { resolve as resolvePath } from 'path';
-import { SwaggerModule } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
-async function bootstrap() {
-  const app = await setupApp();
-  SwaggerModule.setup('api', app, setupSwaggerDocument(app));
-  await app.listen(3000);
-  try {
-    console.log(
-      '\n' +
-        (await readFile(resolvePath(__dirname, '..', '..', '..', '..', 'license-header.txt'))).toString() +
-        '\n'
-    );
-  } catch (err) {
-    console.error(`license file not found: ${err}`);
-  }
+export class ConflictErrorResponseDto {
+  @ApiProperty({ example: 409 })
+  statusCode: 409;
+
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty({ example: 'Conflict' })
+  error: 'Conflict';
 }
-
-void bootstrap();

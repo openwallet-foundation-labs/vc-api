@@ -16,7 +16,7 @@
  */
 
 import { DIDEthrFactory, DIDKeyFactory } from '@energyweb/ssi-did';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DIDDocument, VerificationMethod } from 'did-resolver';
 import { keyType } from '../key/key-types';
@@ -59,6 +59,11 @@ export class DIDService {
    */
   public async registerKeyDID(keyId: string): Promise<DIDDocument> {
     const key = await this.keyService.getPublicKeyFromKeyId(keyId);
+
+    if (!key) {
+      throw new BadRequestException(`keyId=${keyId} not found`);
+    }
+
     // Need to set kty because it is possibly undefined in 'jose' JWK type
     const difKey = { ...key, kty: 'OKP' };
     const didDoc = await DIDKeyFactory.generate(difKey);

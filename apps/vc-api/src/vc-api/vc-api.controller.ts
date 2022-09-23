@@ -15,12 +15,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Body, Controller, Get, HttpCode, Param, Post, Put, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Res
+} from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiBody,
+  ApiConflictResponse,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
@@ -44,6 +58,10 @@ import { SubmissionReviewDto } from './exchanges/dtos/submission-review.dto';
 import { PresentationDto } from './credentials/dtos/presentation.dto';
 import { VerificationResultDto } from './credentials/dtos/verification-result.dto';
 import { VerifyPresentationDto } from './credentials/dtos/verify-presentation.dto';
+import { BadRequestErrorResponseDto } from '../dtos/bad-request-error-response.dto';
+import { ConflictErrorResponseDto } from '../dtos/conflict-error-response.dto';
+import { NotFoundErrorResponseDto } from '../dtos/not-found-error-response.dto';
+import { InternalServerErrorResponseDto } from '../dtos/internal-server-error-response.dto';
 
 /**
  * VcApi API conforms to W3C vc-api
@@ -51,6 +69,8 @@ import { VerifyPresentationDto } from './credentials/dtos/verify-presentation.dt
  */
 @ApiTags('vc-api')
 @Controller('vc-api')
+@ApiBadRequestResponse({ type: BadRequestErrorResponseDto })
+@ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 export class VcApiController {
   constructor(private vcApiService: CredentialsService, private exchangeService: ExchangeService) {}
 
@@ -80,7 +100,6 @@ export class VcApiController {
   @ApiBody({ type: VerifyCredentialDto })
   @HttpCode(200)
   @ApiOkResponse({ description: 'Verifiable Credential successfully verified', type: VerificationResultDto })
-  @ApiBadRequestResponse({ description: 'Invalid input' })
   async verifyCredential(
     @Body()
     verifyCredentialDto: VerifyCredentialDto
@@ -178,6 +197,7 @@ export class VcApiController {
   })
   @ApiBody({ type: ExchangeDefinitionDto })
   @ApiCreatedResponse() // TODO: define response DTO
+  @ApiConflictResponse({ type: ConflictErrorResponseDto })
   async createExchange(@Body() exchangeDefinitionDto: ExchangeDefinitionDto) {
     return this.exchangeService.createExchange(exchangeDefinitionDto);
   }
@@ -187,6 +207,7 @@ export class VcApiController {
     description: 'Initiates an exchange of information.\nhttps://w3c-ccg.github.io/vc-api/#initiate-exchange'
   })
   @ApiCreatedResponse({ type: ExchangeResponseDto })
+  @ApiNotFoundResponse({ type: NotFoundErrorResponseDto })
   async initiateExchange(@Param('exchangeId') exchangeId: string): Promise<ExchangeResponseDto> {
     return this.exchangeService.startExchange(exchangeId);
   }
@@ -205,13 +226,28 @@ export class VcApiController {
   @ApiAcceptedResponse({
     description: 'Verifiable Presentation successfully submitted. Further review in progress.'
   })
+  @ApiNotFoundResponse({ type: NotFoundErrorResponseDto })
   async continueExchange(
     @Param('exchangeId') exchangeId: string,
     @Param('transactionId') transactionId: string,
     @Body() presentation: VerifiablePresentationDto,
     @Res() res: Response
   ): Promise<ExchangeResponseDto | Response> {
+    if (!(await this.exchangeService.getExchange(exchangeId))) {
+      throw new NotFoundException(`exchangeId=${exchangeId} does not exist`);
+    }
+
     const response = await this.exchangeService.continueExchange(presentation, transactionId);
+
+    if (response.errors?.length > 0) {
+      if (response.errors.includes(`${transactionId}: no transaction found for this transaction id`)) {
+        throw new NotFoundException(`transactionId=${transactionId} does not exist`);
+      }
+
+      throw new InternalServerErrorException(
+        response.errors.length === 1 ? response.errors[0] : response.errors
+      );
+    }
 
     if (response.processingInProgress) {
       // Currently 5 second retry time is hardcoded but it could be dynamic based on the use case in the future
@@ -234,11 +270,27 @@ export class VcApiController {
       'Similar to https://identitycache.energyweb.org/api/#/Claims/ClaimController_getByIssuerDid'
   })
   @ApiOkResponse({ type: GetTransactionDto })
+  @ApiNotFoundResponse({ type: NotFoundErrorResponseDto })
   async getTransaction(
     @Param('exchangeId') exchangeId: string,
     @Param('transactionId') transactionId: string
   ): Promise<GetTransactionDto> {
+    if (!(await this.exchangeService.getExchange(exchangeId))) {
+      throw new NotFoundException(`exchangeId=${exchangeId} does not exist`);
+    }
+
     const queryResult = await this.exchangeService.getExchangeTransaction(transactionId);
+
+    if (queryResult?.errors.length > 0) {
+      if (queryResult.errors.includes(`${transactionId}: no transaction found for this transaction id`)) {
+        throw new NotFoundException(`transactionId=${transactionId} does not exist`);
+      }
+
+      throw new InternalServerErrorException(
+        queryResult.errors.length > 1 ? queryResult.errors : queryResult.errors[0]
+      );
+    }
+
     const transactionDto = queryResult.transaction
       ? TransactionDto.toDto(queryResult.transaction)
       : undefined;
@@ -254,6 +306,7 @@ export class VcApiController {
    * TODO: Needs to have special authorization
    * @param exchangeId id of the exchange
    * @param transactionId id of the exchange transaction
+   * @param submissionReview
    */
   @Post('/exchanges/:exchangeId/:transactionId/review')
   @ApiOperation({
@@ -264,11 +317,26 @@ export class VcApiController {
   })
   @ApiBody({ type: SubmissionReviewDto })
   // TODO: define response DTO
+  @ApiCreatedResponse()
+  @ApiNotFoundResponse({ type: NotFoundErrorResponseDto })
   async addSubmissionReview(
     @Param('exchangeId') exchangeId: string,
     @Param('transactionId') transactionId: string,
     @Body() submissionReview: SubmissionReviewDto
   ) {
-    return await this.exchangeService.addReview(transactionId, submissionReview);
+    if (!(await this.exchangeService.getExchange(exchangeId))) {
+      throw new NotFoundException(`exchangeId=${exchangeId} does not exist`);
+    }
+
+    const result = await this.exchangeService.addReview(transactionId, submissionReview);
+
+    if (
+      result.errors.length > 0 &&
+      result.errors.includes(`${transactionId}: no transaction found for this transaction id`)
+    ) {
+      throw new NotFoundException(`transactionId=${transactionId} does not exist`);
+    }
+
+    return result;
   }
 }

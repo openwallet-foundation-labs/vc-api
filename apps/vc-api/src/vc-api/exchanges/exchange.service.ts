@@ -15,11 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { inspect } from 'util';
 import { VerifiablePresentationDto } from '../credentials/dtos/verifiable-presentation.dto';
 import { ExchangeEntity } from './entities/exchange.entity';
 import { ExchangeResponseDto } from './dtos/exchange-response.dto';
@@ -48,16 +53,13 @@ export class ExchangeService {
     private httpService: HttpService
   ) {}
 
-  public async createExchange(exchangeDefinitionDto: ExchangeDefinitionDto) {
+  public async createExchange(exchangeDefinitionDto: ExchangeDefinitionDto): Promise<void> {
     if (await this.exchangeRepository.findOneBy({ exchangeId: exchangeDefinitionDto.exchangeId })) {
       throw new ConflictException(`exchangeId='${exchangeDefinitionDto.exchangeId}' already exists`);
     }
 
     const exchange = new ExchangeEntity(exchangeDefinitionDto);
     await this.exchangeRepository.save(exchange);
-    return {
-      errors: []
-    };
   }
 
   /**
@@ -67,19 +69,13 @@ export class ExchangeService {
    */
   public async startExchange(exchangeId: string): Promise<ExchangeResponseDto> {
     const exchange = await this.exchangeRepository.findOneBy({ exchangeId });
+
     if (!exchange) {
-      return {
-        errors: [`${exchangeId}: no exchange definition found for this exchangeId`],
-        processingInProgress: false
-      };
+      throw new NotFoundException(`no exchange definition found for this exchangeId=${exchangeId}`);
     }
+
     const baseUrl = this.configService.get<string>('baseUrl');
-    if (!baseUrl) {
-      return {
-        errors: [`base url is not defined`],
-        processingInProgress: false
-      };
-    }
+
     const baseWithControllerPath = `${baseUrl}${API_DEFAULT_VERSION_PREFIX}/vc-api`;
     const transaction = exchange.start(baseWithControllerPath);
     await this.transactionRepository.save(transaction);
@@ -140,22 +136,24 @@ export class ExchangeService {
       throw new Error(validationErrors.toString());
     }
 
-    callback?.forEach((callback) => {
-      this.httpService.post(callback.url, body).subscribe({
-        next: (v) => this.logger.log(inspect(v)), // inspect used to replace circular references https://stackoverflow.com/a/18354289
-        error: (e) => this.logger.error(inspect(e))
-      });
-    });
+    Promise.all(
+      callback?.map(async (callback) => {
+        try {
+          await this.httpService.axiosRef.post(callback.url, body);
+          this.logger.log(`callback submitted: ${callback.url}`);
+        } catch (err) {
+          this.logger.error(`error calling callback (${callback.url}): ${err}`);
+        }
+      })
+    ).catch((err) => this.logger.error(err));
+    // TODO: decide how to change logic here to handle callback error
 
     return response;
   }
 
-  public async getExchange(exchangeId: string): Promise<{ errors: string[]; exchange?: ExchangeEntity }> {
+  public async getExchange(exchangeId: string): Promise<ExchangeEntity> {
     const exchange = await this.exchangeRepository.findOneBy({ exchangeId });
-    if (!exchange) {
-      return { errors: [`${exchangeId}: no exchange found for this transaction id`] };
-    }
-    return { errors: [], exchange: exchange };
+    return exchange;
   }
 
   public async getExchangeTransaction(

@@ -63,7 +63,15 @@ export class VpRequestQueryDto {
         { $ref: getSchemaPath(VpRequestPresentationDefinitionQueryDto) },
         { $ref: getSchemaPath(VpRequestDidAuthQueryDto) }
       ]
-    }
+    },
+    example: [
+      {
+        presentationDefinition: {
+          id: '00000000-0000-4000-0000-000000000000',
+          input_descriptors: []
+        }
+      }
+    ]
   })
   credentialQuery: Array<VpRequestPresentationDefinitionQueryDto | VpRequestDidAuthQueryDto>;
 }

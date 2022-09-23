@@ -47,12 +47,12 @@ export class CredentialDto {
   issuer: string;
 
   @IsDateString()
-  @ApiProperty({ description: 'The issuanceDate' })
+  @ApiProperty({ description: 'The issuanceDate', example: '2022-09-21T11:49:03.205Z' })
   issuanceDate: string;
 
   @IsString()
   @IsOptional()
-  @ApiPropertyOptional({ description: 'The expirationDate' })
+  @ApiPropertyOptional({ description: 'The expirationDate', example: '2023-09-21T11:49:03.205Z' })
   expirationDate?: string;
 
   @IsObject()

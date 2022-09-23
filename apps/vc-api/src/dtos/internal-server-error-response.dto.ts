@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021, 2022 Energy Web Foundation
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,24 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { setupApp, setupSwaggerDocument } from './setup';
-import { readFile } from 'fs/promises';
-import { resolve as resolvePath } from 'path';
-import { SwaggerModule } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-async function bootstrap() {
-  const app = await setupApp();
-  SwaggerModule.setup('api', app, setupSwaggerDocument(app));
-  await app.listen(3000);
-  try {
-    console.log(
-      '\n' +
-        (await readFile(resolvePath(__dirname, '..', '..', '..', '..', 'license-header.txt'))).toString() +
-        '\n'
-    );
-  } catch (err) {
-    console.error(`license file not found: ${err}`);
-  }
+export class InternalServerErrorResponseDto {
+  @ApiProperty({ example: 500 })
+  statusCode: 500;
+
+  @ApiPropertyOptional({
+    oneOf: [
+      { type: 'string', example: 'error' },
+      {
+        type: 'array',
+        items: { type: 'string' },
+        example: ['error 1', 'error 2']
+      }
+    ]
+  })
+  message?: string | string[];
+
+  @ApiProperty({ example: 'Internal Server Error' })
+  error: 'Internal Server Error';
 }
-
-void bootstrap();

@@ -78,11 +78,9 @@ describe('ExchangeService', () => {
   });
 
   const mockHttpService = {
-    post: jest.fn(() => {
-      return {
-        subscribe: jest.fn()
-      };
-    })
+    axiosRef: {
+      post: jest.fn()
+    }
   };
 
   beforeEach(async () => {
@@ -150,8 +148,8 @@ describe('ExchangeService', () => {
         isOneTime: false,
         callback: []
       };
-      const result = await service.createExchange(exchangeDef);
-      expect(result.errors).toHaveLength(0);
+
+      await service.createExchange(exchangeDef);
     });
   });
 
@@ -199,7 +197,7 @@ describe('ExchangeService', () => {
         ]
       };
 
-      mockHttpService.post.mockClear();
+      mockHttpService.axiosRef.post.mockClear();
 
       await service.createExchange(exchangeDef);
       exchangeResponse = await service.startExchange(exchangeId);
@@ -210,14 +208,14 @@ describe('ExchangeService', () => {
       beforeEach(async function () {
         await service.continueExchange(vp, transactionId);
 
-        [actualCallbackUrl, actualCallbackBody] = mockHttpService.post.mock.calls[0] as unknown as [
+        [actualCallbackUrl, actualCallbackBody] = mockHttpService.axiosRef.post.mock.calls[0] as unknown as [
           string,
           Record<string, unknown>
         ];
       });
 
       it('should send callback request', async () => {
-        expect(mockHttpService.post.mock.calls).toHaveLength(1);
+        expect(mockHttpService.axiosRef.post.mock.calls).toHaveLength(1);
       });
 
       it('should send callback request to a correct url', async () => {
@@ -331,7 +329,7 @@ describe('ExchangeService', () => {
       });
 
       it('should make no callback requests', async function () {
-        expect(mockHttpService.post.mock.calls.length).toBe(0);
+        expect(mockHttpService.axiosRef.post.mock.calls.length).toBe(0);
       });
     });
   });

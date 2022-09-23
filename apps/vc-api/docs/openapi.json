@@ -17,6 +17,20 @@
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/KeyDescriptionDto" } }
             }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
           }
         },
         "tags": ["key"]
@@ -30,6 +44,20 @@
           "200": {
             "description": "",
             "content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeyPairDto" } } }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/NotFoundErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
           }
         },
         "tags": ["key"]
@@ -53,6 +81,20 @@
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/CreateDidResponseDto" } }
             }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
           }
         },
         "tags": ["did"]
@@ -71,7 +113,20 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/CreateDidResponseDto" } }
             }
           },
-          "404": { "description": "" }
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/NotFoundErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
+          }
         },
         "tags": ["did"]
       }
@@ -93,6 +148,20 @@
             "description": "",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/VerifiableCredentialDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
             }
           }
         },
@@ -118,7 +187,20 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/VerificationResultDto" } }
             }
           },
-          "400": { "description": "Invalid input" }
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
+          }
         },
         "tags": ["vc-api"]
       }
@@ -139,6 +221,20 @@
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
             }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
           }
         },
         "tags": ["vc-api"]
@@ -155,6 +251,20 @@
             "description": "",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/PresentationDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
             }
           }
         },
@@ -176,6 +286,20 @@
             "description": "",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
             }
           }
         },
@@ -201,7 +325,15 @@
               "application/json": { "schema": { "$ref": "#/components/schemas/VerificationResultDto" } }
             }
           },
-          "400": { "description": "Invalid or malformed input" }
+          "400": { "description": "Invalid or malformed input" },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
+          }
         },
         "tags": ["vc-api"]
       }
@@ -218,7 +350,29 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeDefinitionDto" } }
           }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": { "description": "" },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ConflictErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     },
@@ -235,6 +389,26 @@
             "description": "",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/NotFoundErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
             }
           }
         },
@@ -265,6 +439,26 @@
           },
           "202": {
             "description": "Verifiable Presentation successfully submitted. Further review in progress."
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/NotFoundErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
           }
         },
         "tags": ["vc-api"]
@@ -282,6 +476,26 @@
             "description": "",
             "content": {
               "application/json": { "schema": { "$ref": "#/components/schemas/GetTransactionDto" } }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/NotFoundErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
             }
           }
         },
@@ -303,7 +517,29 @@
             "application/json": { "schema": { "$ref": "#/components/schemas/SubmissionReviewDto" } }
           }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": { "description": "" },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/NotFoundErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
+          }
+        },
         "tags": ["vc-api"]
       }
     }
@@ -313,6 +549,20 @@
   "servers": [],
   "components": {
     "schemas": {
+      "InternalServerErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": { "type": "number", "example": 500 },
+          "message": {
+            "oneOf": [
+              { "type": "string", "example": "error" },
+              { "type": "array", "items": { "type": "string" }, "example": ["error 1", "error 2"] }
+            ]
+          },
+          "error": { "type": "string", "example": "Internal Server Error" }
+        },
+        "required": ["statusCode", "error"]
+      },
       "KeyPairDto": {
         "type": "object",
         "properties": {
@@ -327,6 +577,29 @@
           "keyId": { "type": "string", "description": "id of key (for example, JWK thumbprint)" }
         },
         "required": ["keyId"]
+      },
+      "BadRequestErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": { "type": "number", "example": 400 },
+          "message": {
+            "oneOf": [
+              { "type": "array", "items": { "type": "string" }, "example": ["error 1", "error 2"] },
+              { "type": "string", "example": "error" }
+            ]
+          },
+          "error": { "type": "string", "example": "Bad Request" }
+        },
+        "required": ["statusCode", "message", "error"]
+      },
+      "NotFoundErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": { "type": "number", "example": 404 },
+          "message": { "type": "string" },
+          "error": { "type": "string", "example": "Not Found" }
+        },
+        "required": ["statusCode", "message", "error"]
       },
       "DidMethod": { "type": "string", "enum": ["key", "ethr"] },
       "CreateDidOptionsDto": {
@@ -396,8 +669,16 @@
             "items": { "type": "string" }
           },
           "issuer": { "type": "string", "description": "A JSON-LD Verifiable Credential Issuer." },
-          "issuanceDate": { "type": "string", "description": "The issuanceDate" },
-          "expirationDate": { "type": "string", "description": "The expirationDate" },
+          "issuanceDate": {
+            "type": "string",
+            "description": "The issuanceDate",
+            "example": "2022-09-21T11:49:03.205Z"
+          },
+          "expirationDate": {
+            "type": "string",
+            "description": "The expirationDate",
+            "example": "2023-09-21T11:49:03.205Z"
+          },
           "credentialSubject": { "type": "object", "description": "The subject" }
         },
         "required": ["@context", "id", "type", "issuer", "issuanceDate", "credentialSubject"]
@@ -446,8 +727,16 @@
             "items": { "type": "string" }
           },
           "issuer": { "type": "string", "description": "A JSON-LD Verifiable Credential Issuer." },
-          "issuanceDate": { "type": "string", "description": "The issuanceDate" },
-          "expirationDate": { "type": "string", "description": "The expirationDate" },
+          "issuanceDate": {
+            "type": "string",
+            "description": "The issuanceDate",
+            "example": "2022-09-21T11:49:03.205Z"
+          },
+          "expirationDate": {
+            "type": "string",
+            "description": "The expirationDate",
+            "example": "2023-09-21T11:49:03.205Z"
+          },
           "credentialSubject": { "type": "object", "description": "The subject" },
           "proof": { "type": "object", "description": "A JSON-LD Linked Data proof." }
         },
@@ -649,12 +938,20 @@
         },
         "required": ["type"]
       },
+      "PresentationDefinitionDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "input_descriptors": { "type": "array", "items": { "type": "object" } }
+        },
+        "required": ["id", "input_descriptors"]
+      },
       "VpRequestPresentationDefinitionQueryDto": {
         "type": "object",
         "properties": {
           "presentationDefinition": {
-            "type": "object",
-            "description": "An object conforming to the Presentation Definition specification\nhttps://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904"
+            "description": "An object conforming to the Presentation Definition specification\nhttps://github.com/w3c-ccg/vp-request-spec/issues/7#issuecomment-1067036904",
+            "allOf": [{ "$ref": "#/components/schemas/PresentationDefinitionDto" }]
           }
         },
         "required": ["presentationDefinition"]
@@ -676,7 +973,15 @@
                 { "$ref": "#/components/schemas/VpRequestPresentationDefinitionQueryDto" },
                 { "$ref": "#/components/schemas/VpRequestDidAuthQueryDto" }
               ]
-            }
+            },
+            "example": [
+              {
+                "presentationDefinition": {
+                  "id": "00000000-0000-4000-0000-000000000000",
+                  "input_descriptors": []
+                }
+              }
+            ]
           }
         },
         "required": ["type", "credentialQuery"]
@@ -686,7 +991,8 @@
         "properties": {
           "url": {
             "type": "string",
-            "description": "URL at a callback notification will be sent:\n- when a VP is submitted to a \"mediated\" exchange\n- after the exchange has completed"
+            "description": "URL at a callback notification will be sent:\n- when a VP is submitted to a \"mediated\" exchange\n- after the exchange has completed",
+            "example": "https://example.com"
           }
         },
         "required": ["url"]
@@ -719,6 +1025,15 @@
           }
         },
         "required": ["exchangeId", "interactServices", "query", "isOneTime", "callback"]
+      },
+      "ConflictErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": { "type": "number", "example": 409 },
+          "message": { "type": "string" },
+          "error": { "type": "string", "example": "Conflict" }
+        },
+        "required": ["statusCode", "message", "error"]
       },
       "VpRequestInteractServiceDto": {
         "type": "object",

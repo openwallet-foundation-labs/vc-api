@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import {
   issueCredential,
   verifyCredential,
@@ -39,6 +39,7 @@ import { PresentationDto } from './dtos/presentation.dto';
 import { IPresentationDefinition, IVerifiableCredential, PEX, ProofPurpose, Status } from '@sphereon/pex';
 import { VerificationMethod } from 'did-resolver';
 import { ProvePresentationOptionsDto } from './dtos/prove-presentation-options.dto';
+import { didKitExecutor } from './utils/did-kit-executor.function';
 
 /**
  * Credential issuance options that Spruce accepts
@@ -74,12 +75,15 @@ export class CredentialsService implements CredentialVerifier {
       issueDto.options,
       verificationMethod.id
     );
-    return JSON.parse(
-      await issueCredential(
-        JSON.stringify(issueDto.credential),
-        JSON.stringify(proofOptions),
-        JSON.stringify(key)
-      )
+
+    return didKitExecutor<VerifiableCredentialDto>(
+      () =>
+        issueCredential(
+          JSON.stringify(issueDto.credential),
+          JSON.stringify(proofOptions),
+          JSON.stringify(key)
+        ),
+      'issueCredential'
     );
   }
 
@@ -88,7 +92,11 @@ export class CredentialsService implements CredentialVerifier {
     options: VerifyOptionsDto
   ): Promise<VerificationResultDto> {
     const verifyOptions: ISpruceVerifyOptions = options;
-    return JSON.parse(await verifyCredential(JSON.stringify(vc), JSON.stringify(verifyOptions)));
+
+    return didKitExecutor<VerificationResultDto>(
+      () => verifyCredential(JSON.stringify(vc), JSON.stringify(verifyOptions)),
+      'verifyCredential'
+    );
   }
 
   /**
@@ -105,7 +113,7 @@ export class CredentialsService implements CredentialVerifier {
       credentials as IVerifiableCredential[]
     );
     if (areRequiredCredentialsPresent !== Status.INFO) {
-      throw new Error('Credentials do not satisfy defintion');
+      throw new InternalServerErrorException('Credentials do not satisfy defintion');
     }
     const presentation = pex.presentationFrom(presentationDefinition, verifiableCredential);
 
@@ -139,12 +147,15 @@ export class CredentialsService implements CredentialVerifier {
       (await this.getVerificationMethodForDid(provePresentationDto.presentation.holder)).id;
     const key = await this.getKeyForVerificationMethod(verificationMethodId);
     const proofOptions = this.mapVcApiPresentationOptionsToSpruceIssueOptions(provePresentationDto.options);
-    return JSON.parse(
-      await issuePresentation(
-        JSON.stringify(provePresentationDto.presentation),
-        JSON.stringify(proofOptions),
-        JSON.stringify(key)
-      )
+
+    return didKitExecutor<VerifiablePresentationDto>(
+      () =>
+        issuePresentation(
+          JSON.stringify(provePresentationDto.presentation),
+          JSON.stringify(proofOptions),
+          JSON.stringify(key)
+        ),
+      'issuePresentation'
     );
   }
 
@@ -154,14 +165,20 @@ export class CredentialsService implements CredentialVerifier {
    */
   async didAuthenticate(authenticateDto: AuthenticateDto): Promise<VerifiablePresentationDto> {
     if (authenticateDto.options.proofPurpose !== ProofPurpose.authentication) {
-      throw new Error('proof purpose must be authentication for DIDAuth');
+      throw new BadRequestException('proof purpose must be authentication for DIDAuth');
     }
+
     const verificationMethodId =
       authenticateDto.options.verificationMethod ??
       (await this.getVerificationMethodForDid(authenticateDto.did)).id;
+
     const key = await this.getKeyForVerificationMethod(verificationMethodId);
     const proofOptions = this.mapVcApiPresentationOptionsToSpruceIssueOptions(authenticateDto.options);
-    return JSON.parse(await DIDAuth(authenticateDto.did, JSON.stringify(proofOptions), JSON.stringify(key)));
+
+    return didKitExecutor<VerifiablePresentationDto>(
+      () => DIDAuth(authenticateDto.did, JSON.stringify(proofOptions), JSON.stringify(key)),
+      'DIDAuth'
+    );
   }
 
   async verifyPresentation(
@@ -169,11 +186,20 @@ export class CredentialsService implements CredentialVerifier {
     options: VerifyOptionsDto
   ): Promise<VerificationResultDto> {
     const verifyOptions: ISpruceVerifyOptions = options;
-    return JSON.parse(await verifyPresentation(JSON.stringify(vp), JSON.stringify(verifyOptions)));
+
+    return didKitExecutor<VerificationResultDto>(
+      () => verifyPresentation(JSON.stringify(vp), JSON.stringify(verifyOptions)),
+      'verifyPresentation'
+    );
   }
 
   private async getVerificationMethodForDid(did: string): Promise<VerificationMethod> {
     const didDoc = await this.didService.getDID(did);
+
+    if (!didDoc) {
+      throw new BadRequestException(`DID="${did}" does not exist`);
+    }
+
     return didDoc.verificationMethod[0];
   }
 
@@ -185,17 +211,17 @@ export class CredentialsService implements CredentialVerifier {
   private async getKeyForVerificationMethod(desiredVerificationMethodId: string): Promise<JWK> {
     const verificationMethod = await this.didService.getVerificationMethod(desiredVerificationMethodId);
     if (!verificationMethod) {
-      throw new Error('This verification method is not known to this wallet');
+      throw new InternalServerErrorException('This verification method is not known to this wallet');
     }
     const keyID = verificationMethod.publicKeyJwk?.kid;
     if (!keyID) {
-      throw new Error(
+      throw new InternalServerErrorException(
         'There is no key ID (kid) associated with this verification method. Unable to retrieve private key'
       );
     }
     const privateKey = await this.keyService.getPrivateKeyFromKeyId(keyID);
     if (!privateKey) {
-      throw new Error('Unable to retrieve private key for this verification method');
+      throw new InternalServerErrorException('Unable to retrieve private key for this verification method');
     }
     return privateKey;
   }

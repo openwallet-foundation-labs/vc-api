@@ -31,7 +31,8 @@ export class CallbackConfigurationDto implements CallbackConfiguration {
     description:
       'URL at a callback notification will be sent:\n' +
       '- when a VP is submitted to a "mediated" exchange\n' +
-      '- after the exchange has completed'
+      '- after the exchange has completed',
+    example: 'https://example.com'
   })
   url: string;
 }
