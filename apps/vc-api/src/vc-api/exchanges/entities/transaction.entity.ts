@@ -127,7 +127,7 @@ export class TransactionEntity {
   public async processPresentation(
     presentation: VerifiablePresentation,
     verifier: SubmissionVerifier
-  ): Promise<{ response: ExchangeResponseDto; callback: CallbackConfiguration[] }> {
+  ): Promise<{ response: ExchangeResponseDto & { errors: string[] }; callback: CallbackConfiguration[] }> {
     if (this.presentationSubmission && this.presentationSubmission.vpHolder !== presentation.holder) {
       throw new TransactionDidForbiddenException(
         'DID does not match the DID that initially submitted the presentation'

@@ -155,13 +155,6 @@ Copy this URL, including the domain, into the exchange definition below.
     "isOneTime":true
 }
 ```
-**Sample Expected Response Body**
-
-```json
-{
-    "errors": []
-}
-```
 
 **Expected Response HTTP Status Code**
 
@@ -217,7 +210,6 @@ This is providing the location at which we can continue the credential exchange 
 
 ```json
 {
-    "errors": [],
     "vpRequest": {
         "challenge": "57ca126c-acbf-4da4-8f79-447150e93128",
         "query": [
@@ -389,7 +381,6 @@ The response should be similar to as shown below.
 This response indicates that the client attempt to continue the exchange again (after some interval), using the service endpoint.
 ```json
 {
-    "errors": [],
     "vpRequest": {
         "challenge": "08070970-638c-4b43-91bd-08325b08cc4a",
         "query": [],
@@ -863,14 +854,6 @@ Fill the json below appropriately and send as the body:
 }
 ```
 
-**Sample Expected Response Body**
-
-```json
-{
-    "errors": []
-}
-```
-
 **Expected Response HTTP Status Code**
 
 `201 Created`
@@ -885,7 +868,6 @@ The response should be similar to the following, where the `vp` contains the iss
 
 ```json
 {
-    "errors": [],
     "vp": {
         "@context": [
             "https://www.w3.org/2018/credentials/v1"
@@ -1030,14 +1012,6 @@ Copy this URL, including the domain, into the exchange definition below.
 }
 ```
 
-**Sample Expected Response Body**
-
-```json
-{
-    "errors": []
-}
-```
-
 **Expected Response HTTP Status Code**
 
 `201 Created`
@@ -1080,9 +1054,6 @@ If using the Postman collection request, fill in the `exchangeId` param to be th
 A similar json should be returned in the response body:
 ```json
 {
-   "errors":[
-      
-   ],
    "vpRequest":{
       "challenge":"7c66d573-4da6-4e13-b52f-9b5c844d6d52",
       "query":[
@@ -1337,14 +1308,6 @@ In the request params, use the `transactionId` and `exchangeId` from the `servic
 **Request Body**
 
 In the request body, copy the VP that was obtained from the previous step.
-
-**Sample Expected Response Body**
-
-```json
-{
-    "errors": []
-}
-```
 
 **Expected Response HTTP Status Code**
 

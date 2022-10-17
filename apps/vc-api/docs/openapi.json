@@ -474,9 +474,7 @@
         "responses": {
           "200": {
             "description": "",
-            "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/GetTransactionDto" } }
-            }
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TransactionDto" } } }
           },
           "400": {
             "description": "",
@@ -1075,11 +1073,6 @@
       "ExchangeResponseDto": {
         "type": "object",
         "properties": {
-          "errors": {
-            "description": "Any errors encountered during exchange",
-            "type": "array",
-            "items": { "type": "string" }
-          },
           "vpRequest": {
             "description": "Verifiable Presentation Request.\nShould conform to VP-Request specification.\nWill be returned if a VP is required to obtain more information from requester\nMay not be returned if no further information is required (for example, at the end of the workflow)",
             "allOf": [{ "$ref": "#/components/schemas/VpRequestDto" }]
@@ -1093,7 +1086,7 @@
             "description": "True if an exchange submission is currently being processed or reviewed asyncronously"
           }
         },
-        "required": ["errors", "processingInProgress"]
+        "required": ["processingInProgress"]
       },
       "PresentationSubmissionSecureDto": { "type": "object", "properties": {} },
       "TransactionDto": {
@@ -1114,21 +1107,6 @@
           }
         },
         "required": ["transactionId", "exchangeId", "vpRequest"]
-      },
-      "GetTransactionDto": {
-        "type": "object",
-        "properties": {
-          "errors": {
-            "description": "Any errors encountered querying transaction",
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "transaction": {
-            "description": "The returned transaction",
-            "allOf": [{ "$ref": "#/components/schemas/TransactionDto" }]
-          }
-        },
-        "required": ["errors", "transaction"]
       },
       "ReviewResult": { "type": "string", "enum": ["approved", "rejected"] },
       "SubmissionReviewDto": {

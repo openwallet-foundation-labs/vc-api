@@ -155,9 +155,8 @@ export class WalletClient {
     const continueExchangeResponse = await request(this.#app.getHttpServer())
       .get(`${API_DEFAULT_VERSION_PREFIX}/vc-api/exchanges/${exchangeId}/${transactionId}`)
       .expect(200);
-    expect(continueExchangeResponse.body.errors).toHaveLength(0);
-    expect(continueExchangeResponse.body.transaction).toBeDefined();
-    return continueExchangeResponse.body.transaction as TransactionDto;
+
+    return continueExchangeResponse.body as TransactionDto;
   }
 
   /**

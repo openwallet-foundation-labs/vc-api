@@ -25,11 +25,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
  * Describes the possible contents of response to a start/continue exchange request
  */
 export class ExchangeResponseDto {
-  @IsArray()
-  @IsString({ each: true })
-  @ApiProperty({ description: 'Any errors encountered during exchange' })
-  errors: string[];
-
   @ValidateNested()
   @Type(() => VpRequestDto)
   @IsOptional()

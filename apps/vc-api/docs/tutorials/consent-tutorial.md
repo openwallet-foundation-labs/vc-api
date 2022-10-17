@@ -186,13 +186,6 @@ For further documentation regarding the `presentationDefinition`, can be seen [h
     "isOneTime":true
 }
 ```
-**Sample Expected Response Body**
-
-```json
-{
-    "errors": []
-}
-```
 
 **Expected Response HTTP Status Code**
 
@@ -247,7 +240,6 @@ This is providing the location at which we can continue the credential exchange 
 
 ```json
 {
-    "errors": [],
     "vpRequest": {
         "challenge": "4fe8b3e2-fd6d-4862-8476-09e3377046dc",
         "query": [
@@ -748,7 +740,6 @@ In the request body, copy the VP that was obtained from the previous step.
 
 ```json
 {
-    "errors": [],
     "processingInProgress": false
 }
 ```

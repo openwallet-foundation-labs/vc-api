@@ -80,7 +80,6 @@ export class ExchangeService {
     const transaction = exchange.start(baseWithControllerPath);
     await this.transactionRepository.save(transaction);
     return {
-      errors: [],
       vpRequest: VpRequestDto.toDto(transaction.vpRequest),
       processingInProgress: false
     };
@@ -97,14 +96,11 @@ export class ExchangeService {
     verifiablePresentation: VerifiablePresentationDto,
     transactionId: string
   ): Promise<ExchangeResponseDto> {
-    const transactionQuery = await this.getExchangeTransaction(transactionId);
-    if (transactionQuery.errors.length > 0 || !transactionQuery.transaction) {
-      return {
-        errors: transactionQuery.errors,
-        processingInProgress: false
-      };
+    const transaction = await this.getExchangeTransaction(transactionId);
+
+    if (!transaction) {
+      throw new NotFoundException(`${transactionId}: no transaction found for this transaction id`);
     }
-    const transaction = transactionQuery.transaction;
 
     const { response, callback } = await transaction.processPresentation(
       verifiablePresentation,
@@ -156,9 +152,7 @@ export class ExchangeService {
     return exchange;
   }
 
-  public async getExchangeTransaction(
-    transactionId: string
-  ): Promise<{ errors: string[]; transaction?: TransactionEntity }> {
+  public async getExchangeTransaction(transactionId: string): Promise<TransactionEntity> {
     const transaction = await this.transactionRepository.findOne({
       where: {
         transactionId
@@ -171,28 +165,25 @@ export class ExchangeService {
     });
 
     if (!transaction) {
-      return { errors: [`${transactionId}: no transaction found for this transaction id`] };
+      return null;
     }
     const vpRequest = transaction.vpRequest;
     if (!vpRequest) {
-      return {
-        errors: [`${transactionId}: no vp-request associated this transaction id`]
-      };
+      throw new NotFoundException(`${transactionId}: no vp-request associated this transaction id`);
     }
     if (!transaction.exchangeId) {
-      return { errors: [`${transactionId}: no exchange found for this transaction id`] };
+      throw new NotFoundException(`${transactionId}: no exchange found for this transaction id`);
     }
-    return { errors: [], transaction: transaction };
+    return transaction;
   }
 
   public async addReview(transactionId: string, reviewDto: SubmissionReviewDto) {
-    const transactionQuery = await this.getExchangeTransaction(transactionId);
-    if (transactionQuery.errors.length > 0 || !transactionQuery.transaction) {
-      return {
-        errors: transactionQuery.errors
-      };
+    const transaction = await this.getExchangeTransaction(transactionId);
+
+    if (!transaction) {
+      throw new NotFoundException(`${transactionId}: no transaction found for this transaction id`);
     }
-    const transaction = transactionQuery.transaction;
+
     switch (reviewDto.result) {
       case ReviewResult.approved:
         transaction.approvePresentationSubmission(reviewDto.vp);

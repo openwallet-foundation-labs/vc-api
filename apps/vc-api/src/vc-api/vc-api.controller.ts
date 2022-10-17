@@ -52,7 +52,6 @@ import { ExchangeResponseDto } from './exchanges/dtos/exchange-response.dto';
 import { ExchangeDefinitionDto } from './exchanges/dtos/exchange-definition.dto';
 import { ProvePresentationDto } from './credentials/dtos/prove-presentation.dto';
 import { VerifyCredentialDto } from './credentials/dtos/verify-credential.dto';
-import { GetTransactionDto } from './exchanges/dtos/get-transaction.dto';
 import { TransactionDto } from './exchanges/dtos/transaction.dto';
 import { SubmissionReviewDto } from './exchanges/dtos/submission-review.dto';
 import { PresentationDto } from './credentials/dtos/presentation.dto';
@@ -239,16 +238,6 @@ export class VcApiController {
 
     const response = await this.exchangeService.continueExchange(presentation, transactionId);
 
-    if (response.errors?.length > 0) {
-      if (response.errors.includes(`${transactionId}: no transaction found for this transaction id`)) {
-        throw new NotFoundException(`transactionId=${transactionId} does not exist`);
-      }
-
-      throw new InternalServerErrorException(
-        response.errors.length === 1 ? response.errors[0] : response.errors
-      );
-    }
-
     if (response.processingInProgress) {
       // Currently 5 second retry time is hardcoded but it could be dynamic based on the use case in the future
       res.status(202).setHeader('Retry-After', 5);
@@ -269,36 +258,23 @@ export class VcApiController {
       'A NON-STANDARD endpoint currently.\n' +
       'Similar to https://identitycache.energyweb.org/api/#/Claims/ClaimController_getByIssuerDid'
   })
-  @ApiOkResponse({ type: GetTransactionDto })
+  @ApiOkResponse({ type: TransactionDto })
   @ApiNotFoundResponse({ type: NotFoundErrorResponseDto })
   async getTransaction(
     @Param('exchangeId') exchangeId: string,
     @Param('transactionId') transactionId: string
-  ): Promise<GetTransactionDto> {
+  ): Promise<TransactionDto> {
     if (!(await this.exchangeService.getExchange(exchangeId))) {
       throw new NotFoundException(`exchangeId=${exchangeId} does not exist`);
     }
 
-    const queryResult = await this.exchangeService.getExchangeTransaction(transactionId);
+    const transaction = await this.exchangeService.getExchangeTransaction(transactionId);
 
-    if (queryResult?.errors.length > 0) {
-      if (queryResult.errors.includes(`${transactionId}: no transaction found for this transaction id`)) {
-        throw new NotFoundException(`transactionId=${transactionId} does not exist`);
-      }
-
-      throw new InternalServerErrorException(
-        queryResult.errors.length > 1 ? queryResult.errors : queryResult.errors[0]
-      );
+    if (!transaction) {
+      throw new NotFoundException(`${transactionId}: no transaction found for this transaction id`);
     }
 
-    const transactionDto = queryResult.transaction
-      ? TransactionDto.toDto(queryResult.transaction)
-      : undefined;
-    const response: GetTransactionDto = {
-      errors: queryResult.errors,
-      transaction: transactionDto
-    };
-    return response;
+    return TransactionDto.toDto(transaction);
   }
 
   /**
