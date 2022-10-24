@@ -34,8 +34,9 @@ export class CredentialDto {
   '@context': Array<string | Record<string, unknown>>;
 
   @IsString()
-  @ApiProperty({ description: 'The ID of the credential.' })
-  id: string;
+  @IsOptional()
+  @ApiPropertyOptional({ description: 'The ID of the credential.' })
+  id?: string;
 
   @IsArray()
   @IsString({ each: true })

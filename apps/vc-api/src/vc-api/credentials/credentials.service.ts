@@ -72,7 +72,7 @@ export class CredentialsService implements CredentialVerifier {
     const verificationMethod = await this.getVerificationMethodForDid(issueDto.credential.issuer);
     const key = await this.getKeyForVerificationMethod(verificationMethod.id);
     const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(
-      issueDto.options,
+      issueDto.options || ({} as IssueOptionsDto),
       verificationMethod.id
     );
 

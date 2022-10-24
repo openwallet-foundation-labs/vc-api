@@ -36,7 +36,7 @@ export class VerifyCredentialDto {
       'A JSON-LD Verifiable Credential with a proof. ' +
       'https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential'
   })
-  vc: VerifiableCredentialDto;
+  verifiableCredential: VerifiableCredentialDto;
 
   /**
    * Parameters for verifying a verifiable credential or a verifiable presentation

@@ -190,7 +190,14 @@
           "400": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/VerificationResultDto" },
+                    { "$ref": "#/components/schemas/BadRequestErrorResponseDto" }
+                  ]
+                }
+              }
             }
           },
           "500": {
@@ -679,7 +686,7 @@
           },
           "credentialSubject": { "type": "object", "description": "The subject" }
         },
-        "required": ["@context", "id", "type", "issuer", "issuanceDate", "credentialSubject"]
+        "required": ["@context", "type", "issuer", "issuanceDate", "credentialSubject"]
       },
       "IssueOptionsDto": {
         "type": "object",
@@ -708,7 +715,7 @@
           "credential": { "$ref": "#/components/schemas/CredentialDto" },
           "options": { "$ref": "#/components/schemas/IssueOptionsDto" }
         },
-        "required": ["credential", "options"]
+        "required": ["credential"]
       },
       "VerifiableCredentialDto": {
         "type": "object",
@@ -738,7 +745,7 @@
           "credentialSubject": { "type": "object", "description": "The subject" },
           "proof": { "type": "object", "description": "A JSON-LD Linked Data proof." }
         },
-        "required": ["@context", "id", "type", "issuer", "issuanceDate", "credentialSubject", "proof"]
+        "required": ["@context", "type", "issuer", "issuanceDate", "credentialSubject", "proof"]
       },
       "ProofPurpose": {
         "type": "string",
@@ -779,7 +786,7 @@
       "VerifyCredentialDto": {
         "type": "object",
         "properties": {
-          "vc": {
+          "verifiableCredential": {
             "description": "A JSON-LD Verifiable Credential with a proof. https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential",
             "allOf": [{ "$ref": "#/components/schemas/VerifiableCredentialDto" }]
           },
@@ -788,7 +795,7 @@
             "allOf": [{ "$ref": "#/components/schemas/VerifyOptionsDto" }]
           }
         },
-        "required": ["vc", "options"]
+        "required": ["verifiableCredential", "options"]
       },
       "VerificationResultDto": {
         "type": "object",

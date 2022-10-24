@@ -16,6 +16,7 @@
  */
 
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -38,7 +39,8 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
-  ApiTags
+  ApiTags,
+  getSchemaPath
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { IPresentationDefinition } from '@sphereon/pex';
@@ -99,11 +101,28 @@ export class VcApiController {
   @ApiBody({ type: VerifyCredentialDto })
   @HttpCode(200)
   @ApiOkResponse({ description: 'Verifiable Credential successfully verified', type: VerificationResultDto })
+  @ApiBadRequestResponse({
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(VerificationResultDto) },
+        { $ref: getSchemaPath(BadRequestErrorResponseDto) }
+      ]
+    }
+  })
   async verifyCredential(
     @Body()
     verifyCredentialDto: VerifyCredentialDto
   ): Promise<VerificationResultDto> {
-    return await this.vcApiService.verifyCredential(verifyCredentialDto.vc, verifyCredentialDto.options);
+    const verificationResult = await this.vcApiService.verifyCredential(
+      verifyCredentialDto.verifiableCredential,
+      verifyCredentialDto.options
+    );
+
+    if (verificationResult.errors.length > 0) {
+      throw new BadRequestException(verificationResult);
+    }
+
+    return verificationResult;
   }
 
   // VERIFIER https://w3c-ccg.github.io/vc-api/verifier.html

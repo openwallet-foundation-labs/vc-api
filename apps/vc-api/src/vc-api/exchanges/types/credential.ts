@@ -29,7 +29,7 @@ export interface Credential {
   /**
    * The ID of the credential.
    */
-  id: string;
+  id?: string;
 
   /**
    * The JSON-LD type of the credential.
