@@ -31,7 +31,7 @@ export class VerifyPresentationDto {
       'A JSON-LD Verifiable Credential with a proof. ' +
       'https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential'
   })
-  vp: VerifiablePresentationDto;
+  verifiablePresentation: VerifiablePresentationDto;
 
   @IsObject()
   @IsDefined()

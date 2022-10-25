@@ -198,7 +198,10 @@ export class VcApiController {
   async verifyPresentation(
     @Body() verifyPresentation: VerifyPresentationDto
   ): Promise<VerificationResultDto> {
-    return this.vcApiService.verifyPresentation(verifyPresentation.vp, verifyPresentation.options);
+    return this.vcApiService.verifyPresentation(
+      verifyPresentation.verifiablePresentation,
+      verifyPresentation.options
+    );
   }
 
   /**

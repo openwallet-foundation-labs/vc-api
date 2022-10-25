@@ -918,7 +918,7 @@
       "VerifyPresentationDto": {
         "type": "object",
         "properties": {
-          "vp": {
+          "verifiablePresentation": {
             "description": "A JSON-LD Verifiable Credential with a proof. https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential",
             "allOf": [{ "$ref": "#/components/schemas/VerifiablePresentationDto" }]
           },
@@ -927,7 +927,7 @@
             "allOf": [{ "$ref": "#/components/schemas/VerifyOptionsDto" }]
           }
         },
-        "required": ["vp", "options"]
+        "required": ["verifiablePresentation", "options"]
       },
       "VpRequestInteractServiceType": {
         "type": "string",

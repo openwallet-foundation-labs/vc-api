@@ -437,7 +437,7 @@ An example of the expected POST body received in the request bucket is:
       }
    ],
    "presentationSubmission":{
-      "vp":{
+      "verifiablePresentation":{
           "@context": [
               "https://www.w3.org/2018/credentials/v1"
           ],
@@ -790,14 +790,14 @@ Fill the json below appropriately and send as the body:
 ```json
 {
     "result": "approved",
-    "vp": "<COPY VP FROM PREVIOUS STEP HERE>"
+    "verifiablePresentation": "<COPY VP FROM PREVIOUS STEP HERE>"
 }
 ```
 
 ```json
 {
     "result": "approved",
-    "vp": {
+    "verifiablePresentation": {
         "@context": [
             "https://www.w3.org/2018/credentials/v1"
         ],
@@ -868,7 +868,7 @@ The response should be similar to the following, where the `vp` contains the iss
 
 ```json
 {
-    "vp": {
+    "verifiablePresentation": {
         "@context": [
             "https://www.w3.org/2018/credentials/v1"
         ],
@@ -1368,7 +1368,7 @@ For reference, the callback notification that would have been received in a conf
       }
    },
    "presentationSubmission":{
-      "vp":{
+      "verifiablePresentation":{
         "@context": [
             "https://www.w3.org/2018/credentials/v1",
             "https://www.w3.org/2018/credentials/examples/v1"
