@@ -16,12 +16,15 @@
  */
 
 import { IsArray, IsDateString, IsObject, IsOptional, IsString } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiExtraModels, ApiProperty, ApiPropertyOptional, getSchemaPath } from '@nestjs/swagger';
+import { IsIssuer } from '../../exchanges/dtos/custom-validators';
+import { IssuerDto } from './issuer.dto';
 
 /**
  * A JSON-LD Verifiable Credential without a proof.
  * https://w3c-ccg.github.io/vc-api/issuer.html#operation/issueCredential
  */
+@ApiExtraModels(IssuerDto)
 export class CredentialDto {
   [key: string]: unknown;
 
@@ -43,9 +46,12 @@ export class CredentialDto {
   @ApiProperty({ description: 'The JSON-LD type of the credential.' })
   type: string[];
 
-  @IsString()
-  @ApiProperty({ description: 'A JSON-LD Verifiable Credential Issuer.' })
-  issuer: string;
+  @IsIssuer()
+  @ApiProperty({
+    description: 'A JSON-LD Verifiable Credential Issuer.',
+    oneOf: [{ $ref: getSchemaPath(IssuerDto) }, { type: 'string' }]
+  })
+  issuer: string | IssuerDto;
 
   @IsDateString()
   @ApiProperty({ description: 'The issuanceDate', example: '2022-09-21T11:49:03.205Z' })

@@ -659,6 +659,7 @@
         },
         "required": ["id"]
       },
+      "IssuerDto": { "type": "object", "properties": { "id": { "type": "string" } }, "required": ["id"] },
       "CredentialDto": {
         "type": "object",
         "properties": {
@@ -673,7 +674,10 @@
             "type": "array",
             "items": { "type": "string" }
           },
-          "issuer": { "type": "string", "description": "A JSON-LD Verifiable Credential Issuer." },
+          "issuer": {
+            "description": "A JSON-LD Verifiable Credential Issuer.",
+            "oneOf": [{ "$ref": "#/components/schemas/IssuerDto" }, { "type": "string" }]
+          },
           "issuanceDate": {
             "type": "string",
             "description": "The issuanceDate",
@@ -731,7 +735,10 @@
             "type": "array",
             "items": { "type": "string" }
           },
-          "issuer": { "type": "string", "description": "A JSON-LD Verifiable Credential Issuer." },
+          "issuer": {
+            "description": "A JSON-LD Verifiable Credential Issuer.",
+            "oneOf": [{ "$ref": "#/components/schemas/IssuerDto" }, { "type": "string" }]
+          },
           "issuanceDate": {
             "type": "string",
             "description": "The issuanceDate",

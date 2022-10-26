@@ -39,7 +39,7 @@ export interface Credential {
   /**
    * A JSON-LD Verifiable Credential Issuer.
    */
-  issuer: string;
+  issuer: string | { id: string };
 
   /**
    * The issuanceDate

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsPresentationDefinitionCredentialQuery } from './custom-validators/presentation-definition-credential-query.validator';
+import { IsPresentationDefinitionCredentialQuery } from './custom-validators';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmptyObject, ValidateNested } from 'class-validator';
 import { PresentationDefinitionDto } from './presentation-definition.dto';

@@ -69,7 +69,11 @@ export class CredentialsService implements CredentialVerifier {
   constructor(private didService: DIDService, private keyService: KeyService) {}
 
   async issueCredential(issueDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {
-    const verificationMethod = await this.getVerificationMethodForDid(issueDto.credential.issuer);
+    const verificationMethod = await this.getVerificationMethodForDid(
+      typeof issueDto.credential.issuer === 'string'
+        ? issueDto.credential.issuer
+        : issueDto.credential.issuer.id
+    );
     const key = await this.getKeyForVerificationMethod(verificationMethod.id);
     const proofOptions = this.mapVcApiIssueOptionsToSpruceIssueOptions(
       issueDto.options || ({} as IssueOptionsDto),
