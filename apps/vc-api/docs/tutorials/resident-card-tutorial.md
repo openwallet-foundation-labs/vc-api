@@ -864,6 +864,22 @@ As the review is submitted, the resident can continue the exchange to receive th
 
 To do this, return to the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange id}/{transaction id}` folder.
 Resend the request.
+
+**Request URL**
+
+Use the same `exchangeId` and `transactionId` as used in step [1.6  [Resident] Continue exchange by submitting the DID Auth proof](#16-resident-continue-exchange-by-submitting-the-did-auth-proof)
+
+`{VC API base url}/vc-api/exchanges/{exchange id}/{transaction id}`
+
+**HTTP Verb**
+
+`PUT`
+
+**Request Body**
+
+The same `DIDAuthentication` proof that was submitted in step 1.6
+
+**Sample Expected Response Body**
 The response should be similar to the following, where the `vp` contains the issued credential.
 
 ```json
@@ -924,6 +940,10 @@ The response should be similar to the following, where the `vp` contains the iss
     }
 }
 ```
+
+**Expected Response HTTP Status Code**
+
+`200 OK`
 
 ### 2. Permanent Resident Card verification
 
