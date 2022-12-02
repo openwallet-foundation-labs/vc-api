@@ -37,7 +37,11 @@ export const residentCardExchangeSuite = () => {
     // As issuer, configure credential issuance exchange
     // POST /exchanges
     const exchange = new ResidentCardIssuance(callbackUrl);
-    const issuanceCallbackScope = nock(callbackUrlBase).post(callbackUrlPath).reply(201);
+    const numHolderQueriesPriorToIssuance = 2;
+    const issuanceCallbackScope = nock(callbackUrlBase)
+      .post(callbackUrlPath)
+      .times(numHolderQueriesPriorToIssuance)
+      .reply(201);
     await request(app.getHttpServer())
       .post(`${vcApiBaseUrl}/exchanges`)
       .send(exchange.getExchangeDefinition())
@@ -67,7 +71,9 @@ export const residentCardExchangeSuite = () => {
     expect(didAuthVp).toBeDefined();
 
     // As holder, continue exchange by submitting did auth presention
-    await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true, true);
+    for (let i = 0; i < numHolderQueriesPriorToIssuance; i++) {
+      await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true, true);
+    }
     issuanceCallbackScope.done();
 
     // As the issuer, get the transaction

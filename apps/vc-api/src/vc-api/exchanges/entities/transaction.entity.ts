@@ -26,6 +26,7 @@ import { VpRequestEntity } from './vp-request.entity';
 import { CallbackConfiguration } from '../types/callback-configuration';
 import { PresentationSubmissionEntity } from './presentation-submission.entity';
 import { SubmissionVerifier } from '../types/submission-verifier';
+import { exhaustiveMatchGuard } from '../../exhaustiveMatchGuard';
 
 export class TransactionEntityException extends Error {
   constructor(message?: string) {
@@ -148,38 +149,44 @@ export class TransactionEntity {
     }
 
     const service = this.vpRequest.interact.service[0]; // TODO: Not sure how to handle multiple interaction services
+
     if (service.type === VpRequestInteractServiceType.mediatedPresentation) {
-      if (this.presentationReview.reviewStatus === PresentationReviewStatus.pendingSubmission) {
-        // TODO: should we allow overwrite of a previous submitted submission?
-        if (!this.presentationSubmission) {
-          this.presentationSubmission = new PresentationSubmissionEntity(presentation, verificationResult);
-        }
-        this.presentationReview.reviewStatus = PresentationReviewStatus.pendingReview;
-        return {
-          response: {
-            errors: [],
-            vpRequest: {
-              challenge: uuidv4(),
-              query: [],
-              interact: this.vpRequest.interact // Holder should query the same endpoint again to check if it has been reviewed
+      switch (this.presentationReview.reviewStatus) {
+        case PresentationReviewStatus.pendingSubmission:
+          // TODO: should we allow overwrite of a previous submitted submission?
+          if (!this.presentationSubmission) {
+            this.presentationSubmission = new PresentationSubmissionEntity(presentation, verificationResult);
+          }
+          this.presentationReview.reviewStatus = PresentationReviewStatus.pendingReview;
+          return {
+            response: {
+              errors: [],
+              vpRequest: this.vpRequest,
+              processingInProgress: true
             },
-            processingInProgress: true
-          },
-          callback: this.callback
-        };
-      }
-      if (
-        this.presentationReview.reviewStatus === PresentationReviewStatus.approved ||
-        this.presentationReview.reviewStatus === PresentationReviewStatus.rejected
-      ) {
-        return {
-          response: {
-            errors: [],
-            vp: this.presentationReview?.VP,
-            processingInProgress: false
-          },
-          callback: []
-        };
+            callback: this.callback
+          };
+        case PresentationReviewStatus.pendingReview:
+          return {
+            response: {
+              errors: [],
+              vpRequest: this.vpRequest,
+              processingInProgress: true
+            },
+            callback: this.callback
+          };
+        case PresentationReviewStatus.approved:
+        case PresentationReviewStatus.rejected:
+          return {
+            response: {
+              errors: [],
+              vp: this.presentationReview?.VP,
+              processingInProgress: false
+            },
+            callback: []
+          };
+        default:
+          return exhaustiveMatchGuard(this.presentationReview.reviewStatus);
       }
     }
     if (service.type === VpRequestInteractServiceType.unmediatedPresentation) {
