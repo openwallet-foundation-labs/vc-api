@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2021, 2022 Energy Web Foundation
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default () => ({
-  baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+import * as Joi from 'joi';
+
+export const envVarsValidationSchema = Joi.object({
+  NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
+  PORT: Joi.number().integer().positive().default(3000),
+  BASE_URL: Joi.string().uri().default('http://localhost:3000')
 });

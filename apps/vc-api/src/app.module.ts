@@ -15,16 +15,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { KeyModule } from './key/key.module';
 import { DidModule } from './did/did.module';
 import { VcApiModule } from './vc-api/vc-api.module';
 import { TypeOrmSQLiteModule } from './in-memory-db';
-import config from './config/configuration';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SeederModule } from './seeder/seeder.module';
+import { envVarsValidationSchema } from './config/env-vars-validation-schema';
+
+let config: DynamicModule;
+
+try {
+  config = ConfigModule.forRoot({
+    isGlobal: true,
+    validationOptions: {
+      allowUnknown: true,
+      abortEarly: false
+    },
+    validationSchema: envVarsValidationSchema
+  });
+} catch (err) {
+  console.log(err.toString());
+  console.log('exiting');
+  // eslint-disable-next-line no-process-exit
+  process.exit(1);
+}
 
 @Module({
   imports: [
@@ -32,7 +50,7 @@ import { SeederModule } from './seeder/seeder.module';
     KeyModule,
     DidModule,
     VcApiModule,
-    ConfigModule.forRoot({ load: [config] }),
+    config,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../..', 'static-assets', '.well-known'),
       serveStaticOptions: {

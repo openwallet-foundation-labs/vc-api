@@ -74,7 +74,7 @@ export class ExchangeService {
       throw new NotFoundException(`no exchange definition found for this exchangeId=${exchangeId}`);
     }
 
-    const baseUrl = this.configService.get<string>('baseUrl');
+    const baseUrl = this.configService.get<string>('BASE_URL');
 
     const baseWithControllerPath = `${baseUrl}${API_DEFAULT_VERSION_PREFIX}/vc-api`;
     const transaction = exchange.start(baseWithControllerPath);
