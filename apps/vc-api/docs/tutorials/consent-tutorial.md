@@ -152,18 +152,18 @@ For further documentation regarding the `presentationDefinition`, can be seen [h
                                       },
                                       "additionalProperties":true
                                   }
-                                  },
-                                  {
-                                    "path":["$.type"],
-                                    "filter":{
-                                        "type":"array",
-                                        "items":[
+                                },
+                                {
+                                  "path":["$.type"],
+                                  "filter":{
+                                      "type":"array",
+                                      "items":[
                                           {
                                               "const":"VerifiableCredential"
                                           }
-                                        ]
-                                    }
+                                      ]
                                   }
+                                }
                               ]
                           }
                         }
@@ -416,6 +416,10 @@ This can be done by providing the `constraints` object from the input descriptor
 
 Open the `Converter Controller input Descriptor To Credential` request in the "Input Descriptor to Credential" collection.
 **Change `{{baseUrl}}` to `{{idcUrl}}` in the request URL**, so that it matches the Postman environment.
+
+**Note** `additionalProperties: true` in the `$.credentialSubject` filter should be changed to `false`.
+It is required to be true in the presentation definition as `id` must be added during credential issuance.
+However, if set to `true` during credential generation, then the `input-descriptor-to-credential` will add additional unnecessary data. 
 
 Send the request as described below.
 
