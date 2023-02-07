@@ -1045,74 +1045,77 @@ Copy this URL, including the domain, into the exchange definition below.
 ```json
 {
    "exchangeId":"<SOME UNIQUE ID>",
-   "query":[
-         {
-            "type":"PresentationDefinition",
-            "credentialQuery":[
-               {
-                  "presentationDefinition":{
-                     "id":"286bc1e0-f1bd-488a-a873-8d71be3c690e",
-                     "input_descriptors":[
-                        {
-                           "id":"PermanentResidentCard",
-                           "name":"PermanentResidentCard",
-                           "purpose":"PermanentResidentCard",
-                           "constraints":{
-                              "fields":[
-                                 {
-                                    "path":[
-                                       "$.type"
-                                    ],
-                                    "filter":{
-                                       "type":"array",
-                                       "contains":{
-                                          "type":"string",
-                                          "const":"PermanentResidentCard"
-                                       }
+    "query":[
+      {
+         "type":"PresentationDefinition",
+         "credentialQuery":[
+            {
+               "presentationDefinition":{
+                  "id":"286bc1e0-f1bd-488a-a873-8d71be3c690e",
+                  "submission_requirements":[
+                     {
+                        "name":"Consent and Resident-card Exchange",
+                        "rule":"pick",
+                        "min":2,
+                        "from":"A"
+                     }
+                  ],
+                  "input_descriptors":[
+                     {
+                        "id":"PermanentResidentCard",
+                        "name":"PermanentResidentCard",
+                        "purpose":"PermanentResidentCard",
+                        "group":[
+                           "A"
+                        ],
+                        "constraints":{
+                           "fields":[
+                              {
+                                 "path":[
+                                    "$.type"
+                                 ],
+                                 "filter":{
+                                    "type":"array",
+                                    "contains":{
+                                       "type":"string",
+                                       "const":"PermanentResidentCard"
                                     }
                                  }
-                              ]
-                           }
+                              }
+                           ]
                         }
-                     ]
-                  }
-               }
-            ]
-         },
-         {
-            "type":"PresentationDefinition",
-            "credentialQuery":[
-               {
-                  "presentationDefinition":{
-                     "id":"286bc1e0-f1bd-488a-a873-8d71be3c690e",
-                     "input_descriptors":[
-                        {
-                           "id":"consent_credential",
-                           "name":"Consent Credential",
-                           "purpose":"One consent credential is must for this presentation",
-                           "constraints":{
-                              "fields":[
-                                 {
-                                    "path":[
-                                       "$.type"
-                                    ],
-                                    "filter":{
-                                       "type":"array",
-                                       "contains":{
-                                          "type":"string",
-                                          "const":"ConsentCredential"
-                                       }
+                     },
+                     {
+                        "id":"ConsentCredential",
+                        "name":"ConsentCredential",
+                        "purpose":"One consent credential is required for this presentation",
+                        "group":[
+                           "A"
+                        ],
+                        "constraints":{
+                           "subject_is_issuer":"required",
+                           "fields":[
+                              {
+                                 "path":[
+                                    "$.type"
+                                 ],
+                                 "filter":{
+                                    "type":"array",
+                                    "contains":{
+                                       "type":"string",
+                                       "const":"ConsentCredential"
                                     }
                                  }
-                              ]
-                           }
+                              }
+                           ]
                         }
-                     ]
-                  }
+                     }
+                  ]
                }
-            ]
-         }
-      ],
+            }
+         ]
+      }
+   ],
    "interactServices":[
       {
          "type":"UnmediatedHttpPresentationService2021"
@@ -1169,86 +1172,89 @@ If using the Postman collection request, fill in the `exchangeId` param to be th
 A similar json should be returned in the response body:
 ```json
 {
-   "vpRequest":{
-      "challenge":"7c66d573-4da6-4e13-b52f-9b5c844d6d52",
-      "query":[
-         {
-            "type":"PresentationDefinition",
-            "credentialQuery":[
-               {
-                  "presentationDefinition":{
-                     "id":"286bc1e0-f1bd-488a-a873-8d71be3c690e",
-                     "input_descriptors":[
-                        {
-                           "id":"PermanentResidentCard",
-                           "name":"PermanentResidentCard",
-                           "purpose":"PermanentResidentCard",
-                           "constraints":{
-                              "fields":[
-                                 {
-                                    "path":[
-                                       "$.type"
-                                    ],
-                                    "filter":{
-                                       "type":"array",
-                                       "contains":{
-                                          "type":"string",
-                                          "const":"PermanentResidentCard"
-                                       }
-                                    }
-                                 }
-                              ]
-                           }
+  "vpRequest": {
+    "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
+    "query": [
+      {
+        "type": "PresentationDefinition",
+        "credentialQuery": [
+          {
+            "presentationDefinition": {
+              "id": "286bc1e0-f1bd-488a-a873-8d71be3c690e",
+              "submission_requirements": [
+                {
+                  "name": "Consent and Resident-card Exchange",
+                  "rule": "pick",
+                  "min": 2,
+                  "from": "A"
+                }
+              ],
+              "input_descriptors": [
+                {
+                  "id": "PermanentResidentCard",
+                  "name": "PermanentResidentCard",
+                  "purpose": "PermanentResidentCard",
+                  "group": [
+                    "A"
+                  ],
+                  "constraints": {
+                    "fields": [
+                      {
+                        "path": [
+                          "$.type"
+                        ],
+                        "filter": {
+                          "type": "array",
+                          "contains": {
+                            "type": "string",
+                            "const": "PermanentResidentCard"
+                          }
                         }
-                     ]
+                      }
+                    ]
                   }
-               }
-            ]
-         },
-         {
-            "type":"PresentationDefinition",
-            "credentialQuery":[
-               {
-                  "presentationDefinition":{
-                     "id":"286bc1e0-f1bd-488a-a873-8d71be3c690e",
-                     "input_descriptors":[
-                        {
-                           "id":"consent_credential",
-                           "name":"Consent Credential",
-                           "purpose":"One consent credential is must for this presentation",
-                           "constraints":{
-                              "fields":[
-                                 {
-                                    "path":[
-                                       "$.type"
-                                    ],
-                                    "filter":{
-                                       "type":"array",
-                                       "contains":{
-                                          "type":"string",
-                                          "const":"ConsentCredential"
-                                       }
-                                    }
-                                 }
-                              ]
-                           }
+                },
+                {
+                  "id": "ConsentCredential",
+                  "name": "ConsentCredential",
+                  "purpose": "One consent credential is required for this presentation",
+                  "group": [
+                    "A"
+                  ],
+                  "constraints": {
+                    "subject_is_issuer": "required",
+                    "fields": [
+                      {
+                        "path": [
+                          "$.type"
+                        ],
+                        "filter": {
+                          "type": "array",
+                          "contains": {
+                            "type": "string",
+                            "const": "ConsentCredential"
+                          }
                         }
-                     ]
+                      }
+                    ]
                   }
-               }
-            ]
-         }
-      ],
-      "interact":{
-         "service":[
-            {
-               "type":"UnmediatedHttpPresentationService2021",
-               "serviceEndpoint":"https://vc-api-dev.energyweb.org/vc-api/exchanges/34712646/b38b7c65-f0d7-4d00-b026-f2704ff716cc"
+                }
+              ]
             }
-         ]
+          }
+        ]
       }
-   },
-   "processingInProgress":false
+    ],
+    "interact": {
+      "service": [
+        {
+          "type": "UnmediatedHttpPresentationService2021",
+          "serviceEndpoint": "https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/b6754fca-f123-43ce-8bd2-92074f05a29b/25390400-e995-4f34-8f59-5820a8ce7816"
+        }
+      ]
+    }
+  },
+  "processingInProgress": false
 }
 ```
 The `challenge` value and the final fragment of the `serviceEndpoint`, which is the `transaction id`, should be different.
@@ -1391,7 +1397,7 @@ For example, your filled json would look like:
    "options":{
       "verificationMethod":"did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
       "proofPurpose":"authentication",
-      "challenge":"c5de7960-bec2-46c3-8db1-4e1cd7e32a4d"
+      "challenge":"8e71f026-cf02-4a28-ba62-14eefa26c9d0"
    }
 }
 ```
@@ -1421,20 +1427,20 @@ The response should be a verifiable presentation, similar to the one below.
       ],
       "credentialSubject": {
         "id": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-        "lprNumber": "999-999-999",
-        "lprCategory": "C09",
         "commuterClassification": "C1",
-        "birthCountry": "Bahamas",
-        "birthDate": "1958-07-17",
-        "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
-        "residentSince": "2015-01-01",
         "givenName": "JOHN",
-        "familyName": "SMITH",
+        "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
         "type": [
           "PermanentResident",
           "Person"
         ],
-        "gender": "Male"
+        "familyName": "SMITH",
+        "birthDate": "1958-07-17",
+        "gender": "Male",
+        "lprCategory": "C09",
+        "lprNumber": "999-999-999",
+        "residentSince": "2015-01-01",
+        "birthCountry": "Bahamas"
       },
       "issuer": "did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
       "issuanceDate": "2019-12-03T12:19:52Z",
@@ -1451,8 +1457,8 @@ The response should be a verifiable presentation, similar to the one below.
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
         {
-          "elia": "https://www.eliagroup.eu/ld-context-2022#",
-          "consent": "elia:consent"
+          "consent": "elia:consent",
+          "elia": "https://www.eliagroup.eu/ld-context-2022#"
         }
       ],
       "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -1478,10 +1484,10 @@ The response should be a verifiable presentation, similar to the one below.
   "proof": {
     "type": "Ed25519Signature2018",
     "proofPurpose": "authentication",
-    "challenge": "c5de7960-bec2-46c3-8db1-4e1cd7e32a4d",
+    "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
     "verificationMethod": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-    "created": "2023-01-30T09:20:58.180Z",
-    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..Gw8_75kcUAkB6NV43STd-fIdVslL9sUVQ_HqPbWYqJyHPj7crfRKKuRA89CPxa46Iac5XNXq-hHTrKZU0lOyBA"
+    "created": "2023-02-07T05:47:47.304Z",
+    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..tCIS0gexf5g6CyweXFyQAUtgWm8nrKq0cpFW6Bc_Mnxic_dFEnby-KJhBn9aWEwExmDFLvZRHogvBsLTNaQsDQ"
   },
   "holder": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC"
 }
@@ -1522,10 +1528,10 @@ For reference, the callback notification that would have been received in a conf
 
 ```json
 {
-  "transactionId": "c13de3c9-23ed-4a2c-afd7-ecd36d46406b",
-  "exchangeId": "da977be7-8f9a-4907-b421-61690a67383a",
+  "transactionId": "25390400-e995-4f34-8f59-5820a8ce7816",
+  "exchangeId": "b6754fca-f123-43ce-8bd2-92074f05a29b",
   "vpRequest": {
-    "challenge": "c5de7960-bec2-46c3-8db1-4e1cd7e32a4d",
+    "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
     "query": [
       {
         "type": "PresentationDefinition",
@@ -1535,9 +1541,12 @@ For reference, the callback notification that would have been received in a conf
               "id": "286bc1e0-f1bd-488a-a873-8d71be3c690e",
               "input_descriptors": [
                 {
-                  "id": "permanent_resident_card",
-                  "name": "Permanent Resident Card",
-                  "purpose": "We can only allow permanent residents into the application",
+                  "id": "PermanentResidentCard",
+                  "name": "PermanentResidentCard",
+                  "purpose": "PermanentResidentCard",
+                  "group": [
+                    "A"
+                  ],
                   "constraints": {
                     "fields": [
                       {
@@ -1554,24 +1563,16 @@ For reference, the callback notification that would have been received in a conf
                       }
                     ]
                   }
-                }
-              ]
-            }
-          }
-        ]
-      },
-      {
-        "type": "PresentationDefinition",
-        "credentialQuery": [
-          {
-            "presentationDefinition": {
-              "id": "286bc1e0-f1bd-488a-a873-8d71be3c690f",
-              "input_descriptors": [
+                },
                 {
-                  "id": "consent_credential",
-                  "name": "Consent Credential",
-                  "purpose": "One consent credential is must for this presentation",
+                  "id": "ConsentCredential",
+                  "name": "ConsentCredential",
+                  "purpose": "One consent credential is required for this presentation",
+                  "group": [
+                    "A"
+                  ],
                   "constraints": {
+                    "subject_is_issuer": "required",
                     "fields": [
                       {
                         "path": [
@@ -1598,7 +1599,7 @@ For reference, the callback notification that would have been received in a conf
       "service": [
         {
           "type": "UnmediatedHttpPresentationService2021",
-          "serviceEndpoint": "https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/da977be7-8f9a-4907-b421-61690a67383a/c13de3c9-23ed-4a2c-afd7-ecd36d46406b"
+          "serviceEndpoint": "https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/b6754fca-f123-43ce-8bd2-92074f05a29b/25390400-e995-4f34-8f59-5820a8ce7816"
         }
       ]
     }
@@ -1632,20 +1633,20 @@ For reference, the callback notification that would have been received in a conf
           ],
           "credentialSubject": {
             "id": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-            "lprNumber": "999-999-999",
-            "lprCategory": "C09",
             "commuterClassification": "C1",
-            "birthCountry": "Bahamas",
-            "birthDate": "1958-07-17",
-            "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
-            "residentSince": "2015-01-01",
             "givenName": "JOHN",
-            "familyName": "SMITH",
+            "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
             "type": [
               "PermanentResident",
               "Person"
             ],
-            "gender": "Male"
+            "familyName": "SMITH",
+            "birthDate": "1958-07-17",
+            "gender": "Male",
+            "lprCategory": "C09",
+            "lprNumber": "999-999-999",
+            "residentSince": "2015-01-01",
+            "birthCountry": "Bahamas"
           },
           "issuer": "did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
           "issuanceDate": "2019-12-03T12:19:52Z",
@@ -1662,8 +1663,8 @@ For reference, the callback notification that would have been received in a conf
           "@context": [
             "https://www.w3.org/2018/credentials/v1",
             {
-              "elia": "https://www.eliagroup.eu/ld-context-2022#",
-              "consent": "elia:consent"
+              "consent": "elia:consent",
+              "elia": "https://www.eliagroup.eu/ld-context-2022#"
             }
           ],
           "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -1689,10 +1690,10 @@ For reference, the callback notification that would have been received in a conf
       "proof": {
         "type": "Ed25519Signature2018",
         "proofPurpose": "authentication",
-        "challenge": "c5de7960-bec2-46c3-8db1-4e1cd7e32a4d",
+        "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
         "verificationMethod": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-        "created": "2023-01-30T09:20:58.180Z",
-        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..Gw8_75kcUAkB6NV43STd-fIdVslL9sUVQ_HqPbWYqJyHPj7crfRKKuRA89CPxa46Iac5XNXq-hHTrKZU0lOyBA"
+        "created": "2023-02-07T05:47:47.304Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..tCIS0gexf5g6CyweXFyQAUtgWm8nrKq0cpFW6Bc_Mnxic_dFEnby-KJhBn9aWEwExmDFLvZRHogvBsLTNaQsDQ"
       },
       "holder": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC"
     }

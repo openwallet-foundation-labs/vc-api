@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { Rules } from '@sphereon/pex-models';
 import { plainToClass } from 'class-transformer';
 import { ExchangeDefinitionDto } from '../../../../src/vc-api/exchanges/dtos/exchange-definition.dto';
 import { VpRequestInteractServiceType } from '../../../../src/vc-api/exchanges/types/vp-request-interact-service-type';
@@ -43,10 +44,25 @@ export class ResidentCardPresentation {
             {
               presentationDefinition: {
                 id: '286bc1e0-f1bd-488a-a873-8d71be3c690e',
+                submission_requirements: [
+                  {
+                    name: 'Application requirements',
+                    purpose: 'Application requires user satisfies certain criteries',
+                    rule: Rules.All,
+                    from: 'A'
+                  },
+                  {
+                    name: 'User consent',
+                    purpose: 'User should give consent',
+                    rule: Rules.All,
+                    from: 'B'
+                  }
+                ],
                 input_descriptors: [
                   {
                     id: 'permanent_resident_card',
                     name: 'Permanent Resident Card',
+                    group: ['A'],
                     purpose: 'We can only allow permanent residents into the application',
                     constraints: {
                       fields: [
@@ -66,6 +82,7 @@ export class ResidentCardPresentation {
                   {
                     id: 'consent_credential',
                     name: 'Consent Credential',
+                    group: ['B'],
                     purpose: 'One consent credential is must for this presentation',
                     constraints: {
                       fields: [

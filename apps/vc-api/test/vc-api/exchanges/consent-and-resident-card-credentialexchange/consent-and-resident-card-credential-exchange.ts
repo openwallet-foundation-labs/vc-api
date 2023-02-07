@@ -114,7 +114,7 @@ export class ConsentandResidentCardCredentialIssuance {
         }
       ],
       id: 'urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e',
-      type: ['VerifiableCredential'],
+      type: ['VerifiableCredential', 'ConsentCredential'],
       credentialSubject: {
         consent: 'I consent to such and such',
         id: holderDID
