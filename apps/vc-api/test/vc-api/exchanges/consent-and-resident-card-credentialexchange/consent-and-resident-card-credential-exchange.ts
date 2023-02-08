@@ -196,32 +196,3 @@ export class ConsentandResidentCardCredentialIssuance {
     };
   }
 }
-
-// {
-//   "credential": {
-//       "@context": [
-//         "https://www.w3.org/2018/credentials/v1",
-//         "https://w3id.org/citizenship/v1"
-//       ],
-//       "id": "https://issuer.oidp.uscis.gov/credentials/83627465",
-//       "type": ["VerifiableCredential", "PermanentResidentCard"],
-//       "issuer":"did:key:z6Mkfh7Ac2ub5A5vMb3iUnWnWRey54CMYqsD14edvQTJKKNU",
-//       "issuanceDate": "2019-12-03T12:19:52Z",
-//       "expirationDate": "2039-12-03T12:19:52Z",
-//       "credentialSubject": {
-//         "id":"did:key:z6MksGpmJLgzBtCaGVdQ9wuET2JUK2Qi4URPuYbruD6Rko35",
-//         "type": ["PermanentResident", "Person"],
-//         "givenName": "JOHN",
-//         "familyName": "SMITH",
-//         "gender": "Male",
-//         "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
-//         "residentSince": "2015-01-01",
-//         "lprCategory": "C09",
-//         "lprNumber": "999-999-999",
-//         "commuterClassification": "C1",
-//         "birthCountry": "Bahamas",
-//         "birthDate": "1958-07-17"
-//       }
-//     },
-//   "options": {}
-// }
