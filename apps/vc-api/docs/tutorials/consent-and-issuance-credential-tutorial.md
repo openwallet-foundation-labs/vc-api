@@ -18,7 +18,9 @@
 # Tutorial
 
 ## Business overview
-The business objective of this tutorial is to demonstrate how to present multiple credentials issued to / by the holder. For this tutorial we would use a self signed (consent) Verifiable Credential (VC) and another VC issued to the user (holder) connected to a portal that we will call "authority portal".
+The business objective of this tutorial is to demonstrate how a verifier can request multiple credentials and how a holder can present multiple credentials in a presentation that meets this request. 
+
+For this tutorial we would use a self signed (consent) Verifiable Credential (VC) and another VC issued to the user (holder) connected to a portal that we will call "authority portal".
 
 In the example below, we will issue a permanent residency card to a user we will call "resident". We use the context "https://w3id.org/residentship/v1" which describes the data of a VC of type "PermanentResidentCard". As second credential we will use a consent credential (self signed) by the user (holder).
 
@@ -244,9 +246,9 @@ Send the request as described below.
 
 `201 Created`
 
-### 3. Permanent Resident Card verification
+### 2. Permanent Resident Card verification
 
-#### 3.1 [Verifier] Configure Credential Exchange
+#### 2.1 [Verifier] Configure Credential Exchange
 
 The Verifier needs to configure the parameters of the credential exchange by sending an [Exchange Definition](../exchanges.md#exchange-definitions).
 To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/exchanges` and send with the json below.
@@ -371,7 +373,7 @@ Copy this URL, including the domain, into the exchange definition below.
 
 `201 Created`
 
-#### 3.2 [Verifier] Provide an exchange invitation to the resident
+#### 2.2 [Verifier] Provide an exchange invitation to the resident
 
 Having configured the exchange, the Verifier must then ask the resident to present the required credentials.
 
@@ -386,7 +388,7 @@ Having configured the exchange, the Verifier must then ask the resident to prese
 }
 ```
 
-#### 3.3 [Resident] Initiate the presentation exchange
+#### 2.3 [Resident] Initiate the presentation exchange
 
 Initiate the credential exchange by POSTing to the `url` directly in Postman or by navigating to the `Vc Api Controller initiate Exchange` request in the collection.
 Send the request as described below.
@@ -507,7 +509,7 @@ This is providing the location at which we can continue the credential request f
 
 `201 Created`
       
-#### 3.4 [Resident] Create the required presentation
+#### 2.4 [Resident] Create the required presentation
 
 Open the `Vc Api Controller prove Presentation` request under the `vc-api/presentations/prove` folder.
 
@@ -734,7 +736,7 @@ The response should be a verifiable presentation, similar to the one below.
 
 `201 Created`
 
-#### 3.5 [Resident] Continue the exchange
+#### 2.5 [Resident] Continue the exchange
 
 Continue the exchange by sending the VP in response to the VP Request that was previously received.
 Open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange Id}` folder.
@@ -759,7 +761,7 @@ In the request body, copy the VP that was obtained from the previous step.
 
 `200 OK`
 
-#### 3.6 [Verifier] Act on Submitted Presentation
+#### 2.6 [Verifier] Act on Submitted Presentation
 
 For reference, the callback notification that would have been received in a configured callback for this presentation would be:
 
