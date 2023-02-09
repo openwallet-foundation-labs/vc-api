@@ -104,7 +104,6 @@ export class ConsentandResidentCardCredentialIssuance {
   }
 
   private fillConsentCredential(holderDID: string): CredentialDto {
-    // This hard-coded example is from https://w3c-ccg.github.io/citizenship-vocab/#example
     return {
       '@context': [
         'https://www.w3.org/2018/credentials/v1',
@@ -166,7 +165,6 @@ export class ConsentandResidentCardCredentialIssuance {
   }
 
   private fillResidentCardCredential(issuingDID: string, holderDID: string): CredentialDto {
-    // This hard-coded example is from https://w3c-ccg.github.io/citizenship-vocab/#example
     return {
       '@context': [
         'https://www.w3.org/2018/credentials/v1',
