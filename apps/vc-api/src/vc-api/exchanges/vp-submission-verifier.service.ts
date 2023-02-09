@@ -116,10 +116,8 @@ export class VpSubmissionVerifierService implements SubmissionVerifier {
       let partialErrors;
 
       try {
-        ({ errors: partialErrors } = pex.evaluatePresentation(
-          presentationDefinition,
-          presentation as IPresentation
-        ));
+        const { errors } = pex.evaluatePresentation(presentationDefinition, presentation as IPresentation);
+        partialErrors = errors;
       } catch (err) {
         if (typeof err === 'string') {
           partialErrors = [{ message: err }];

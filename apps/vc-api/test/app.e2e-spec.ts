@@ -28,6 +28,7 @@ import { keySuite } from './key/key.e2e-suite';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ExchangeEntity } from '../src/vc-api/exchanges/entities/exchange.entity';
 import { API_DEFAULT_VERSION, API_DEFAULT_VERSION_PREFIX } from '../src/setup';
+import { consentAndResidentCardExchangeSuite } from './vc-api/exchanges/consent-and-resident-card-credentialexchange/consent-and-resident-card.e2e-suite';
 
 // Increasing timeout for debugging
 // Should only affect this file https://jestjs.io/docs/jest-object#jestsettimeouttimeout
@@ -62,6 +63,7 @@ describe('App (e2e)', () => {
   describe('VC-API (e2e)', vcApiSuite);
   describe('Resident Card (e2e)', residentCardExchangeSuite);
   describe('Rebeam (e2e)', rebeamExchangeSuite);
+  describe('Consent and Resident Card credential (e2e)', consentAndResidentCardExchangeSuite);
 });
 
 /**
