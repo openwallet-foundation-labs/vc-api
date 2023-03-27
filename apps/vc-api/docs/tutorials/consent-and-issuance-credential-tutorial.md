@@ -26,19 +26,15 @@ In the example below, we will issue a permanent residency card to a user we will
 
 ### Business workflows
 
-#### Issuance Business workflow
-1. For the resident credential, the authority portal authenticates the current user as a known resident.
-1. The resident requests a "PermanentResidentCard" credential on the autority portal.
-1. The autority portal displays a QR code for the citizen to scan with his mobile wallet.
-1. The citizen's mobile wallet provides the autority portal with a presentation to prove control over a DID.
-1. The authority portal reviews the presentation and issues a "PermanentResidentCard" credential containing the resident's information.
-1. The citizen's mobile wallet contacts the autority portal again to receive the "PermanentResidentCard".
-1. The user issues a self signed consent Verifiable Credential as the second credential.
+#### Issuance and Consent Credential Business workflow
+1. The resident creates their DID.
+2. The resident obtains a "PermanentResidentCard" from the authority.
 
 #### Presentation Business workflow
 1. The authority portal displays a QR code requesting a presentation containing the "PermanentResidentCard" and "ConsentCredential" credential.
-1. The resident scans the QR code with their mobile wallet and prompts the user for permission to present the "PermanentResidentCard" and "ConsentCredential" credential.
-1. The resident confirms and the presentation is submitted to the authority portal who can then authorize the resident.
+2. The resident creates a self-signed consent Verifiable Credential as the second credential.
+3. The resident scans the QR code with their mobile wallet and prompts the user for permission to present the "PermanentResidentCard" and "ConsentCredential" credential.
+4. The resident confirms and the presentation is submitted to the authority portal who can then authorize the resident.
 
 ## Technical overview
 From a technical point of view, in this tutorial, we have access to the server API but no mobile wallet is available. So we will use the server API for both roles of the portal and the resident's mobile wallet.
@@ -46,17 +42,17 @@ From a technical point of view, in this tutorial, we have access to the server A
 ### Technical workflows
 
 #### 1. Credential Issuance workflow
-- [1.1  [Resident] Create a DID](#11-resident-create-a-did)
+- [1.1 [Resident] Create a DID](#11-resident-create-a-did)
 - [1.2 [Resident] Obtain a ResidentCard credential](#12-obtain-permanentresidentcard-credential)
-- [1.3 [Resident] Issue a self-signed credential](#13-resident-issue-a-self-signed-credential)
 
 #### 2. Presentation workflow
 - [2.1  [Verifier] Configure Credential Exchange](#21-verifier-configure-credential-exchange)
 - [2.2  [Verifier] Provide an exchange invitation to the resident](#22-verifier-provide-an-exchange-invitation-to-the-resident)
 - [2.3  [Resident] Initiate the presentation exchange](#23-resident-initiate-the-presentation-exchange)
-- [2.4  [Resident] Create the required presentation](#24-resident-create-the-required-presentation)
-- [2.5  [Resident] Continue the exchange](#25-resident-continue-the-exchange)
-- [2.6 [Verifier] Act on Submitted Presentation](#26-verifier-act-on-submitted-presentation)
+- [2.4  [Resident] Issue a self-signed credential](#24-resident-issue-a-self-signed-credential)
+- [2.5  [Resident] Create the required presentation](#24-resident-create-the-required-presentation)
+- [2.6  [Resident] Continue the exchange](#25-resident-continue-the-exchange)
+- [2.7  [Verifier] Act on Submitted Presentation](#26-verifier-act-on-submitted-presentation)
 
 ## Overview and Objective
 
@@ -123,6 +119,8 @@ Response body should be similar to the one below but with a different `did`.
 
 Using the above created `DID` get a ResidentCard Credential using [resident-card-tutorial](./resident-card-tutorial.md).
 
+Kindly follow all steps of [issuance workflow](./resident-card-tutorial.md/#1-issuance-workflow) except [creating a new `DID`](./resident-card-tutorial.md/#14-resident-create-a-did).
+
 **Sample ResidentCard Credential**
 
 ```json
@@ -166,87 +164,7 @@ Using the above created `DID` get a ResidentCard Credential using [resident-card
 }
 ```
 
-#### 1.3 [Resident] Issue a self-signed credential
-
-The consenter/resident can sign the credential to create a self-signed verifiable credential.
-The consenter/resident should add the following fields to the credential received in the previous step:
-- `issuer`: This should be the DID generated in a previous step
-- `credential.credentialSubject.id`: This should be the DID generated in a previous step
-- `issuanceDate`: This should be the date at which the credential is being issued
-
-Send the request as described below.
-
-**Request URL**
-
-`{VC API base url}/v1/vc-api/credentials/issue`
-
-**HTTP Verb**
-
-`POST`
-
-**Request Body**
-
-```json
-{
-    "credential": {
-        "@context": [
-            "https://www.w3.org/2018/credentials/v1",
-            {
-                "elia": "https://www.eliagroup.eu/ld-context-2022#",
-                "consent": "elia:consent"
-            }
-        ],
-        "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
-        "type": [
-            "VerifiableCredential", "ConsentCredential"
-        ],
-        "credentialSubject": {
-            "consent": "I consent to such and such",
-            "id": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd"
-        },
-        "issuer": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
-        "issuanceDate":"2022-10-03T12:19:52Z"
-    },
-    "options": {}
-}
-```
-
-**Sample Expected Response Body**
-
-```json
-{
-    "@context": [
-        "https://www.w3.org/2018/credentials/v1",
-        {
-            "elia": "https://www.eliagroup.eu/ld-context-2022#",
-            "consent": "elia:consent"
-        }
-    ],
-    "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
-    "type": [
-        "VerifiableCredential", "ConsentCredential"
-    ],
-    "credentialSubject": {
-        "id": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
-        "consent": "I consent to such and such"
-    },
-    "issuer": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
-    "issuanceDate": "2022-10-03T12:19:52Z",
-    "proof": {
-        "type": "Ed25519Signature2018",
-        "proofPurpose": "assertionMethod",
-        "verificationMethod": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd#z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
-        "created": "2022-08-19T13:06:33.005Z",
-        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..6r3J6qIohC6NRdXiWYWdJz0igFV2f6WSnDIvqUDnM5Qy7vU8UugdlGJiJ4SleiiNs7Hk-jiRprDXaazKpSrbCw"
-    }
-}
-```
-
-**Expected Response HTTP Status Code**
-
-`201 Created`
-
-### 2. Permanent Resident Card verification
+### 2. Permanent Resident Card and Consent Credential verification
 
 #### 2.1 [Verifier] Configure Credential Exchange
 
@@ -278,7 +196,7 @@ With this service, requests are saved to a dedicated location for later review.
 Please only use this service for this tutorial (or other non-production applications).
 
 To use the webhook.site service with this tutorial, use a dedicated endpoint url generated for you after entering
-the site. It should looke similar to `https://webhook.site/efb19fb8-2579-4e1b-8614-d5a03edaaa7a`
+the site. It should look similar to `https://webhook.site/efb19fb8-2579-4e1b-8614-d5a03edaaa7a`
 Copy this URL, including the domain, into the exchange definition below.
 
 ```json
@@ -508,8 +426,89 @@ This is providing the location at which we can continue the credential request f
 **Expected Response HTTP Status Code**
 
 `201 Created`
+
+#### 2.4 [Resident] Issue a self-signed credential
+
+The consenter/resident can sign the credential to create a self-signed verifiable credential with the required information requested by the verifier.
+
+The consenter/resident should add the following fields to the credential received in the previous step:
+- `issuer`: This should be the DID generated in a previous step
+- `credential.credentialSubject.id`: This should be the DID generated in a previous step
+- `issuanceDate`: This should be the date at which the credential is being issued
+
+Send the request as described below.
+
+**Request URL**
+
+`{VC API base url}/v1/vc-api/credentials/issue`
+
+**HTTP Verb**
+
+`POST`
+
+**Request Body**
+
+```json
+{
+    "credential": {
+        "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            {
+                "elia": "https://www.eliagroup.eu/ld-context-2022#",
+                "consent": "elia:consent"
+            }
+        ],
+        "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
+        "type": [
+            "VerifiableCredential", "ConsentCredential"
+        ],
+        "credentialSubject": {
+            "consent": "I consent to such and such",
+            "id": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd"
+        },
+        "issuer": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
+        "issuanceDate":"2022-10-03T12:19:52Z"
+    },
+    "options": {}
+}
+```
+
+**Sample Expected Response Body**
+
+```json
+{
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        {
+            "elia": "https://www.eliagroup.eu/ld-context-2022#",
+            "consent": "elia:consent"
+        }
+    ],
+    "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
+    "type": [
+        "VerifiableCredential", "ConsentCredential"
+    ],
+    "credentialSubject": {
+        "id": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
+        "consent": "I consent to such and such"
+    },
+    "issuer": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
+    "issuanceDate": "2022-10-03T12:19:52Z",
+    "proof": {
+        "type": "Ed25519Signature2018",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd#z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
+        "created": "2022-08-19T13:06:33.005Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..6r3J6qIohC6NRdXiWYWdJz0igFV2f6WSnDIvqUDnM5Qy7vU8UugdlGJiJ4SleiiNs7Hk-jiRprDXaazKpSrbCw"
+    }
+}
+```
+
+**Expected Response HTTP Status Code**
+
+`201 Created`
       
-#### 2.4 [Resident] Create the required presentation
+#### 2.5 [Resident] Create the required presentation
 
 Open the `Vc Api Controller prove Presentation` request under the `vc-api/presentations/prove` folder.
 
@@ -736,7 +735,7 @@ The response should be a verifiable presentation, similar to the one below.
 
 `201 Created`
 
-#### 2.5 [Resident] Continue the exchange
+#### 2.6 [Resident] Continue the exchange
 
 Continue the exchange by sending the VP in response to the VP Request that was previously received.
 Open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange Id}` folder.
@@ -761,7 +760,7 @@ In the request body, copy the VP that was obtained from the previous step.
 
 `200 OK`
 
-#### 2.6 [Verifier] Act on Submitted Presentation
+#### 2.7 [Verifier] Act on Submitted Presentation
 
 For reference, the callback notification that would have been received in a configured callback for this presentation would be:
 

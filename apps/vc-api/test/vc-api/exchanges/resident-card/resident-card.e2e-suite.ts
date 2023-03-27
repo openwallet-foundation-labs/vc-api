@@ -70,7 +70,7 @@ export const residentCardExchangeSuite = () => {
     const didAuthVp = didAuthResponse.body;
     expect(didAuthVp).toBeDefined();
 
-    // As holder, continue exchange by submitting did auth presention
+    // As holder, continue exchange by submitting did auth presentation
     for (let i = 0; i < numHolderQueriesPriorToIssuance; i++) {
       await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true, true);
     }

@@ -571,7 +571,7 @@ Fill in, in the json below, the resident DID as the `subject` id and the authori
 
 **Sample Expected Response Body**
 
-The resonse is an issued Verifiable Credential, similar to the one shown below.
+The response is an issued Verifiable Credential, similar to the one shown below.
 
 ```json
 {
@@ -977,7 +977,7 @@ With this service, requests are saved to a dedicated location for later review.
 Please only use this service for this tutorial (or other non-production applications).
 
 To use the webhook.site service with this tutorial, use a dedicated endpoint url generated for you after entering
-the site. It should looke similar to `https://webhook.site/efb19fb8-2579-4e1b-8614-d5a03edaaa7a`
+the site. It should look similar to `https://webhook.site/efb19fb8-2579-4e1b-8614-d5a03edaaa7a`
 Copy this URL, including the domain, into the exchange definition below.
 
 ```json
