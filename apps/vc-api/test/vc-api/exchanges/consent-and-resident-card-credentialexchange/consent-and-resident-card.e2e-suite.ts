@@ -84,7 +84,7 @@ export const consentAndResidentCardExchangeSuite = () => {
     const didAuthVp = didAuthResponse.body;
     expect(didAuthVp).toBeDefined();
 
-    // As holder, continue exchange by submitting did auth presention
+    // As holder, continue exchange by submitting did auth presentation
     for (let i = 0; i < numHolderQueriesPriorToIssuance; i++) {
       await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true, true);
     }
@@ -104,8 +104,8 @@ export const consentAndResidentCardExchangeSuite = () => {
     const holderKeyId = holderDIDDoc.verificationMethod[0].publicKeyJwk.kid;
     const issueResultConsentCredential = await exchange.issueConsentCredential(holderKeyId, walletClient);
     issuedVPConsentCredential = issueResultConsentCredential.vp;
-    const issueResultResidentiCard = await exchange.issueResidentCardCredential(didAuthVp, walletClient);
-    issuedVPResidentCard = issueResultResidentiCard.vp; // VP used to wrapped issued credentials
+    const issueResultResidentCard = await exchange.issueResidentCardCredential(didAuthVp, walletClient);
+    issuedVPResidentCard = issueResultResidentCard.vp; // VP used to wrapped issued credentials
 
     const presentationResidentCard: Presentation = {
       '@context': ['https://www.w3.org/2018/credentials/v1'],
@@ -141,7 +141,7 @@ export const consentAndResidentCardExchangeSuite = () => {
   });
 
   describe('Should be able to verify VP with Consent and ResidentCard credential', () => {
-    it('where presentation-definition has multiple submission_requirement and input_desciptor groups', async () => {
+    it('where presentation-definition has multiple submission_requirement and input_descriptor groups', async () => {
       // Configure presentation exchange
       // POST /exchanges
       const presentationExchange = new ConsentAndResidentCardPresentation(callbackUrl);
@@ -186,7 +186,7 @@ export const consentAndResidentCardExchangeSuite = () => {
       presentationCallbackScope.done();
     });
 
-    it('where presentation-definition has one submission_requirement and one input_desciptor group', async () => {
+    it('where presentation-definition has one submission_requirement and one input_descriptor group', async () => {
       // Configure presentation exchange
       // POST /exchanges
       const presentationExchange = new ConsentAndResidentCardPresentation(callbackUrl);
