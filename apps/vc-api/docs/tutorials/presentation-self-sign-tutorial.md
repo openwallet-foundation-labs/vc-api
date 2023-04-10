@@ -313,6 +313,9 @@ Copy this URL, including the domain, into the exchange definition below.
                                 "items":[
                                   {
                                     "const":"VerifiableCredential"
+                                  },
+                                  {
+                                    "const":"ConsentCredential"
                                   }
                                 ]
                               }
@@ -495,6 +498,9 @@ A similar json should be returned in the response body:
                           "items":[
                             {
                               "const":"VerifiableCredential"
+                            },
+                            {
+                              "const":"ConsentCredential"
                             }
                           ]
                         }

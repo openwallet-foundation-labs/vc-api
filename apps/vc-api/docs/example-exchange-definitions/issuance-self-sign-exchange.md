@@ -80,7 +80,10 @@ Use cases: The Holder is required to present a self signed credential to obtain 
                                     "type":"array",
                                     "items":[
                                        {
-                                             "const":"VerifiableCredential"
+                                          "const":"VerifiableCredential"
+                                       },
+                                       {
+                                          "const":"ConsentCredential"
                                        }
                                     ]
                                  }

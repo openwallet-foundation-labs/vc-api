@@ -81,6 +81,9 @@ Use case: The Holder is required to present self-signed Verifiable Credential to
                                       "items":[
                                           {
                                               "const":"VerifiableCredential"
+                                          },
+                                          {
+                                              "const":"ConsentCredential"
                                           }
                                       ]
                                   }
