@@ -1,16 +1,16 @@
-Exchange definition requiring any or some of credential from a list of credential.
+Exchange definition requiring any or some credential from a list of credentials.
 
-To create `presentation-definition` which accepts any or some of the Verifiable Credentials from a list we use `group` to categories the credential to choose from. 
+To create a `presentation-definition` that accepts any or some of the Verifiable Credentials from a list, we use `group` to categorise the credentials to choose from.
 
-The `submission_requirements` property of `presentation-definition` specifies the number of credentials need to be presented against the definition within a group. Refer [Submission Requirements](https://identity.foundation/presentation-exchange/#submission-requirements) documentation for more information.
+The `submission_requirements` property of `presentation-definition` specifies the number of credentials that need to be presented against the definition within a group. Refer to the [Submission Requirements](https://identity.foundation/presentation-exchange/#submission-requirements) documentation for more information.
 
-Use case: 
+Use case:
 
-1. The Holder is required to present any one of the credential from the list of credential (Group A).
+1. The Holder is required to present any one of the credentials from the list of credentials (Group A).
 
-* The below `presentation-definition` requires the holder to either present `PermanentResidentCard` or `ConsentCredential` for a successful verification.
+* The below `presentation-definition` requires the holder to either present a PermanentResidentCard` or `ConsentCredential` for a successful verification.
 
-* Both the required credentials are part of `group : ["A"]` and the `submission_requirements` specifies `min` property to be `1`, which states that any one credential is required.
+* Both of the required credentials are part of the group : ["A"]` and the `submission_requirements` specifies the min` property to be `1`, which states that any one credential is required.
 
 ```json
 {
@@ -159,13 +159,13 @@ Use case:
 }
 ```
 
-2. The Holder is required to present one credential mandatorily and any one out of two credential.
+2. The Holder is required to present one credential mandatorily and any one out of two credentials.
 
-* The below `presentation-definition` requires the holder to present at least 2 Verifiable Credential of 3 mentioned Verifiable Credential.
+* The below `presentation-definition` requires the holder to present at least 2 Verifiable Credentials of the 3 mentioned Verifiable Credentials.
 
-* The required credentials are categorized in two groups, `group : ["A"]` contains validation for `PermanentResidentCard` and `ConsentCredential` while `group : ["B"]` validates `DrivingLicense`.
+* The required credentials are categorised into two groups: `group : ["A"]` contains validation for `PermanentResidentCard` and `ConsentCredential`, while `group : ["B"]` validates `DrivingLicense`.
 
-* The `submission_requirements` specifies two requirements, one is for `group : ["A"]` which has `min` set to `1`. This indicates that only one credential needs to be presented out of `PermanentResidentCard` and `ConsentCredential`. The other is for `group : ["B"]` which also has `min` set to `1` but since the `group` lists only one credential it becomes mandatorily to present, which is the `DrivingLicense`.
+* The `submission_requirements` specifies two requirements; one is for `group : ["A"]`, which has `min` set to `1`. This indicates that only one credential needs to be presented out of `PermanentResidentCard` and `ConsentCredential`. The other is for `group : ["B"]` which also has `min` set to `1`, but since the `group` lists only one credential, it becomes mandatory to present it, which is the `DrivingLicense`.
 
 ```json
 {
