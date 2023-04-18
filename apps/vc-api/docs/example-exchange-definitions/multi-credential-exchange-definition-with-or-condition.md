@@ -10,7 +10,7 @@ Use case:
 
 * The below `presentation-definition` requires the holder to either present `PermanentResidentCard` or `ConsentCredential` for a successful verification.
 
-* Both the required credentials are part of `group : ["A"]` and the `submission_requirements` specifies `min` property to be `1`, which minimum of any one credential is required.
+* Both the required credentials are part of `group : ["A"]` and the `submission_requirements` specifies `min` property to be `1`, which states that any one credential is required.
 
 ```json
 {
