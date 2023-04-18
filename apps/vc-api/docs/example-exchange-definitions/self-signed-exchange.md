@@ -51,7 +51,10 @@ Use case: The Holder is required to present self-signed Verifiable Credential to
                                               },
                                               "consent":{
                                                   "const":"elia:consent"
-                                              }
+                                              },
+                                              "ConsentCredential":{
+                                                "const":"elia:ConsentCredential"
+                                             }
                                             },
                                             "additionalProperties":false,
                                             "required":[

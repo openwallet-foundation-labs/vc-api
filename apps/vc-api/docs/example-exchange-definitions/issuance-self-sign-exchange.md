@@ -51,6 +51,9 @@ Use cases: The Holder is required to present a self signed credential to obtain 
                                              },
                                              "consent":{
                                                 "const":"elia:consent"
+                                             },
+                                              "ConsentCredential":{
+                                                "const":"elia:ConsentCredential"
                                              }
                                           },
                                           "additionalProperties":false,

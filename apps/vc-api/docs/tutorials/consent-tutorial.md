@@ -130,7 +130,10 @@ For further documentation regarding the `presentationDefinition`, can be seen [h
                                               },
                                               "consent":{
                                                   "const":"elia:consent"
-                                              }
+                                              },
+                                              "ConsentCredential":{
+                                                "const":"elia:ConsentCredential"
+                                             }
                                             },
                                             "additionalProperties":false,
                                             "required":[
@@ -294,6 +297,9 @@ This is providing the location at which we can continue the credential exchange 
                                                                 },
                                                                 "consent": {
                                                                     "const": "elia:consent"
+                                                                },
+                                                                "ConsentCredential":{
+                                                                    "const":"elia:ConsentCredential"
                                                                 }
                                                             },
                                                             "additionalProperties": false,
@@ -479,6 +485,9 @@ Send the request as described below.
                               },
                               "consent": {
                                   "const": "elia:consent"
+                              },
+                              "ConsentCredential":{
+                                  "const":"elia:ConsentCredential"
                               }
                           },
                           "additionalProperties": false,
@@ -535,7 +544,8 @@ Send the request as described below.
             "https://www.w3.org/2018/credentials/v1",
             {
                 "elia": "https://www.eliagroup.eu/ld-context-2022#",
-                "consent": "elia:consent"
+                "consent": "elia:consent",
+                "ConsentCredential": "elia:ConsentCredential"
             }
         ],
         "credentialSubject": {
@@ -580,7 +590,8 @@ Send the request as described below.
             "https://www.w3.org/2018/credentials/v1",
             {
                 "elia": "https://www.eliagroup.eu/ld-context-2022#",
-                "consent": "elia:consent"
+                "consent": "elia:consent",
+                "ConsentCredential": "elia:ConsentCredential"
             }
         ],
         "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -606,7 +617,8 @@ Send the request as described below.
         "https://www.w3.org/2018/credentials/v1",
         {
             "elia": "https://www.eliagroup.eu/ld-context-2022#",
-            "consent": "elia:consent"
+            "consent": "elia:consent",
+            "ConsentCredential": "elia:ConsentCredential"
         }
     ],
     "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -692,7 +704,8 @@ The `challenge` should be value received from the VP Request obtained when initi
                 "https://www.w3.org/2018/credentials/v1",
                 {
                     "consent": "elia:consent",
-                    "elia": "https://www.eliagroup.eu/ld-context-2022#"
+                    "elia": "https://www.eliagroup.eu/ld-context-2022#",
+                    "ConsentCredential": "elia:ConsentCredential"
                 }
             ],
             "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",

@@ -283,6 +283,9 @@ Copy this URL, including the domain, into the exchange definition below.
                                         },
                                         "consent":{
                                           "const":"elia:consent"
+                                        },
+                                        "ConsentCredential":{
+                                          "const":"elia:ConsentCredential"
                                         }
                                     },
                                     "additionalProperties":false,
@@ -468,6 +471,9 @@ A similar json should be returned in the response body:
                                   },
                                   "consent":{
                                     "const":"elia:consent"
+                                  },
+                                  "ConsentCredential":{
+                                    "const":"elia:ConsentCredential"
                                   }
                               },
                               "additionalProperties":false,
@@ -567,7 +573,8 @@ Send the request as described below.
             "https://www.w3.org/2018/credentials/v1",
             {
                 "elia": "https://www.eliagroup.eu/ld-context-2022#",
-                "consent": "elia:consent"
+                "consent": "elia:consent",
+                "ConsentCredential": "elia:ConsentCredential"
             }
         ],
         "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -593,7 +600,8 @@ Send the request as described below.
         "https://www.w3.org/2018/credentials/v1",
         {
             "elia": "https://www.eliagroup.eu/ld-context-2022#",
-            "consent": "elia:consent"
+            "consent": "elia:consent",
+            "ConsentCredential": "elia:ConsentCredential"
         }
     ],
     "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -719,7 +727,8 @@ For example, your filled json would look like:
                "https://www.w3.org/2018/credentials/v1",
                {
                   "consent":"elia:consent",
-                  "elia":"https://www.eliagroup.eu/ld-context-2022#"
+                  "elia":"https://www.eliagroup.eu/ld-context-2022#",
+                  "ConsentCredential": "elia:ConsentCredential"
                }
             ],
             "id":"urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -808,7 +817,8 @@ The response should be a verifiable presentation, similar to the one below.
         "https://www.w3.org/2018/credentials/v1",
         {
           "consent": "elia:consent",
-          "elia": "https://www.eliagroup.eu/ld-context-2022#"
+          "elia": "https://www.eliagroup.eu/ld-context-2022#",
+          "ConsentCredential": "elia:ConsentCredential"
         }
       ],
       "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -922,18 +932,77 @@ For reference, the callback notification that would have been received in a conf
                     "A"
                   ],
                   "constraints": {
-                    "subject_is_issuer": "required",
-                    "fields": [
+                    "subject_is_issuer":"required",
+                    "fields":[
                       {
-                        "path": [
-                          "$.type"
-                        ],
-                        "filter": {
-                          "type": "array",
-                          "contains": {
-                            "type": "string",
-                            "const": "ConsentCredential"
+                        "path":["$.id"],
+                        "filter":{
+                        "const":"urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e"
+                        }
+                      },
+                      {
+                        "path":["$.@context"],
+                        "filter":{
+                          "$schema":"http://json-schema.org/draft-07/schema#",
+                          "type":"array",
+                          "items":[
+                            {
+                              "const":"https://www.w3.org/2018/credentials/v1"
+                            },
+                            {
+                              "$ref":"#/definitions/eliaGroupContext"
+                            }
+                          ],
+                          "additionalItems":false,
+                          "minItems":2,
+                          "maxItems":2,
+                          "definitions":{
+                            "eliaGroupContext":{
+                              "type":"object",
+                              "properties":{
+                                  "elia":{
+                                    "const":"https://www.eliagroup.eu/ld-context-2022#"
+                                  },
+                                  "consent":{
+                                    "const":"elia:consent"
+                                  },
+                                  "ConsentCredential":{
+                                    "const":"elia:ConsentCredential"
+                                  }
+                              },
+                              "additionalProperties":false,
+                              "required":[
+                                  "elia",
+                                  "consent"
+                              ]
+                            }
                           }
+                        }
+                      },
+                      {
+                        "path":["$.credentialSubject"],
+                        "filter":{
+                          "type":"object",
+                          "properties":{
+                            "consent":{
+                              "const":"I consent to such and such"
+                            }
+                          },
+                          "additionalProperties":true
+                        }
+                      },
+                      {
+                        "path":["$.type"],
+                        "filter":{
+                          "type":"array",
+                          "items":[
+                            {
+                              "const":"VerifiableCredential"
+                            },
+                            {
+                              "const":"ConsentCredential"
+                            }
+                          ]
                         }
                       }
                     ]
@@ -1014,7 +1083,8 @@ For reference, the callback notification that would have been received in a conf
             "https://www.w3.org/2018/credentials/v1",
             {
               "consent": "elia:consent",
-              "elia": "https://www.eliagroup.eu/ld-context-2022#"
+              "elia": "https://www.eliagroup.eu/ld-context-2022#",
+              "ConsentCredential": "elia:ConsentCredential"
             }
           ],
           "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
