@@ -86,6 +86,9 @@ Use case: The Holder is required to present a self-signed consent VC and a Perma
                                              },
                                              "consent":{
                                                 "const":"elia:consent"
+                                             },
+                                              "ConsentCredential":{
+                                                "const":"elia:ConsentCredential"
                                              }
                                           },
                                           "additionalProperties":false,
@@ -115,7 +118,10 @@ Use case: The Holder is required to present a self-signed consent VC and a Perma
                                     "type":"array",
                                     "items":[
                                        {
-                                             "const":"VerifiableCredential"
+                                          "const":"VerifiableCredential"
+                                       },
+                                       {
+                                          "const":"ConsentCredential"
                                        }
                                     ]
                                  }
