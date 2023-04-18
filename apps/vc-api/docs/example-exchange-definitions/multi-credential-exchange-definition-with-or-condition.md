@@ -88,7 +88,10 @@ Use case:
                                         },
                                         "consent":{
                                           "const":"elia:consent"
-                                        }
+                                        },
+                                       "ConsentCredential":{
+                                          "const":"elia:ConsentCredential"
+                                       }
                                     },
                                     "additionalProperties":false,
                                     "required":[
@@ -240,7 +243,10 @@ Use case:
                                         },
                                         "consent":{
                                           "const":"elia:consent"
-                                        }
+                                        },
+                                       "ConsentCredential":{
+                                          "const":"elia:ConsentCredential"
+                                       }
                                     },
                                     "additionalProperties":false,
                                     "required":[
