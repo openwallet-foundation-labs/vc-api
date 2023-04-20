@@ -45,17 +45,17 @@ Here is an extract of the context:
 To get the definition of the field "gender" which points to the definition "schema:gender", use the URI of "schema" which points to "http://schema.org/", so we will have a definition available at "http://schema.org/gender".
 Regarding the aliasing of `id` to `@id` and `type` to `@type`, see the [VC specification](https://www.w3.org/TR/vc-data-model/#syntactic-sugar).
 
-We therefore assume that the resident is connected to the autority portal and that the information contained in the context about the resident is available in the autority portal database.
+We therefore assume that the resident is connected to the authority portal and that the information contained in the context about the resident is available in the authority portal database.
 
 ### Business workflows
 
 #### Issuance Business workflow
 1. The authority portal authenticates the current user as a known resident.
-1. The resident requests a "PermanentResidentCard" credential on the autority portal.
-1. The autority portal displays a QR code for the citizen to scan with his mobile wallet.
-1. The citizen's mobile wallet provides the autority portal with a presentation to prove control over a DID.
+1. The resident requests a "PermanentResidentCard" credential on the authority portal.
+1. The authority portal displays a QR code for the citizen to scan with his mobile wallet.
+1. The citizen's mobile wallet provides the authority portal with a presentation to prove control over a DID.
 1. The authority portal reviews the presentation and issues a "PermanentResidentCard" credential containing the resident's information.
-1. The citizen's mobile wallet contacts the autority portal again to receive the "PermanentResidentCard".
+1. The citizen's mobile wallet contacts the authority portal again to receive the "PermanentResidentCard".
 
 #### Presentation Business workflow
 1. The authority portal displays a QR code requesting a presentation containing the "PermanentResidentCard" credential
@@ -130,7 +130,7 @@ With this service, requests are saved to a dedicated location for later review.
 Please only use this service for this tutorial (or other non-production applications).
 
 To use the webhook.site service with this tutorial, use a dedicated endpoint url generated for you after entering
-the site. It should looke similar to `https://webhook.site/efb19fb8-2579-4e1b-8614-d5a03edaaa7a`
+the site. It should look similar to `https://webhook.site/efb19fb8-2579-4e1b-8614-d5a03edaaa7a`
 Copy this URL, including the domain, into the exchange definition below.
 
 ```json
@@ -363,7 +363,7 @@ Send the request as described below.
 
 **Request URL**
 
-In the request params, use the `transactionId` from the `serviceEndpoint` in the VP Request and `exchangeId` as the unique exchange ID configued in the initial step.
+In the request params, use the `transactionId` from the `serviceEndpoint` in the VP Request and `exchangeId` as the unique exchange ID configured in the initial step.
 
 `{VC API base url}/vc-api/exchanges/{EXCHANGE ID}/{TRANSACTION ID}`
 
