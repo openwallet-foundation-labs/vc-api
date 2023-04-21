@@ -98,20 +98,20 @@ Send the request as described below.
 Response body should be similar to the one below but with a different `did`.
 ```json
 {
-    "id": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
-    "verificationMethod": [
-        {
-            "id": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A#z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
-            "type": "Ed25519VerificationKey2018",
-            "controller": "did:key:z6MkvWkza1fMBWhKnYE3CgMgxHem62YkEw4JbdmEZeFTEZ7A",
-            "publicKeyJwk": {
-                "crv": "Ed25519",
-                "x": "7qB2-hwO1ajv4CaLjfK7iB13JPUdGLObB8JGjy95KI0",
-                "kty": "OKP",
-                "kid": "i9CHqa1zwV23F8sxGszjXB53SnB-gKO7aL9hDcmA-ho"
-            }
-        }
-    ]
+  "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+  "verificationMethod": [
+    {
+      "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+      "type": "Ed25519VerificationKey2018",
+      "controller": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+      "publicKeyJwk": {
+        "crv": "Ed25519",
+        "x": "DCWK0WAJnFk3dS4-pMeK31t8JYEA7GXECqTNjO0UxzY",
+        "kty": "OKP",
+        "kid": "Na841vz9DxcXNVE5Ac6t359uf2ROCiB4Tkc9kS5k3R4"
+      }
+    }
+  ]
 }
 ```
 
@@ -135,32 +135,32 @@ Kindly follow all steps of [issuance workflow](./resident-card-tutorial.md/#1-is
     "PermanentResidentCard"
   ],
   "credentialSubject": {
-    "id": "did:key:z6MksGpmJLgzBtCaGVdQ9wuET2JUK2Qi4URPuYbruD6Rko35",
-    "birthDate": "1958-07-17",
-    "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
-    "lprNumber": "999-999-999",
+    "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+    "gender": "Male",
     "residentSince": "2015-01-01",
+    "lprNumber": "999-999-999",
+    "birthCountry": "Bahamas",
+    "birthDate": "1958-07-17",
+    "givenName": "JOHN",
+    "familyName": "SMITH",
+    "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
+    "commuterClassification": "C1",
+    "lprCategory": "C09",
     "type": [
       "PermanentResident",
       "Person"
-    ],
-    "commuterClassification": "C1",
-    "familyName": "SMITH",
-    "lprCategory": "C09",
-    "birthCountry": "Bahamas",
-    "givenName": "JOHN",
-    "gender": "Male"
+    ]
   },
-  "issuer": "did:key:z6Mkfh7Ac2ub5A5vMb3iUnWnWRey54CMYqsD14edvQTJKKNU",
+  "issuer": "did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
   "issuanceDate": "2019-12-03T12:19:52Z",
   "proof": {
     "type": "Ed25519Signature2018",
     "proofPurpose": "assertionMethod",
-    "verificationMethod": "did:key:z6Mkfh7Ac2ub5A5vMb3iUnWnWRey54CMYqsD14edvQTJKKNU#z6Mkfh7Ac2ub5A5vMb3iUnWnWRey54CMYqsD14edvQTJKKNU",
-    "created": "2023-01-24T13:43:26.129Z",
-    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..mZcEc2cxjD9yk6qebqzKxy50IKjhoel6pykwZUlRkgNc9dOvlCzAvkv889eW8Vr_TUUyP8jdgpuEoLozwf-dBw"
+    "verificationMethod": "did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC#z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
+    "created": "2023-04-20T05:05:51.279Z",
+    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..ZwkluPzE6qaL2a4TaA-3TB_l4BWjp344yy6duMYWRhHa3kMzExCF5eVLY0qedPHzQ8Nq1ViOS7Nb5Ku1AE_YCA"
   },
-  "expirationDate": "2039-12-03T12:19:52Z"
+  "expirationDate": "2029-12-03T12:19:52Z"
 }
 ```
 
@@ -389,7 +389,7 @@ A similar json should be returned in the response body:
 ```json
 {
   "vpRequest": {
-    "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
+    "challenge": "1093b079-f937-4f16-bb7a-2af9b354295f",
     "query": [
       {
         "type": "PresentationDefinition",
@@ -438,75 +438,83 @@ A similar json should be returned in the response body:
                     "A"
                   ],
                   "constraints": {
-                    "subject_is_issuer":"required",
-                    "fields":[
+                    "subject_is_issuer": "required",
+                    "fields": [
                       {
-                        "path":["$.id"],
-                        "filter":{
-                        "const":"urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e"
+                        "path": [
+                          "$.id"
+                        ],
+                        "filter": {
+                          "const": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e"
                         }
                       },
                       {
-                        "path":["$.@context"],
-                        "filter":{
-                          "$schema":"http://json-schema.org/draft-07/schema#",
-                          "type":"array",
-                          "items":[
+                        "path": [
+                          "$.@context"
+                        ],
+                        "filter": {
+                          "$schema": "http://json-schema.org/draft-07/schema#",
+                          "type": "array",
+                          "items": [
                             {
-                              "const":"https://www.w3.org/2018/credentials/v1"
+                              "const": "https://www.w3.org/2018/credentials/v1"
                             },
                             {
-                              "$ref":"#/definitions/eliaGroupContext"
+                              "$ref": "#/definitions/eliaGroupContext"
                             }
                           ],
-                          "additionalItems":false,
-                          "minItems":2,
-                          "maxItems":2,
-                          "definitions":{
-                            "eliaGroupContext":{
-                              "type":"object",
-                              "properties":{
-                                  "elia":{
-                                    "const":"https://www.eliagroup.eu/ld-context-2022#"
-                                  },
-                                  "consent":{
-                                    "const":"elia:consent"
-                                  },
-                                  "ConsentCredential":{
-                                    "const":"elia:ConsentCredential"
-                                  }
+                          "additionalItems": false,
+                          "minItems": 2,
+                          "maxItems": 2,
+                          "definitions": {
+                            "eliaGroupContext": {
+                              "type": "object",
+                              "properties": {
+                                "elia": {
+                                  "const": "https://www.eliagroup.eu/ld-context-2022#"
+                                },
+                                "consent": {
+                                  "const": "elia:consent"
+                                },
+                                "ConsentCredential": {
+                                  "const": "elia:ConsentCredential"
+                                }
                               },
-                              "additionalProperties":false,
-                              "required":[
-                                  "elia",
-                                  "consent"
+                              "additionalProperties": false,
+                              "required": [
+                                "elia",
+                                "consent"
                               ]
                             }
                           }
                         }
                       },
                       {
-                        "path":["$.credentialSubject"],
-                        "filter":{
-                          "type":"object",
-                          "properties":{
-                            "consent":{
-                              "const":"I consent to such and such"
+                        "path": [
+                          "$.credentialSubject"
+                        ],
+                        "filter": {
+                          "type": "object",
+                          "properties": {
+                            "consent": {
+                              "const": "I consent to such and such"
                             }
                           },
-                          "additionalProperties":true
+                          "additionalProperties": true
                         }
                       },
                       {
-                        "path":["$.type"],
-                        "filter":{
-                          "type":"array",
-                          "items":[
+                        "path": [
+                          "$.type"
+                        ],
+                        "filter": {
+                          "type": "array",
+                          "items": [
                             {
-                              "const":"VerifiableCredential"
+                              "const": "VerifiableCredential"
                             },
                             {
-                              "const":"ConsentCredential"
+                              "const": "ConsentCredential"
                             }
                           ]
                         }
@@ -524,7 +532,7 @@ A similar json should be returned in the response body:
       "service": [
         {
           "type": "UnmediatedHttpPresentationService2021",
-          "serviceEndpoint": "https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/b6754fca-f123-43ce-8bd2-92074f05a29b/25390400-e995-4f34-8f59-5820a8ce7816"
+          "serviceEndpoint": "https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/5de1ff34-1985-4194-91b1-3513d00827a0/98b0b331-d387-4743-aff2-7f07dee14288"
         }
       ]
     }
@@ -583,9 +591,9 @@ Send the request as described below.
         ],
         "credentialSubject": {
             "consent": "I consent to such and such",
-            "id": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd"
+            "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h"
         },
-        "issuer": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
+        "issuer": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
         "issuanceDate":"2022-10-03T12:19:52Z"
     },
     "options": {}
@@ -596,31 +604,32 @@ Send the request as described below.
 
 ```json
 {
-    "@context": [
-        "https://www.w3.org/2018/credentials/v1",
-        {
-            "elia": "https://www.eliagroup.eu/ld-context-2022#",
-            "consent": "elia:consent",
-            "ConsentCredential": "elia:ConsentCredential"
-        }
-    ],
-    "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
-    "type": [
-        "VerifiableCredential", "ConsentCredential"
-    ],
-    "credentialSubject": {
-        "id": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
-        "consent": "I consent to such and such"
-    },
-    "issuer": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
-    "issuanceDate": "2022-10-03T12:19:52Z",
-    "proof": {
-        "type": "Ed25519Signature2018",
-        "proofPurpose": "assertionMethod",
-        "verificationMethod": "did:key:z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd#z6MksYhSPw2gUFQTr9YtLMSHRAVdXjLTyTwaRyxPprWLyZyd",
-        "created": "2022-08-19T13:06:33.005Z",
-        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..6r3J6qIohC6NRdXiWYWdJz0igFV2f6WSnDIvqUDnM5Qy7vU8UugdlGJiJ4SleiiNs7Hk-jiRprDXaazKpSrbCw"
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    {
+      "elia": "https://www.eliagroup.eu/ld-context-2022#",
+      "ConsentCredential": "elia:ConsentCredential",
+      "consent": "elia:consent"
     }
+  ],
+  "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
+  "type": [
+    "VerifiableCredential",
+    "ConsentCredential"
+  ],
+  "credentialSubject": {
+    "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+    "consent": "I consent to such and such"
+  },
+  "issuer": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+  "issuanceDate": "2022-10-03T12:19:52Z",
+  "proof": {
+    "type": "Ed25519Signature2018",
+    "proofPurpose": "assertionMethod",
+    "verificationMethod": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+    "created": "2023-04-19T06:53:23.529Z",
+    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..z40JNjtVufTUCgUQxuuGuQZMXRTcQcjvav0QuyuXvsq8nEy2UJ7ovfOCsTww5UtQ9fZkXukokySUb1HdzeTVDA"
+  }
 }
 ```
 
@@ -675,89 +684,89 @@ For example, your filled json would look like:
 
 ```json
 {
-   "presentation":{
-      "@context":[
-         "https://www.w3.org/2018/credentials/v1",
-         "https://www.w3.org/2018/credentials/examples/v1"
-      ],
-      "type":[
-         "VerifiablePresentation"
-      ],
-      "verifiableCredential":[
-         {
-            "@context":[
-               "https://www.w3.org/2018/credentials/v1",
-               "https://w3id.org/citizenship/v1"
-            ],
-            "id":"https://issuer.oidp.uscis.gov/credentials/83627465",
-            "type":[
-               "VerifiableCredential",
-               "PermanentResidentCard"
-            ],
-            "credentialSubject":{
-               "id":"did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-               "givenName":"JOHN",
-               "image":"data:image/png;base64,iVBORw0KGgo...kJggg==",
-               "familyName":"SMITH",
-               "birthCountry":"Bahamas",
-               "birthDate":"1958-07-17",
-               "commuterClassification":"C1",
-               "type":[
-                  "PermanentResident",
-                  "Person"
-               ],
-               "gender":"Male",
-               "lprNumber":"999-999-999",
-               "lprCategory":"C09",
-               "residentSince":"2015-01-01"
-            },
-            "issuer":"did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
-            "issuanceDate":"2019-12-03T12:19:52Z",
-            "proof":{
-               "type":"Ed25519Signature2018",
-               "proofPurpose":"assertionMethod",
-               "verificationMethod":"did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ#z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
-               "created":"2023-01-30T08:26:13.729Z",
-               "jws":"eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..ZeGf6he4E9NU0mU5pDYuIuAw18EL_ztsV9hPFwCpefD0A82xD0JkkTpqPRp63M3SfCfaKzvYHFs4IHzCwS-vBw"
-            },
-            "expirationDate":"2029-12-03T12:19:52Z"
-         },
-         {
-            "@context":[
-               "https://www.w3.org/2018/credentials/v1",
-               {
-                  "consent":"elia:consent",
-                  "elia":"https://www.eliagroup.eu/ld-context-2022#",
-                  "ConsentCredential": "elia:ConsentCredential"
-               }
-            ],
-            "id":"urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
-            "type":[
-               "VerifiableCredential",
-               "ConsentCredential"
-            ],
-            "credentialSubject":{
-               "id":"did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-               "consent":"I consent to such and such"
-            },
-            "issuer":"did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-            "issuanceDate":"2022-10-03T12:19:52Z",
-            "proof":{
-               "type":"Ed25519Signature2018",
-               "proofPurpose":"assertionMethod",
-               "verificationMethod":"did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-               "created":"2023-01-30T08:56:32.115Z",
-               "jws":"eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..PqFLOLLcxayOCJrNVtu3WOEgJJEd9ErR9zIaX62R_r0IEAQHcCYALv-cmmvs6KRClaGeijZi8AxBrbChUztPCw"
-            }
-         }
-      ],
-      "holder":"did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC"
-   },
-   "options":{
-      "verificationMethod":"did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-      "proofPurpose":"authentication",
-      "challenge":"8e71f026-cf02-4a28-ba62-14eefa26c9d0"
-   }
+  "presentation":{
+    "@context":[
+      "https://www.w3.org/2018/credentials/v1",
+      "https://www.w3.org/2018/credentials/examples/v1"
+    ],
+    "type":[
+      "VerifiablePresentation"
+    ],
+    "verifiableCredential":[
+      {
+        "@context":[
+          "https://www.w3.org/2018/credentials/v1",
+          {
+            "elia":"https://www.eliagroup.eu/ld-context-2022#",
+            "ConsentCredential":"elia:ConsentCredential",
+            "consent":"elia:consent"
+          }
+        ],
+        "id":"urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
+        "type":[
+          "VerifiableCredential",
+          "ConsentCredential"
+        ],
+        "credentialSubject":{
+          "id":"did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+          "consent":"I consent to such and such"
+        },
+        "issuer":"did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+        "issuanceDate":"2022-10-03T12:19:52Z",
+        "proof":{
+          "type":"Ed25519Signature2018",
+          "proofPurpose":"assertionMethod",
+          "verificationMethod":"did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+          "created":"2023-04-19T06:53:23.529Z",
+          "jws":"eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..z40JNjtVufTUCgUQxuuGuQZMXRTcQcjvav0QuyuXvsq8nEy2UJ7ovfOCsTww5UtQ9fZkXukokySUb1HdzeTVDA"
+        }
+      },
+      {
+        "@context":[
+          "https://www.w3.org/2018/credentials/v1",
+          "https://w3id.org/citizenship/v1"
+        ],
+        "id":"https://issuer.oidp.uscis.gov/credentials/83627465",
+        "type":[
+          "VerifiableCredential",
+          "PermanentResidentCard"
+        ],
+        "credentialSubject":{
+          "id":"did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+          "gender":"Male",
+          "residentSince":"2015-01-01",
+          "lprNumber":"999-999-999",
+          "birthCountry":"Bahamas",
+          "birthDate":"1958-07-17",
+          "givenName":"JOHN",
+          "familyName":"SMITH",
+          "image":"data:image/png;base64,iVBORw0KGgo...kJggg==",
+          "commuterClassification":"C1",
+          "lprCategory":"C09",
+          "type":[
+            "PermanentResident",
+            "Person"
+          ]
+        },
+        "issuer":"did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
+        "issuanceDate":"2019-12-03T12:19:52Z",
+        "proof":{
+          "type":"Ed25519Signature2018",
+          "proofPurpose":"assertionMethod",
+          "verificationMethod":"did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC#z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
+          "created":"2023-04-20T05:05:51.279Z",
+          "jws":"eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..ZwkluPzE6qaL2a4TaA-3TB_l4BWjp344yy6duMYWRhHa3kMzExCF5eVLY0qedPHzQ8Nq1ViOS7Nb5Ku1AE_YCA"
+        },
+        "expirationDate":"2029-12-03T12:19:52Z"
+      }
+    ],
+    "holder":"did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h"
+  },
+  "options":{
+    "verificationMethod":"did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+    "proofPurpose":"authentication",
+    "challenge":"1093b079-f937-4f16-bb7a-2af9b354295f"
+  }
 }
 ```
 
@@ -777,48 +786,10 @@ The response should be a verifiable presentation, similar to the one below.
     {
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
-        "https://w3id.org/citizenship/v1"
-      ],
-      "id": "https://issuer.oidp.uscis.gov/credentials/83627465",
-      "type": [
-        "VerifiableCredential",
-        "PermanentResidentCard"
-      ],
-      "credentialSubject": {
-        "id": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-        "commuterClassification": "C1",
-        "givenName": "JOHN",
-        "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
-        "type": [
-          "PermanentResident",
-          "Person"
-        ],
-        "familyName": "SMITH",
-        "birthDate": "1958-07-17",
-        "gender": "Male",
-        "lprCategory": "C09",
-        "lprNumber": "999-999-999",
-        "residentSince": "2015-01-01",
-        "birthCountry": "Bahamas"
-      },
-      "issuer": "did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
-      "issuanceDate": "2019-12-03T12:19:52Z",
-      "proof": {
-        "type": "Ed25519Signature2018",
-        "proofPurpose": "assertionMethod",
-        "verificationMethod": "did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ#z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
-        "created": "2023-01-30T08:26:13.729Z",
-        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..ZeGf6he4E9NU0mU5pDYuIuAw18EL_ztsV9hPFwCpefD0A82xD0JkkTpqPRp63M3SfCfaKzvYHFs4IHzCwS-vBw"
-      },
-      "expirationDate": "2029-12-03T12:19:52Z"
-    },
-    {
-      "@context": [
-        "https://www.w3.org/2018/credentials/v1",
         {
-          "consent": "elia:consent",
           "elia": "https://www.eliagroup.eu/ld-context-2022#",
-          "ConsentCredential": "elia:ConsentCredential"
+          "ConsentCredential": "elia:ConsentCredential",
+          "consent": "elia:consent"
         }
       ],
       "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -827,29 +798,67 @@ The response should be a verifiable presentation, similar to the one below.
         "ConsentCredential"
       ],
       "credentialSubject": {
-        "id": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
+        "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
         "consent": "I consent to such and such"
       },
-      "issuer": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
+      "issuer": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
       "issuanceDate": "2022-10-03T12:19:52Z",
       "proof": {
         "type": "Ed25519Signature2018",
         "proofPurpose": "assertionMethod",
-        "verificationMethod": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-        "created": "2023-01-30T08:56:32.115Z",
-        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..PqFLOLLcxayOCJrNVtu3WOEgJJEd9ErR9zIaX62R_r0IEAQHcCYALv-cmmvs6KRClaGeijZi8AxBrbChUztPCw"
+        "verificationMethod": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+        "created": "2023-04-19T06:53:23.529Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..z40JNjtVufTUCgUQxuuGuQZMXRTcQcjvav0QuyuXvsq8nEy2UJ7ovfOCsTww5UtQ9fZkXukokySUb1HdzeTVDA"
       }
+    },
+    {
+      "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://w3id.org/citizenship/v1"
+      ],
+      "id": "https://issuer.oidp.uscis.gov/credentials/83627465",
+      "type": [
+        "VerifiableCredential",
+        "PermanentResidentCard"
+      ],
+      "credentialSubject": {
+        "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+        "birthDate": "1958-07-17",
+        "lprCategory": "C09",
+        "type": [
+          "PermanentResident",
+          "Person"
+        ],
+        "residentSince": "2015-01-01",
+        "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
+        "commuterClassification": "C1",
+        "gender": "Male",
+        "lprNumber": "999-999-999",
+        "familyName": "SMITH",
+        "birthCountry": "Bahamas",
+        "givenName": "JOHN"
+      },
+      "issuer": "did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
+      "issuanceDate": "2019-12-03T12:19:52Z",
+      "proof": {
+        "type": "Ed25519Signature2018",
+        "proofPurpose": "assertionMethod",
+        "verificationMethod": "did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC#z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
+        "created": "2023-04-20T05:05:51.279Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..ZwkluPzE6qaL2a4TaA-3TB_l4BWjp344yy6duMYWRhHa3kMzExCF5eVLY0qedPHzQ8Nq1ViOS7Nb5Ku1AE_YCA"
+      },
+      "expirationDate": "2029-12-03T12:19:52Z"
     }
   ],
   "proof": {
     "type": "Ed25519Signature2018",
     "proofPurpose": "authentication",
-    "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
-    "verificationMethod": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-    "created": "2023-02-07T05:47:47.304Z",
-    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..tCIS0gexf5g6CyweXFyQAUtgWm8nrKq0cpFW6Bc_Mnxic_dFEnby-KJhBn9aWEwExmDFLvZRHogvBsLTNaQsDQ"
+    "challenge": "1093b079-f937-4f16-bb7a-2af9b354295f",
+    "verificationMethod": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+    "created": "2023-04-20T05:32:24.889Z",
+    "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..rKTEMOj_EsNW9_ZaBgDeGXcJf_4WI9OSNQ5n0ySr1UGOn6MGYVj4CxCOZ8qlYKcp0m1bKnpvN9ABKM8b3LztDw"
   },
-  "holder": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC"
+  "holder": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h"
 }
 ```
 
@@ -888,10 +897,10 @@ For reference, the callback notification that would have been received in a conf
 
 ```json
 {
-  "transactionId": "25390400-e995-4f34-8f59-5820a8ce7816",
-  "exchangeId": "b6754fca-f123-43ce-8bd2-92074f05a29b",
+  "transactionId": "98b0b331-d387-4743-aff2-7f07dee14288",
+  "exchangeId": "5de1ff34-1985-4194-91b1-3513d00827a0",
   "vpRequest": {
-    "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
+    "challenge": "1093b079-f937-4f16-bb7a-2af9b354295f",
     "query": [
       {
         "type": "PresentationDefinition",
@@ -932,75 +941,83 @@ For reference, the callback notification that would have been received in a conf
                     "A"
                   ],
                   "constraints": {
-                    "subject_is_issuer":"required",
-                    "fields":[
+                    "subject_is_issuer": "required",
+                    "fields": [
                       {
-                        "path":["$.id"],
-                        "filter":{
-                        "const":"urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e"
+                        "path": [
+                          "$.id"
+                        ],
+                        "filter": {
+                          "const": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e"
                         }
                       },
                       {
-                        "path":["$.@context"],
-                        "filter":{
-                          "$schema":"http://json-schema.org/draft-07/schema#",
-                          "type":"array",
-                          "items":[
+                        "path": [
+                          "$.@context"
+                        ],
+                        "filter": {
+                          "$schema": "http://json-schema.org/draft-07/schema#",
+                          "type": "array",
+                          "items": [
                             {
-                              "const":"https://www.w3.org/2018/credentials/v1"
+                              "const": "https://www.w3.org/2018/credentials/v1"
                             },
                             {
-                              "$ref":"#/definitions/eliaGroupContext"
+                              "$ref": "#/definitions/eliaGroupContext"
                             }
                           ],
-                          "additionalItems":false,
-                          "minItems":2,
-                          "maxItems":2,
-                          "definitions":{
-                            "eliaGroupContext":{
-                              "type":"object",
-                              "properties":{
-                                  "elia":{
-                                    "const":"https://www.eliagroup.eu/ld-context-2022#"
-                                  },
-                                  "consent":{
-                                    "const":"elia:consent"
-                                  },
-                                  "ConsentCredential":{
-                                    "const":"elia:ConsentCredential"
-                                  }
+                          "additionalItems": false,
+                          "minItems": 2,
+                          "maxItems": 2,
+                          "definitions": {
+                            "eliaGroupContext": {
+                              "type": "object",
+                              "properties": {
+                                "elia": {
+                                  "const": "https://www.eliagroup.eu/ld-context-2022#"
+                                },
+                                "consent": {
+                                  "const": "elia:consent"
+                                },
+                                "ConsentCredential": {
+                                  "const": "elia:ConsentCredential"
+                                }
                               },
-                              "additionalProperties":false,
-                              "required":[
-                                  "elia",
-                                  "consent"
+                              "additionalProperties": false,
+                              "required": [
+                                "elia",
+                                "consent"
                               ]
                             }
                           }
                         }
                       },
                       {
-                        "path":["$.credentialSubject"],
-                        "filter":{
-                          "type":"object",
-                          "properties":{
-                            "consent":{
-                              "const":"I consent to such and such"
+                        "path": [
+                          "$.credentialSubject"
+                        ],
+                        "filter": {
+                          "type": "object",
+                          "properties": {
+                            "consent": {
+                              "const": "I consent to such and such"
                             }
                           },
-                          "additionalProperties":true
+                          "additionalProperties": true
                         }
                       },
                       {
-                        "path":["$.type"],
-                        "filter":{
-                          "type":"array",
-                          "items":[
+                        "path": [
+                          "$.type"
+                        ],
+                        "filter": {
+                          "type": "array",
+                          "items": [
                             {
-                              "const":"VerifiableCredential"
+                              "const": "VerifiableCredential"
                             },
                             {
-                              "const":"ConsentCredential"
+                              "const": "ConsentCredential"
                             }
                           ]
                         }
@@ -1018,7 +1035,7 @@ For reference, the callback notification that would have been received in a conf
       "service": [
         {
           "type": "UnmediatedHttpPresentationService2021",
-          "serviceEndpoint": "https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/b6754fca-f123-43ce-8bd2-92074f05a29b/25390400-e995-4f34-8f59-5820a8ce7816"
+          "serviceEndpoint": "https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/5de1ff34-1985-4194-91b1-3513d00827a0/98b0b331-d387-4743-aff2-7f07dee14288"
         }
       ]
     }
@@ -1043,48 +1060,10 @@ For reference, the callback notification that would have been received in a conf
         {
           "@context": [
             "https://www.w3.org/2018/credentials/v1",
-            "https://w3id.org/citizenship/v1"
-          ],
-          "id": "https://issuer.oidp.uscis.gov/credentials/83627465",
-          "type": [
-            "VerifiableCredential",
-            "PermanentResidentCard"
-          ],
-          "credentialSubject": {
-            "id": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-            "commuterClassification": "C1",
-            "givenName": "JOHN",
-            "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
-            "type": [
-              "PermanentResident",
-              "Person"
-            ],
-            "familyName": "SMITH",
-            "birthDate": "1958-07-17",
-            "gender": "Male",
-            "lprCategory": "C09",
-            "lprNumber": "999-999-999",
-            "residentSince": "2015-01-01",
-            "birthCountry": "Bahamas"
-          },
-          "issuer": "did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
-          "issuanceDate": "2019-12-03T12:19:52Z",
-          "proof": {
-            "type": "Ed25519Signature2018",
-            "proofPurpose": "assertionMethod",
-            "verificationMethod": "did:key:z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ#z6Mkw22MoJQj8pKPS3F8Pce2e4kjatqqnvVbVRtDz94QNZdJ",
-            "created": "2023-01-30T08:26:13.729Z",
-            "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..ZeGf6he4E9NU0mU5pDYuIuAw18EL_ztsV9hPFwCpefD0A82xD0JkkTpqPRp63M3SfCfaKzvYHFs4IHzCwS-vBw"
-          },
-          "expirationDate": "2029-12-03T12:19:52Z"
-        },
-        {
-          "@context": [
-            "https://www.w3.org/2018/credentials/v1",
             {
-              "consent": "elia:consent",
               "elia": "https://www.eliagroup.eu/ld-context-2022#",
-              "ConsentCredential": "elia:ConsentCredential"
+              "ConsentCredential": "elia:ConsentCredential",
+              "consent": "elia:consent"
             }
           ],
           "id": "urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e",
@@ -1093,29 +1072,67 @@ For reference, the callback notification that would have been received in a conf
             "ConsentCredential"
           ],
           "credentialSubject": {
-            "id": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
+            "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
             "consent": "I consent to such and such"
           },
-          "issuer": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
+          "issuer": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
           "issuanceDate": "2022-10-03T12:19:52Z",
           "proof": {
             "type": "Ed25519Signature2018",
             "proofPurpose": "assertionMethod",
-            "verificationMethod": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-            "created": "2023-01-30T08:56:32.115Z",
-            "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..PqFLOLLcxayOCJrNVtu3WOEgJJEd9ErR9zIaX62R_r0IEAQHcCYALv-cmmvs6KRClaGeijZi8AxBrbChUztPCw"
+            "verificationMethod": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+            "created": "2023-04-19T06:53:23.529Z",
+            "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..z40JNjtVufTUCgUQxuuGuQZMXRTcQcjvav0QuyuXvsq8nEy2UJ7ovfOCsTww5UtQ9fZkXukokySUb1HdzeTVDA"
           }
+        },
+        {
+          "@context": [
+            "https://www.w3.org/2018/credentials/v1",
+            "https://w3id.org/citizenship/v1"
+          ],
+          "id": "https://issuer.oidp.uscis.gov/credentials/83627465",
+          "type": [
+            "VerifiableCredential",
+            "PermanentResidentCard"
+          ],
+          "credentialSubject": {
+            "id": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+            "birthDate": "1958-07-17",
+            "lprCategory": "C09",
+            "type": [
+              "PermanentResident",
+              "Person"
+            ],
+            "residentSince": "2015-01-01",
+            "image": "data:image/png;base64,iVBORw0KGgo...kJggg==",
+            "commuterClassification": "C1",
+            "gender": "Male",
+            "lprNumber": "999-999-999",
+            "familyName": "SMITH",
+            "birthCountry": "Bahamas",
+            "givenName": "JOHN"
+          },
+          "issuer": "did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
+          "issuanceDate": "2019-12-03T12:19:52Z",
+          "proof": {
+            "type": "Ed25519Signature2018",
+            "proofPurpose": "assertionMethod",
+            "verificationMethod": "did:key:z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC#z6MkqCyW7wZE5i2mQLGKbtKXEgX4sFdJ15Xp69BF8y77ephC",
+            "created": "2023-04-20T05:05:51.279Z",
+            "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..ZwkluPzE6qaL2a4TaA-3TB_l4BWjp344yy6duMYWRhHa3kMzExCF5eVLY0qedPHzQ8Nq1ViOS7Nb5Ku1AE_YCA"
+          },
+          "expirationDate": "2029-12-03T12:19:52Z"
         }
       ],
       "proof": {
         "type": "Ed25519Signature2018",
         "proofPurpose": "authentication",
-        "challenge": "8e71f026-cf02-4a28-ba62-14eefa26c9d0",
-        "verificationMethod": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC#z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC",
-        "created": "2023-02-07T05:47:47.304Z",
-        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..tCIS0gexf5g6CyweXFyQAUtgWm8nrKq0cpFW6Bc_Mnxic_dFEnby-KJhBn9aWEwExmDFLvZRHogvBsLTNaQsDQ"
+        "challenge": "1093b079-f937-4f16-bb7a-2af9b354295f",
+        "verificationMethod": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h#z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h",
+        "created": "2023-04-20T05:32:24.889Z",
+        "jws": "eyJhbGciOiJFZERTQSIsImNyaXQiOlsiYjY0Il0sImI2NCI6ZmFsc2V9..rKTEMOj_EsNW9_ZaBgDeGXcJf_4WI9OSNQ5n0ySr1UGOn6MGYVj4CxCOZ8qlYKcp0m1bKnpvN9ABKM8b3LztDw"
       },
-      "holder": "did:key:z6MkubKMuHzFUV7eQWSjmcZtaP3xYSawshTTNru6u3okh2nC"
+      "holder": "did:key:z6MkfGg96cNEL2Ne4z9HD3BSQhhD2neZKTzyE1y5wUu9KM4h"
     }
   }
 }
