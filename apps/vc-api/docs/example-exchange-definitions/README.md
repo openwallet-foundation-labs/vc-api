@@ -1,6 +1,6 @@
 A short guide for exchange-definitions examples
 
-The flows in the different use cases (presentation exchange) can be represented with three variables, which are:
+The flows in the different use cases (presentation exchange) can be categorized into three types, which are:
 
 1. _Presentation_ - It can be referred to as a presentation / exchange of credentials issued by an authority. For example, `PermanentResidentCard`.
 * The interact type would be `Unmediated`.
