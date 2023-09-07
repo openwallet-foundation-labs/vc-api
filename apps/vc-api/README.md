@@ -69,11 +69,30 @@ An implementation of the [W3C Credentials Community Group](https://w3c-ccg.githu
 This spec provides a data model and HTTP protocols to issue, verify, present, and exchange verifiable credentials on the Web.
 The [W3C Credentials Community Group](https://w3c-ccg.github.io/) also publishes [use cases for VC API](https://w3c-ccg.github.io/vc-api-use-cases/index.html).
 
+#### Implemented Endpoints
+
+| Profile | Endpoint | Implemented | Spec Link
+| --- | --- | --- | --- |
+| Issuing | Issue Credential | Yes | https://w3c-ccg.github.io/vc-api/#issue-credential
+| Issuing | Get Credentials | No | https://w3c-ccg.github.io/vc-api/#get-credentials
+| Issuing | Get a Specific Credential | No | https://w3c-ccg.github.io/vc-api/#get-a-specific-credential
+| Issuing | Update Status | No | https://w3c-ccg.github.io/vc-api/#update-status
+| Verifying | Verify Credential | Yes | https://w3c-ccg.github.io/vc-api/#verify-credential
+| Verifying | Verify Presentation | Yes | https://w3c-ccg.github.io/vc-api/#verify-presentation
+| Presenting | Derive Credential | No | https://w3c-ccg.github.io/vc-api/#derive-credential
+| Presenting | Prove Presentation | Yes | https://w3c-ccg.github.io/vc-api/#prove-presentation
+| Presenting | Exchange Discovery | No | https://w3c-ccg.github.io/vc-api/#exchange-discovery
+| Presenting | Get Presentations | No | https://w3c-ccg.github.io/vc-api/#get-presentations
+| Presenting | Get a Specific Presentation | No | https://w3c-ccg.github.io/vc-api/#get-a-specific-presentation
+| Presenting | Initiate Exchange | Yes | https://w3c-ccg.github.io/vc-api/#initiate-exchange
+| Presenting | Continue Exchange | Yes | https://w3c-ccg.github.io/vc-api/#continue-exchange
+
 #### Standard vs Custom Endpoints
 
-Not all of the endpoints available from the VC-API app are standard.
+Not all of the endpoints available from this VC-API app are standard.
+In particular, there are several endpoints related to exchanges that are outside of the specification.
 
-| Profile | Purpose | Standard | Spec Link
+| Profile | Endpoint | Standard | Spec Link
 | --- | --- | --- | --- |
 | Issuing | Issue Credential | Yes | https://w3c-ccg.github.io/vc-api/#issue-credential
 | Verifying | Verify Credential | Yes | https://w3c-ccg.github.io/vc-api/#verify-credential
