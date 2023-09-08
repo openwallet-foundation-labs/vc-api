@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { IsObject, IsOptional, ValidateNested } from 'class-validator';
+import { IsNotEmpty, IsNotEmptyObject, IsObject, IsOptional, ValidateNested } from 'class-validator';
 import { CredentialDto } from './credential.dto';
 import { IssueOptionsDto } from './issue-options.dto';
 import { Type } from 'class-transformer';
@@ -27,6 +27,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class IssueCredentialDto {
   @ValidateNested()
   @Type(() => CredentialDto)
+  @IsNotEmpty()
+  @IsNotEmptyObject()
   @ApiProperty({ type: CredentialDto })
   credential: CredentialDto;
 
