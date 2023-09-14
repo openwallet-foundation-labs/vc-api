@@ -105,12 +105,44 @@ In particular, there are several endpoints related to exchanges that are outside
 | Presenting | Submit Submission Review | No |
 | Presenting | Create Presentation from Credentials | No |
 
+#### Supported Proof Types for Proof Generation
+
+The proof types supported during Proof generation (e.g. issuance and presentation) are listed below.
+Currently only [Data Integrity (JSON-LD)](https://www.w3.org/TR/vc-data-model/#data-integrity-proofs) proofs are supported.
+The "Related DID" is mentioned because the verification method used to generate the proof is selected from the `issuer` property for VCs or `holder` property for VPs.
+
+The following proof types are supported:
+
+| Proof Type | Related DID | Test Status
+| --- | --- | ---
+| Ed25519Signature2018 | did:key | Covered by automated tests
+| EcdsaSecp256k1Signature2019 | did:ethr | Not yet covered by automated tests
+
 ### DID Module
 
 The DID Module in the [vc-api](./) offers the generation of DIDs and tracking the data resolvable in their DID documents.
 
+#### Supported DID Methods
+
+The table below shows which DID methods are available.
+
+| DID Method | Notes
+| --- | --- 
+| key | Only Ed25519 (with `Ed25519VerificationKey2018` verification method)
+| ethr | Only implicit DID resolution. No chain data resolution supported
+
 ### Key Module
 The key module is kept separate from the DID module because it's plausible that key module will be provided by a different service (i.e. a dedicated KMS) at some point.
+
+#### Supported Key Types
+
+The table below shows which key types are available for each operation.
+
+| Operations | Key Type 
+| --- | --- 
+| Import | Ed25519
+| Generate | Ed25519, ES256K
+| Export | Any key stored
 
 #### Key Import/Export
 
