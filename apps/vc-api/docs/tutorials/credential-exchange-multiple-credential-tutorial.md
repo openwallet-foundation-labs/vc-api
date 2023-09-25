@@ -79,7 +79,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/did`
+`{VC API base url}/v1/did`
 
 **HTTP Verb**
 
@@ -175,7 +175,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/vc-api/exchanges`
+`{VC API base url}/v1/vc-api/exchanges`
 
 **HTTP Verb**
 
@@ -359,7 +359,7 @@ Having configured the exchange, the Verifier must then ask the resident to prese
   "outOfBandInvitation": {
     "type": "https://example.com/out-of-band/vc-api-exchange",
     "body": {
-      "url": "http://localhost:3000/vc-api/exchanges/<FILL WITH YOUR EXCHANGE ID>"
+      "url": "{VC API base url}/v1/vc-api/exchanges/<FILL WITH YOUR EXCHANGE ID>"
     }
   }
 }
@@ -373,7 +373,7 @@ Send the request as described below.
 **Request URL**
 
 If using the Postman collection request, fill in the `exchangeId` param to be the value used for the exchange Id by the Verifier.
-`{VC API base url}/vc-api/exchanges/{exchange id}`
+`{VC API base url}/v1/vc-api/exchanges/{exchange id}`
 
 **HTTP Verb**
 
@@ -645,7 +645,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/vc-api/presentations/prove`
+`{VC API base url}/v1/vc-api/presentations/prove`
 
 **HTTP Verb**
 
@@ -877,7 +877,7 @@ Send the request as described below.
 
 In the request params, use the `transactionId` and `exchangeId` from the `serviceEndpoint` in the VP Request.
 
-`{VC API base url}/vc-api/exchanges/{exchangeId}/{transactionId}`
+`{VC API base url}/v1/vc-api/exchanges/{exchangeId}/v1/{transactionId}`
 
 **HTTP Verb**
 

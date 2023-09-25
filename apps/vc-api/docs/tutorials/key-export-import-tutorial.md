@@ -41,7 +41,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/did`
+`{VC API base url}/v1/did`
 
 **HTTP Verb**
 
@@ -89,7 +89,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/key/{keyId}`
+`{VC API base url}/v1/key/{keyId}`
 
 **HTTP Verb**
 
@@ -131,7 +131,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/key`
+`{VC API base url}/v1/key`
 
 **HTTP Verb**
 
@@ -176,7 +176,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/did`
+`{VC API base url}/v1/did`
 
 **HTTP Verb**
 

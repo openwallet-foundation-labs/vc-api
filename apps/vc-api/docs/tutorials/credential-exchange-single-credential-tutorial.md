@@ -111,7 +111,7 @@ To do this, navigate to the `Vc Api Controller create Exchange` under `vc-api/ex
 
 **Request URL**
 
-`{VC API base url}/vc-api/exchanges`
+`{VC API base url}/v1/vc-api/exchanges`
 
 **HTTP Verb**
 
@@ -172,7 +172,7 @@ They can do this transmission by encoding the json in a QR code and displaying t
         "type": "https://energyweb.org/out-of-band-invitation/vc-api-exchange",
         "body": { 
             "credentialTypeAvailable": "PermanentResidentCard",
-            "url": "http://localhost:3000/vc-api/exchanges/{THE EXCHANGE ID FROM THE PREVIOUS STEP}" 
+            "url": "{VC API base url}/v1/vc-api/exchanges/{THE EXCHANGE ID FROM THE PREVIOUS STEP}" 
         }
     }
 } 
@@ -187,7 +187,7 @@ Send the request as described below.
 **Request URL**
 
 If using the collection request, fill in the `exchangeid` param to be the exchange ID used in the first step.
-`{VC API base url}/vc-api/exchanges/{exchangeId}`
+`{VC API base url}/v1/vc-api/exchanges/{exchangeId}`
 
 **HTTP Verb**
 
@@ -222,7 +222,7 @@ This is providing the location at which we can continue the credential exchange 
             "service": [
                 {
                     "type": "MediatedHttpPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/exchanges/resident-card-issuance-82793/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
+                    "serviceEndpoint": "{VC API base url}/v1/exchanges/resident-card-issuance-82793/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
                 }
             ]
         }
@@ -245,7 +245,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/did`
+`{VC API base url}/v1/did`
 
 **HTTP Verb**
 
@@ -295,7 +295,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/vc-api/presentations/prove/authentication`
+`{VC API base url}/v1/vc-api/presentations/prove/authentication`
 
 **HTTP Verb**
 
@@ -357,7 +357,7 @@ The response should be a verifiable presentation, similar to the one below.
 #### 1.6 [Resident] Continue exchange by submitting the DID Auth proof
 
 Continue the exchange using the DIDAuth presentation.
-To do this, open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange id}/{transaction id}` folder.
+To do this, open the `Vc Api Controller continue Exchange` request in the `vc-api/exchanges/{exchange id}/v1/{transaction id}` folder.
 
 Send the request as described below.
 
@@ -365,7 +365,7 @@ Send the request as described below.
 
 In the request params, use the `transactionId` from the `serviceEndpoint` in the VP Request and `exchangeId` as the unique exchange ID configured in the initial step.
 
-`{VC API base url}/vc-api/exchanges/{EXCHANGE ID}/{TRANSACTION ID}`
+`{VC API base url}/v1/vc-api/exchanges/{EXCHANGE ID}/{TRANSACTION ID}`
 
 **HTTP Verb**
 
@@ -388,7 +388,7 @@ This response indicates that the client attempt to continue the exchange again (
             "service": [
                 {
                     "type": "MediatedHttpPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/vc-api/exchanges/{EXCHANGE ID}/27ce6175-bab7-4a1b-84b2-87cf87ad9163"
+                    "serviceEndpoint": "{VC API base url}/v1/vc-api/exchanges/{EXCHANGE ID}/27ce6175-bab7-4a1b-84b2-87cf87ad9163"
                 }
             ]
         }
@@ -426,7 +426,7 @@ An example of the expected POST body received in the request bucket is:
             "service": [
                 {
                     "type": "MediatedHttpPresentationService2021",
-                    "serviceEndpoint": "http://localhost:3000/exchanges/resident-card-issuance-82793/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
+                    "serviceEndpoint": "{VC API base url}/v1/vc-api/exchanges/resident-card-issuance-82793/55fb5bc5-4f5f-40c8-aa8d-f3a1991637fc"
                 }
             ]
         }
@@ -470,7 +470,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/did`
+`{VC API base url}/v1/did`
 
 **HTTP Verb**
 
@@ -521,7 +521,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/credentials/issue`
+`{VC API base url}/v1/credentials/issue`
 
 **HTTP Verb**
 
@@ -623,7 +623,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/vc-api/presentations/prove`
+`{VC API base url}/v1/vc-api/presentations/prove`
 
 **HTTP Verb**
 
@@ -778,7 +778,7 @@ Send the request as described below.
 
 Use the same `exchangeId` and `transactionId` as the path variables as in the "Continue Exchange" step.
 
-`{VC API base url}/vc-api/exchanges/{exchange id}/{transaction id}/review`
+`{VC API base url}/v1/vc-api/exchanges/{exchange id}/{transaction id}/review`
 
 **HTTP Verb**
 
@@ -869,7 +869,7 @@ Resend the request.
 
 Use the same `exchangeId` and `transactionId` as used in step [1.6  [Resident] Continue exchange by submitting the DID Auth proof](#16-resident-continue-exchange-by-submitting-the-did-auth-proof)
 
-`{VC API base url}/vc-api/exchanges/{exchange id}/{transaction id}`
+`{VC API base url}/v1/vc-api/exchanges/{exchange id}/{transaction id}`
 
 **HTTP Verb**
 
@@ -956,7 +956,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/vc-api/exchanges`
+`{VC API base url}/v1/vc-api/exchanges`
 
 **HTTP Verb**
 
@@ -1045,7 +1045,7 @@ Having configured the exchange, the Verifier must then ask the resident to prese
   "outOfBandInvitation": {
     "type": "https://example.com/out-of-band/vc-api-exchange",
     "body": {
-      "url": "http://localhost:3000/vc-api/exchanges/<FILL WITH YOUR EXCHANGE ID>"
+      "url": "{VC API base url}/v1/vc-api/exchanges/<FILL WITH YOUR EXCHANGE ID>"
     }
   }
 }
@@ -1059,7 +1059,7 @@ Send the request as described below.
 **Request URL**
 
 If using the Postman collection request, fill in the `exchangeId` param to be the value used for the exchange Id by the Verifier.
-`{VC API base url}/vc-api/exchanges/{exchange id}`
+`{VC API base url}/v1/vc-api/exchanges/{exchange id}`
 
 **HTTP Verb**
 
@@ -1115,7 +1115,7 @@ A similar json should be returned in the response body:
          "service":[
             {
                "type":"UnmediatedHttpPresentationService2021",
-               "serviceEndpoint":"https://vc-api-dev.energyweb.org/vc-api/exchanges/34712646/b38b7c65-f0d7-4d00-b026-f2704ff716cc"
+               "serviceEndpoint":"https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/34712646/b38b7c65-f0d7-4d00-b026-f2704ff716cc"
             }
          ]
       }
@@ -1144,7 +1144,7 @@ Send the request as described below.
 
 **Request URL**
 
-`{VC API base url}/vc-api/presentations/prove`
+`{VC API base url}/v1/vc-api/presentations/prove`
 
 **HTTP Verb**
 
@@ -1319,7 +1319,7 @@ Send the request as described below.
 
 In the request params, use the `transactionId` and `exchangeId` from the `serviceEndpoint` in the VP Request.
 
-`{VC API base url}/vc-api/exchanges/{exchangeId}/{transactionId}`
+`{VC API base url}/v1/vc-api/exchanges/{exchangeId}/v1/{transactionId}`
 
 **HTTP Verb**
 
@@ -1382,7 +1382,7 @@ For reference, the callback notification that would have been received in a conf
          "service":[
             {
                "type":"UnmediatedHttpPresentationService2021",
-               "serviceEndpoint":"https://vc-api-dev.energyweb.org/vc-api/exchanges/34712646/b38b7c65-f0d7-4d00-b026-f2704ff716cc"
+               "serviceEndpoint":"https://vc-api-dev.energyweb.org/v1/vc-api/exchanges/34712646/b38b7c65-f0d7-4d00-b026-f2704ff716cc"
             }
          ]
       }

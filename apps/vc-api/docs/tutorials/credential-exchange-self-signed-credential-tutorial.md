@@ -208,7 +208,7 @@ They can do this transmission by encoding the json in a QR code and displaying t
     "outOfBandInvitation": { 
         "type": "https://energyweb.org/out-of-band-invitation/vc-api-exchange",
         "body": { 
-            "url": "http://localhost:3000/vc-api/exchanges/{THE EXCHANGE ID FROM THE PREVIOUS STEP}" 
+            "url": "{VC API base url}/v1/vc-api/exchanges/{THE EXCHANGE ID FROM THE PREVIOUS STEP}" 
         }
     }
 } 
