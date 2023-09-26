@@ -16,13 +16,20 @@
  */
 
 import { Credential, CredentialType } from '@ew-did-registry/credentials-interface';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CredentialDto implements Credential<Record<string, unknown>> {
+  @ApiProperty()
   '@context': Array<string | Record<string, unknown>>;
+  @ApiProperty()
   credentialSubject: Record<string, unknown>;
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   issuanceDate: string;
+  @ApiProperty({ enum: CredentialType, enumName: 'CredentialType', isArray: true })
   type: CredentialType[];
+  @ApiProperty()
   issuer: string;
   [x: string]: unknown;
 

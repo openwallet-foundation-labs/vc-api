@@ -16,8 +16,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputDescriptorToCredentialResponseDto"
+                }
+              }
+            }
           }
         }
       }
@@ -50,6 +57,49 @@
           }
         },
         "required": ["constraints"]
+      },
+      "CredentialType": {
+        "type": "string",
+        "enum": ["VerifiableCredential", "VerifiablePresentation", "StatusList2021Credential", "EWFRole"]
+      },
+      "CredentialDto": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "credentialSubject": {
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "issuanceDate": {
+            "type": "string"
+          },
+          "type": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CredentialType"
+            }
+          },
+          "issuer": {
+            "type": "string"
+          }
+        },
+        "required": ["@context", "credentialSubject", "id", "issuanceDate", "type", "issuer"]
+      },
+      "InputDescriptorToCredentialResponseDto": {
+        "type": "object",
+        "properties": {
+          "credential": {
+            "$ref": "#/components/schemas/CredentialDto"
+          }
+        },
+        "required": ["credential"]
       }
     }
   }

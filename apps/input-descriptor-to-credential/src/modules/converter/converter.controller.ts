@@ -19,12 +19,14 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ConverterService } from './converter.service';
 import { InputDesciptorToCredentialDto, InputDescriptorToCredentialResponseDto } from './dtos';
 import { CredentialDto } from './dtos/credential.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('converter')
 export class ConverterController {
   constructor(private readonly converterService: ConverterService) {}
 
   @Post('input-descriptor-to-credential')
+  @ApiResponse({ type: InputDescriptorToCredentialResponseDto })
   async inputDescriptorToCredential(
     @Body() inputDesciptorToCredentialDto: InputDesciptorToCredentialDto
   ): Promise<InputDescriptorToCredentialResponseDto> {
