@@ -9,7 +9,6 @@ RUN apk add g++ make py3-pip
 COPY common common
 COPY rush.json .
 COPY apps/vc-api/package.json apps/vc-api/package.json
-COPY apps/input-descriptor-to-credential/package.json apps/input-descriptor-to-credential/package.json
 COPY tests/e2e/package.json tests/e2e/package.json
 COPY libraries/did/package.json libraries/did/package.json
 COPY libraries/webkms/package.json libraries/webkms/package.json
