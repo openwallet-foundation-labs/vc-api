@@ -10,7 +10,6 @@
   "author": "",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@energyweb/input-descriptor-to-credential": "0.0.1",
     "@energyweb/ssi-vc-api": "0.0.1",
     "@nestjs/common": "^10.0.4",
     "@nestjs/testing": "^10.0.4",
