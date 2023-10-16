@@ -26,6 +26,10 @@ export class HttpLoggerMiddleware implements NestMiddleware {
       } else {
         this.logger.log(message);
       }
+
+      if (req.body) {
+        this.logger.debug(`request body: ${JSON.stringify(req.body)}`);
+      }
     });
 
     res.on('close', () => {
