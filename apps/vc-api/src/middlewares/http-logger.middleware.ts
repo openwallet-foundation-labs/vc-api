@@ -12,6 +12,45 @@ export class HttpLoggerMiddleware implements NestMiddleware {
 
     let finished = false;
 
+    let responseBody: string;
+
+    try {
+      const oldWrite = res.write;
+      const oldEnd = res.end;
+      const chunks: Buffer[] = [];
+
+      res.write = (...args: unknown[]): boolean => {
+        try {
+          chunks.push(args[0] as Buffer);
+        } catch (err) {
+          this.logger.error(`error collecting response body chunk: ${err}`);
+          this.logger.verbose(err.stack);
+        }
+
+        return oldWrite.apply(res, args);
+      };
+
+      res.end = (...args: unknown[]) => {
+        try {
+          const chunk = args[0] as Buffer;
+
+          if (chunk) {
+            chunks.push(chunk);
+          }
+
+          responseBody = Buffer.concat(chunks).toString();
+        } catch (err) {
+          this.logger.error(`error collecting response body chunk: ${err}`);
+          this.logger.verbose(err.stack);
+        }
+
+        return oldEnd.apply(res, args);
+      };
+    } catch (err) {
+      this.logger.error(`error setting response body to be collected: ${err}`);
+      this.logger.verbose(err.stack);
+    }
+
     res.on('finish', () => {
       const message = `${res.statusCode} ${res.statusMessage} | ${req.ip} | [${method}] ${url} - ${
         Date.now() - requestStarted
@@ -29,6 +68,10 @@ export class HttpLoggerMiddleware implements NestMiddleware {
 
       if (req.body) {
         this.logger.debug(`request body: ${JSON.stringify(req.body)}`);
+      }
+
+      if (responseBody) {
+        this.logger.debug(`response body: ${responseBody}`);
       }
     });
 
