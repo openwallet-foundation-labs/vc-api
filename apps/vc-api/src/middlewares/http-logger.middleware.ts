@@ -12,6 +12,27 @@ export class HttpLoggerMiddleware implements NestMiddleware {
 
     let finished = false;
 
+    const oldWrite = res.write;
+    const oldEnd = res.end;
+    const chunks: Buffer[] = [];
+    let responseBody: string;
+
+    res.write = (...args: unknown[]): boolean => {
+      chunks.push(args[0] as Buffer);
+      return oldWrite.apply(res, args);
+    };
+
+    res.end = (...args: unknown[]) => {
+      const chunk = args[0] as Buffer;
+
+      if (chunk) {
+        chunks.push(chunk);
+      }
+
+      responseBody = Buffer.concat(chunks).toString();
+      return oldEnd.apply(res, args);
+    };
+
     res.on('finish', () => {
       const message = `${res.statusCode} ${res.statusMessage} | ${req.ip} | [${method}] ${url} - ${
         Date.now() - requestStarted
@@ -29,6 +50,10 @@ export class HttpLoggerMiddleware implements NestMiddleware {
 
       if (req.body) {
         this.logger.debug(`request body: ${JSON.stringify(req.body)}`);
+      }
+
+      if (responseBody) {
+        this.logger.debug(`response body: ${responseBody}`);
       }
     });
 
