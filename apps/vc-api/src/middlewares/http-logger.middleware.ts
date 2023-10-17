@@ -12,26 +12,44 @@ export class HttpLoggerMiddleware implements NestMiddleware {
 
     let finished = false;
 
-    const oldWrite = res.write;
-    const oldEnd = res.end;
-    const chunks: Buffer[] = [];
     let responseBody: string;
 
-    res.write = (...args: unknown[]): boolean => {
-      chunks.push(args[0] as Buffer);
-      return oldWrite.apply(res, args);
-    };
+    try {
+      const oldWrite = res.write;
+      const oldEnd = res.end;
+      const chunks: Buffer[] = [];
 
-    res.end = (...args: unknown[]) => {
-      const chunk = args[0] as Buffer;
+      res.write = (...args: unknown[]): boolean => {
+        try {
+          chunks.push(args[0] as Buffer);
+        } catch (err) {
+          this.logger.error(`error collecting response body chunk: ${err}`);
+          this.logger.verbose(err.stack);
+        }
 
-      if (chunk) {
-        chunks.push(chunk);
-      }
+        return oldWrite.apply(res, args);
+      };
 
-      responseBody = Buffer.concat(chunks).toString();
-      return oldEnd.apply(res, args);
-    };
+      res.end = (...args: unknown[]) => {
+        try {
+          const chunk = args[0] as Buffer;
+
+          if (chunk) {
+            chunks.push(chunk);
+          }
+
+          responseBody = Buffer.concat(chunks).toString();
+        } catch (err) {
+          this.logger.error(`error collecting response body chunk: ${err}`);
+          this.logger.verbose(err.stack);
+        }
+
+        return oldEnd.apply(res, args);
+      };
+    } catch (err) {
+      this.logger.error(`error setting response body to be collected: ${err}`);
+      this.logger.verbose(err.stack);
+    }
 
     res.on('finish', () => {
       const message = `${res.statusCode} ${res.statusMessage} | ${req.ip} | [${method}] ${url} - ${
