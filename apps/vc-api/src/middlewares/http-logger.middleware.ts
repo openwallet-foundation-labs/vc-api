@@ -1,3 +1,8 @@
+/*
+ * Copyright 2021 - 2023 Energy Web Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 

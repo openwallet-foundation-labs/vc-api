@@ -1,3 +1,8 @@
+/*
+ * Copyright 2021 - 2023 Energy Web Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { SeederService } from './seeder.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
