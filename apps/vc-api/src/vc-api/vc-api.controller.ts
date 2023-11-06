@@ -286,7 +286,7 @@ export class VcApiController {
     return this.continueExchange({ exchangeId, transactionId, presentation, res });
   }
 
-  async continueExchange(options: {
+  private async continueExchange(options: {
     exchangeId: string;
     transactionId: string;
     presentation: VerifiablePresentationDto;
