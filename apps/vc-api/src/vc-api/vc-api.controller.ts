@@ -22,6 +22,7 @@ import {
   Get,
   HttpCode,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
   Param,
   Post,
@@ -73,6 +74,8 @@ import { InternalServerErrorResponseDto } from '../dtos/internal-server-error-re
 @ApiBadRequestResponse({ type: BadRequestErrorResponseDto })
 @ApiInternalServerErrorResponse({ type: InternalServerErrorResponseDto })
 export class VcApiController {
+  private readonly logger = new Logger(VcApiController.name, { timestamp: true });
+
   constructor(private vcApiService: CredentialsService, private exchangeService: ExchangeService) {}
 
   /**
@@ -248,12 +251,49 @@ export class VcApiController {
     description: 'Verifiable Presentation successfully submitted. Further review in progress.'
   })
   @ApiNotFoundResponse({ type: NotFoundErrorResponseDto })
-  async continueExchange(
+  async continueExchangePut(
     @Param('exchangeId') exchangeId: string,
     @Param('transactionId') transactionId: string,
     @Body() presentation: VerifiablePresentationDto,
     @Res() res: Response
   ): Promise<ExchangeResponseDto | Response> {
+    this.logger.warn(`PUT method to be deprecated for exchange continuation`);
+
+    return this.continueExchange({ exchangeId, transactionId, presentation, res });
+  }
+
+  @Post('/exchanges/:exchangeId/:transactionId')
+  @ApiOperation({
+    description:
+      'Receives information related to an existing exchange.\n' +
+      'https://w3c-ccg.github.io/vc-api/#continue-exchange'
+  })
+  @ApiBody({ type: VerifiablePresentationDto })
+  @ApiOkResponse({
+    description: 'Verifiable Presentation successfully submitted and verified',
+    type: ExchangeResponseDto
+  })
+  @ApiAcceptedResponse({
+    description: 'Verifiable Presentation successfully submitted. Further review in progress.'
+  })
+  @ApiNotFoundResponse({ type: NotFoundErrorResponseDto })
+  async continueExchangePost(
+    @Param('exchangeId') exchangeId: string,
+    @Param('transactionId') transactionId: string,
+    @Body() presentation: VerifiablePresentationDto,
+    @Res() res: Response
+  ): Promise<ExchangeResponseDto | Response> {
+    return this.continueExchange({ exchangeId, transactionId, presentation, res });
+  }
+
+  private async continueExchange(options: {
+    exchangeId: string;
+    transactionId: string;
+    presentation: VerifiablePresentationDto;
+    res: Response;
+  }): Promise<ExchangeResponseDto | Response> {
+    const { exchangeId, transactionId, presentation, res } = options;
+
     if (!(await this.exchangeService.getExchange(exchangeId))) {
       throw new NotFoundException(`exchangeId=${exchangeId} does not exist`);
     }

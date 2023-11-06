@@ -424,7 +424,54 @@
     },
     "/v1/vc-api/exchanges/{exchangeId}/{transactionId}": {
       "put": {
-        "operationId": "VcApiController_continueExchange",
+        "operationId": "VcApiController_continueExchangePut",
+        "summary": "",
+        "description": "Receives information related to an existing exchange.\nhttps://w3c-ccg.github.io/vc-api/#continue-exchange",
+        "parameters": [
+          { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/VerifiablePresentationDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verifiable Presentation successfully submitted and verified",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ExchangeResponseDto" } }
+            }
+          },
+          "202": {
+            "description": "Verifiable Presentation successfully submitted. Further review in progress."
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BadRequestErrorResponseDto" } }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/NotFoundErrorResponseDto" } }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InternalServerErrorResponseDto" }
+              }
+            }
+          }
+        },
+        "tags": ["vc-api"]
+      },
+      "post": {
+        "operationId": "VcApiController_continueExchangePost",
         "summary": "",
         "description": "Receives information related to an existing exchange.\nhttps://w3c-ccg.github.io/vc-api/#continue-exchange",
         "parameters": [
