@@ -1,3 +1,8 @@
+/*
+ * Copyright 2021 - 2023 Energy Web Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Optionality, Rules } from '@sphereon/pex-models';
 import { CredentialDto } from 'src/vc-api/credentials/dtos/credential.dto';
 import { Presentation } from 'src/vc-api/exchanges/types/presentation';

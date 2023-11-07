@@ -1,3 +1,8 @@
+/*
+ * Copyright 2021 - 2023 Energy Web Foundation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { keyToDID } from '@spruceid/didkit-wasm-node';
 
 export const key = {
