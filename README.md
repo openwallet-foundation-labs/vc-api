@@ -84,5 +84,5 @@ For questions and support please use the Github issues.
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 or later - see the [LICENSE](LICENSE) file for details
+This project is licensed under the Apache 2.0 license - see the [LICENSE](LICENSE) file for details
 
