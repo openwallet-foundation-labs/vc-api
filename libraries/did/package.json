@@ -16,7 +16,7 @@
     "test": "jest"
   },
   "author": "Energy Web",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "dependencies": {
     "@trust/keyto": "^1.0.1",
     "ethers": "6.6.2",

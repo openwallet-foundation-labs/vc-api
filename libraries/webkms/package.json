@@ -15,7 +15,7 @@
     "url": "https://github.com/energywebfoundation/ssi/issues"
   },
   "author": "Energy Web",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "dependencies": {
     "ethers": "6.6.2",
     "jose": "^4.14.4"
