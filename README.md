@@ -48,7 +48,7 @@ See comparison of [NPM vs PNPM vs Yarn for Rush](https://rushjs.io/pages/maintai
 
 ### Requirements
 
-PNPM is required. See installation instructions here: https://pnpm.js.org/installation/
+PNPM is required. See installation instructions here: https://pnpm.io/installation
 
 Rush is required. See installation instructions here: https://rushjs.io/pages/intro/get_started/
 
