@@ -146,7 +146,7 @@ When defining an exchange, callbacks can be configured to allow parties to recei
 Notifications consist of POST requests to the configured URLs.
 A callback is configured by adding an entry to the callback array in the [Exchange Definition](../src/vc-api/exchanges/dtos/exchange-definition.dto.ts).
 
-For an example of the result of a callback notification, see the [Resident Card Tutorial](../docs/tutorials/resident-card-tutorial.md#17-authority-portal-check-for-notification-of-submitted-presentation).
+For an example of the result of a callback notification, see the [Resident Card Tutorial](./tutorials/credential-exchange-single-credential-tutorial.md#17-authority-portal-check-for-notification-of-submitted-presentation).
 
 #### Exchange Interact Services
 
@@ -173,11 +173,11 @@ This is because the issued VC will often depend data supplied by the credential 
 For example, the subject id of the credential may be a DID confirmed by a "DIDAuth" process
 or the VC may contain a "trust level" attribute based on the data provided in a VP by the holder.
 
-An example exchange definition for issuance can be seen in the [Resident Card tutorial](./tutorials/resident-card-tutorial.md#authority-portal-configure-the-credential-issuance-exchange).
+An example exchange definition for issuance can be seen in the [Resident Card tutorial](./tutorials/credential-exchange-single-credential-tutorial.md#11-authority-portal-configure-the-credential-issuance-exchange).
 
 #### Exchange Definition For Presentation
 
 For credential presentations, either a [Mediated Exchange](./exchanges.md#mediated-exchange-interactions)
 or an [Unmediated Exchange](./exchanges.md#unmediated-exchange-interactions) can be used.
 
-An example exchange definition of an unmediated exchange for presentation can be seen in the [Resident Card tutorial](./tutorials/resident-card-tutorial.md#verifier-configure-credential-exchange).
+An example exchange definition of an unmediated exchange for presentation can be seen in the [Resident Card tutorial](./tutorials/credential-exchange-single-credential-tutorial.md#21-verifier-configure-credential-exchange).
