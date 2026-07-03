@@ -134,8 +134,14 @@ export class WalletClient {
   ) {
     const continueExchangeResponse = await request(this.#app.getHttpServer())
       .put(exchangeContinuationEndpoint)
-      .send(vp)
-      .expect(expectsProcessionInProgress ? 202 : 200);
+      .send(vp);
+    const expectedStatus = expectsProcessionInProgress ? 202 : 200;
+    if (continueExchangeResponse.status !== expectedStatus) {
+      console.error(
+        `continueExchange returned ${continueExchangeResponse.status}: ${JSON.stringify(continueExchangeResponse.body)}`
+      );
+    }
+    expect(continueExchangeResponse.status).toEqual(expectedStatus);
     expect(continueExchangeResponse.body.errors).toHaveLength(0);
     if (expectsVpRequest) {
       expect(continueExchangeResponse.body.vpRequest).toBeDefined();
@@ -203,8 +209,14 @@ export class WalletClient {
       .post(exchangeContinuationEndpoint)
       .send({
         verifiablePresentation: vp
-      })
-      .expect(expectsProcessingInProgress ? 202 : 200);
+      });
+    const expectedWfStatus = expectsProcessingInProgress ? 202 : 200;
+    if (continueExchangeResponse.status !== expectedWfStatus) {
+      console.error(
+        `continueWorkflowExchange returned ${continueExchangeResponse.status}: ${JSON.stringify(continueExchangeResponse.body)}`
+      );
+    }
+    expect(continueExchangeResponse.status).toEqual(expectedWfStatus);
 
     const body = continueExchangeResponse.body as WfExchangeResponseDto;
 

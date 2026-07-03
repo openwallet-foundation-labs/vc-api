@@ -28,6 +28,14 @@ export let app: INestApplication;
 export let walletClient: WalletClient;
 export const vcApiBaseUrl = `${API_DEFAULT_VERSION_PREFIX}/vc-api`;
 
+// Surface any callback request that nock rejects; the server only logs these
+// on its own stdout, which CI does not reliably capture
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import * as nock from 'nock';
+nock.emitter.on('no match', (req) => {
+  console.error(`NOCK no match: ${req?.method} ${req?.host ?? ''}${req?.path ?? ''}`);
+});
+
 describe('App (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
