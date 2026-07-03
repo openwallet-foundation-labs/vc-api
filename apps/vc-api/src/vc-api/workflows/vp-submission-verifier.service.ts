@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ProofPurpose, IPresentationDefinition, PEX, IPresentation } from '@sphereon/pex';
 import { CredentialsService } from '../credentials/credentials.service';
 import { SubmissionVerifier } from './types/submission-verifier';
@@ -21,6 +21,8 @@ import { VpRequestDto } from './dtos/vp-request.dto';
  */
 @Injectable()
 export class VpSubmissionVerifierService implements SubmissionVerifier {
+  private readonly logger = new Logger(VpSubmissionVerifierService.name, { timestamp: true });
+
   constructor(private credentialsService: CredentialsService) {}
 
   public async verifyVpRequestSubmission(
@@ -37,6 +39,9 @@ export class VpSubmissionVerifierService implements SubmissionVerifier {
       ...proofVerifiactionResult.problemDetails,
       ...vpRequestValidationErrors.map((error) => ({ title: error }))
     ];
+    if (errors.length > 0) {
+      this.logger.warn(`presentation submission verification failed: ${JSON.stringify(errors)}`);
+    }
     return {
       verified: proofVerifiactionResult.verified,
       errors,
