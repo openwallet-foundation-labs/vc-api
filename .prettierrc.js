@@ -1,6 +1,10 @@
 // Documentation for this file: https://prettier.io/docs/en/configuration.html
 module.exports = {
-  ...require('@energyweb/prettier-config'),
+  // Editor auto-wrapping is preferred for editing markdown files
+  proseWrap: 'never',
+
+  singleQuote: true,
+
   // We use a larger print width because Prettier's word-wrapping seems to be tuned
   // for plain JavaScript without type annotations
   printWidth: 110,
@@ -9,6 +13,7 @@ module.exports = {
   endOfLine: 'auto',
 
   // For ES5, trailing commas cannot be used in function parameters; it is counterintuitive
-  // to use them for arrays only
+  // to use them for arrays only.
+  // (Kept explicitly because Prettier 3 changed the default to "all".)
   trailingComma: 'none'
 };

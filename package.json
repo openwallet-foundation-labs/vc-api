@@ -12,12 +12,19 @@
     "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true",
     "build": "pnpm --recursive run build",
     "test": "pnpm --recursive --workspace-concurrency=1 run test",
-    "lint": "pnpm --recursive run lint",
-    "update-openapi": "pnpm --filter @energyweb/ssi-vc-api run update-openapi"
+    "lint": "eslint .",
+    "update-openapi": "pnpm --filter @energyweb/ssi-vc-api run update-openapi",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@energyweb/prettier-config": "catalog:",
+    "@eslint/js": "^10.0.0",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-no-only-tests": "catalog:",
+    "globals": "catalog:",
     "prettier": "catalog:",
-    "pretty-quick": "^3.1.3"
+    "pretty-quick": "^4.0.0",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }

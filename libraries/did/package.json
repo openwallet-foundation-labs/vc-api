@@ -31,17 +31,10 @@
   "devDependencies": {
     "@types/jest": "catalog:",
     "babel-jest": "29.5.0",
-    "eslint": "catalog:",
     "jest": "catalog:",
     "rimraf": "catalog:",
     "ts-jest": "catalog:",
     "typescript": "catalog:",
-    "@energyweb/eslint-config": "catalog:",
-    "@energyweb/prettier-config": "catalog:",
-    "@typescript-eslint/eslint-plugin": "catalog:",
-    "@typescript-eslint/parser": "catalog:",
-    "eslint-config-prettier": "catalog:",
-    "eslint-plugin-no-only-tests": "catalog:",
     "prettier": "catalog:",
     "@types/node": "catalog:"
   },

@@ -14,7 +14,6 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest && jest --config ./test/jest-e2e.json",
     "test:unit": "jest",
     "test:watch": "jest --watch",
@@ -63,11 +62,6 @@
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "@types/supertest": "catalog:",
-    "@typescript-eslint/eslint-plugin": "catalog:",
-    "@typescript-eslint/parser": "catalog:",
-    "eslint": "catalog:",
-    "eslint-config-prettier": "catalog:",
-    "eslint-plugin-prettier": "catalog:",
     "jest": "catalog:",
     "prettier": "catalog:",
     "supertest": "catalog:",
@@ -77,10 +71,7 @@
     "tsconfig-paths": "catalog:",
     "typescript": "catalog:",
     "nock": "^14.0.0",
-    "@sphereon/pex-models": "~2.0.2",
-    "@energyweb/eslint-config": "catalog:",
-    "@energyweb/prettier-config": "catalog:",
-    "eslint-plugin-no-only-tests": "catalog:"
+    "@sphereon/pex-models": "~2.0.2"
   },
   "jest": {
     "moduleFileExtensions": [

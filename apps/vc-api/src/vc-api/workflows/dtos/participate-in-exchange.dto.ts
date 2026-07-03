@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { IsBoolean, IsOptional, ValidateNested } from 'class-validator';
+import { IsOptional, ValidateNested } from 'class-validator';
 import { VerifiablePresentationDto } from '../../credentials/dtos/verifiable-presentation.dto';
 import { VpRequestDto } from './vp-request.dto';
 import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 /**
  * Describes the possible body of a request to participate an exchange.

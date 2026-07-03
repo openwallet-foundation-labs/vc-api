@@ -22,8 +22,6 @@ catalog:
   '@credo-ts/askar': 0.5.10
   '@credo-ts/core': 0.5.10
   '@credo-ts/node': 0.5.10
-  '@energyweb/eslint-config': ~0.1.0
-  '@energyweb/prettier-config': ~0.0.1
   '@hyperledger/aries-askar-nodejs': ^0.2.1
   '@nestjs/common': ^11.1.0
   '@nestjs/core': ^11.1.0
@@ -32,17 +30,15 @@ catalog:
   '@types/jest': ^30.0.0
   '@types/node': ^24.0.0
   '@types/supertest': ^7.0.0
-  '@typescript-eslint/eslint-plugin': ^5.60.1
-  '@typescript-eslint/parser': ^5.60.1
   did-resolver: ~4.1.0
-  eslint: ^8.22.0
-  eslint-config-prettier: ^8.8.0
-  eslint-plugin-no-only-tests: ~3.1.0
-  eslint-plugin-prettier: ^4.2.1
+  eslint: ^10.0.0
+  globals: ^16.0.0
+  eslint-config-prettier: ^10.0.0
+  eslint-plugin-no-only-tests: ^3.3.0
   ethers: 6.6.2
   jest: ^30.4.0
   jose: ^4.14.4
-  prettier: ^2.8.8
+  prettier: ^3.9.0
   reflect-metadata: ^0.2.2
   rimraf: ^4.0.0
   supertest: ^7.0.0
@@ -51,6 +47,7 @@ catalog:
   ts-node: ^10.9.1
   tsconfig-paths: ^4.2.0
   typescript: ^5.9.0
+  typescript-eslint: ^8.62.0
 
 overrides:
   # Align every consumer on one class-validator instance (also credo-ts's pin);

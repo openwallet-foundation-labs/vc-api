@@ -6,7 +6,7 @@
 import { AskarModule } from '@credo-ts/askar';
 import { DIDKeyFactory } from './did-key-factory';
 import { Agent, InitConfig, TypedArrayEncoder } from '@credo-ts/core';
-import { agentDependencies } from '@credo-ts/node'
+import { agentDependencies } from '@credo-ts/node';
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs';
 
 describe('DIDKeyFactory', () => {
@@ -22,12 +22,12 @@ describe('DIDKeyFactory', () => {
         storage: {
           type: 'sqlite',
           config: {
-          	inMemory: true,
+            inMemory: true
           }
-        },
-      },
-    }
-    
+        }
+      }
+    };
+
     // create agent - here Aries Askar
     agent = new Agent({
       config,
@@ -35,11 +35,11 @@ describe('DIDKeyFactory', () => {
       modules: {
         // Register the Askar module on the agent
         askar: new AskarModule({
-          ariesAskar,
-        }),
-      },
+          ariesAskar
+        })
+      }
     });
-  
+
     // operations in the credo wallet can only be performed once the agent is initialized
     await agent.initialize();
   });
@@ -47,7 +47,7 @@ describe('DIDKeyFactory', () => {
   afterEach(async function () {
     await agent.wallet.close();
     await agent.wallet.delete();
-	  await agent.shutdown();
+    await agent.shutdown();
   });
 
   it('should create did', async () => {
@@ -60,8 +60,9 @@ describe('DIDKeyFactory', () => {
     expect(didDocument.id).toEqual('did:key:z6Mkpf5gPMANfqmgCfzDye4kCnLRwC7mtqrtjZ3J87AjKddx');
     expect(didDocument.verificationMethod?.length).toEqual(1);
     const verificationMethod = didDocument.verificationMethod![0];
-    expect(verificationMethod.publicKeyBase58)
-      .toEqual(TypedArrayEncoder.toBase58(TypedArrayEncoder.fromBase64(publicKeyJWK.x)));
+    expect(verificationMethod.publicKeyBase58).toEqual(
+      TypedArrayEncoder.toBase58(TypedArrayEncoder.fromBase64(publicKeyJWK.x))
+    );
 
     /**
      * From https://www.w3.org/TR/did-core/#verification-material :
