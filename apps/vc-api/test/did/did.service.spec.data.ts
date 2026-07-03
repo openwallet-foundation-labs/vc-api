@@ -1,7 +1,6 @@
-import { DidDocument } from '@credo-ts/core';
 import { IKeyDescription } from '@energyweb/w3c-ccg-webkms';
-import { KeyEntryObject } from '@hyperledger/aries-askar-shared';
 import { DIDDocument } from 'did-resolver';
+import { JWK } from 'jose';
 import { KeyPairDto } from '../../src/key/dtos/key-pair.dto';
 
 export const generatedKey: IKeyDescription = {
@@ -42,20 +41,14 @@ export const didDocument: DIDDocument = {
   capabilityDelegation: [
     'did:key:z6MkkHpdGLCEmsp6cPACigf2EU7GfsXqpwY5Dwn63SXYw6Ra#z6MkkHpdGLCEmsp6cPACigf2EU7GfsXqpwY5Dwn63SXYw6Ra'
   ]
-} as DidDocument;
+} as unknown as DIDDocument;
 
-export const keyEntryObject: KeyEntryObject = {
-  key: {
-    get jwkPublic() {
-      return {
-        kty: 'OKP',
-        crv: 'Ed25519',
-        x: 'VrsnBw1-JP3R4xuaQqDQI9pXM2YP1Per79Unm2UkCaU',
-        kid: '6qZag5woSLKdVtKW37hBPNZGrJFzR4HiXvsADAZY1seC'
-      };
-    }
-  } as any
-} as any;
+export const publicKeyJwk: JWK = {
+  kty: 'OKP',
+  crv: 'Ed25519',
+  x: 'VrsnBw1-JP3R4xuaQqDQI9pXM2YP1Per79Unm2UkCaU',
+  kid: '6qZag5woSLKdVtKW37hBPNZGrJFzR4HiXvsADAZY1seC'
+};
 
 export const keyPair: KeyPairDto = {
   publicKey: {

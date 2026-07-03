@@ -48,15 +48,13 @@ export class DIDService {
    * @returns DID Document of registered DID
    */
   public async registerKeyDID(keyId: string): Promise<DIDDocument> {
-    const key = await this.keyService.fetchKey(keyId);
+    const key = await this.keyService.getPublicKeyFromKeyId(keyId);
 
     if (!key) {
       throw new BadRequestException(`keyId=${keyId} not found`);
     }
 
-    // Need to set kty because it is possibly undefined in 'jose' JWK type
-    const difKey = { ...key?.key?.jwkPublic, kty: 'OKP' };
-    const didDoc = await DIDKeyFactory.generate(this.credoService.agent, difKey);
+    const didDoc = await DIDKeyFactory.generate(this.credoService.agent, keyId);
     return didDoc;
   }
 

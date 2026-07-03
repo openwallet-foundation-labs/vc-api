@@ -98,7 +98,8 @@ export class ConsentandResidentCardCredentialIssuance {
         'https://www.w3.org/2018/credentials/v1',
         {
           elia: 'https://www.eliagroup.eu/ld-context-2022#',
-          consent: 'elia:consent'
+          consent: 'elia:consent',
+          ConsentCredential: 'elia:ConsentCredential'
         }
       ],
       id: 'urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e',

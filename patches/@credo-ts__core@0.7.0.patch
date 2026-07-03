@@ -1,0 +1,13 @@
+diff --git a/build/modules/vc/data-integrity/W3cJsonLdCredentialService.mjs b/build/modules/vc/data-integrity/W3cJsonLdCredentialService.mjs
+index 49858f101d5fc7cbb3e5f3e7ba464753d38e5cdb..94b7f43e1e273418cdb64622187859bf7379f677 100644
+--- a/build/modules/vc/data-integrity/W3cJsonLdCredentialService.mjs
++++ b/build/modules/vc/data-integrity/W3cJsonLdCredentialService.mjs
+@@ -139,7 +139,7 @@ let W3cJsonLdCredentialService = class W3cJsonLdCredentialService {
+ 		};
+ 		if (options.proofPurpose) signOptions.purpose = options.proofPurpose;
+ 		const result = await vc_default.signPresentation(signOptions);
+-		return JsonTransformer.fromJSON(result, W3cJsonLdVerifiablePresentation);
++		return JsonTransformer.fromJSON(result, W3cJsonLdVerifiablePresentation, { validate: !(result.verifiableCredential === undefined) });
+ 	}
+ 	/**
+ 	* Verifies a presentation including the credentials it includes

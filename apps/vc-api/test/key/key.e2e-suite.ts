@@ -12,7 +12,9 @@ export const keySuite = () => {
     const keyId = didDoc.verificationMethod[0].publicKeyBase58;
     const exportedKey = await walletClient.exportKey(keyId);
     expect(exportedKey).toBeDefined();
-    expect(TypedArrayEncoder.toBase58(TypedArrayEncoder.fromBase64(exportedKey.publicKey.x))).toEqual(keyId);
+    expect(TypedArrayEncoder.toBase58(TypedArrayEncoder.fromBase64Url(exportedKey.publicKey.x))).toEqual(
+      keyId
+    );
   });
 
   it('should import and export a key', async () => {

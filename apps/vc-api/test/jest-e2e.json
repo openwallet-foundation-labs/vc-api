@@ -5,5 +5,10 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^@openwallet-foundation/askar-nodejs$": "<rootDir>/../../../jest-setup/askar-nodejs.cjs",
+    "^@openwallet-foundation/askar-shared$": "<rootDir>/../../../jest-setup/askar-shared.cjs",
+    "^webcrypto-core$": "<rootDir>/../../../jest-setup/webcrypto-core.cjs"
   }
 }

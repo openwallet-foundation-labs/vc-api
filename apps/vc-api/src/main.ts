@@ -3,6 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// Registers the native askar binding before any '@credo-ts/*' package loads
+// (see the import-order note in credo/credo.service.ts)
+import '@openwallet-foundation/askar-nodejs';
 import { setupApp, setupSwaggerDocument } from './setup';
 import { readFile } from 'fs/promises';
 import { resolve as resolvePath } from 'path';

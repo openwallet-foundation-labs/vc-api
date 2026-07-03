@@ -6,23 +6,24 @@ packages:
 # Postinstall scripts are blocked unless allowed here. The allowed packages
 # compile or download native binaries they cannot work without.
 allowBuilds:
-  '@2060.io/ffi-napi': true
-  '@2060.io/ref-napi': true
-  '@hyperledger/aries-askar-nodejs': true
+  '@openwallet-foundation/askar-nodejs': true
   '@nestjs/core': true
   '@scarf/scarf': false
   '@sphereon/pex': false
   es5-ext: false
   sqlite3: true
   unrs-resolver: true
+  cbor-extract: true
+  koffi: true
 
 # Shared dependency versions (replaces Rush's ensureConsistentVersions).
 # Reference these from package.json with the "catalog:" protocol.
 catalog:
-  '@credo-ts/askar': 0.5.10
-  '@credo-ts/core': 0.5.10
-  '@credo-ts/node': 0.5.10
-  '@hyperledger/aries-askar-nodejs': ^0.2.1
+  '@credo-ts/askar': ^0.7.0
+  '@credo-ts/core': ^0.7.0
+  '@credo-ts/node': ^0.7.0
+  '@openwallet-foundation/askar-nodejs': ^0.6.0
+  '@openwallet-foundation/askar-shared': ^0.6.0
   '@nestjs/common': ^11.1.0
   '@nestjs/core': ^11.1.0
   '@nestjs/platform-express': ^11.1.0
@@ -30,6 +31,7 @@ catalog:
   '@types/jest': ^30.0.0
   '@types/node': ^24.0.0
   '@types/supertest': ^7.0.0
+  cross-env: ^10.0.0
   did-resolver: ~4.1.0
   eslint: ^10.0.0
   globals: ^16.0.0
@@ -55,4 +57,4 @@ overrides:
   class-validator: 0.14.1
 
 patchedDependencies:
-  '@credo-ts/core@0.5.10': patches/@credo-ts__core@0.5.10.patch
+  '@credo-ts/core@0.7.0': patches/@credo-ts__core@0.7.0.patch

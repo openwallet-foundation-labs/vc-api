@@ -37,7 +37,7 @@ PNPM is used for its speed and solution to NPM doppelgangers.
 
 ### Requirements
 
-Node.js >= 22 is required (see `.nvmrc`).
+Node.js >= 24.9 is required (see `.nvmrc`).
 
 pnpm is required. With Node.js installed, the easiest way to get it is `corepack enable`
 (the version is pinned by the `packageManager` field in `package.json`).

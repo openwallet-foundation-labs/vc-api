@@ -3,39 +3,38 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// IMPORTANT: '@openwallet-foundation/askar-nodejs' must be imported before any
+// '@credo-ts/*' package so the native askar binding is registered before the
+// ESM-only Credo packages snapshot it (see CredoService in apps/vc-api)
+import { askar } from '@openwallet-foundation/askar-nodejs';
 import { AskarModule } from '@credo-ts/askar';
 import { DIDKeyFactory } from './did-key-factory';
-import { Agent, InitConfig, TypedArrayEncoder } from '@credo-ts/core';
+import { Agent, TypedArrayEncoder } from '@credo-ts/core';
 import { agentDependencies } from '@credo-ts/node';
-import { ariesAskar } from '@hyperledger/aries-askar-nodejs';
 
 describe('DIDKeyFactory', () => {
   let agent: Agent<{
     askar: AskarModule;
   }>;
   beforeEach(async function () {
-    const config: InitConfig = {
-      label: 'wallet-test-askar',
-      walletConfig: {
-        id: 'wallet-test',
-        key: 'testkey0000000000000000000000000',
-        storage: {
-          type: 'sqlite',
-          config: {
-            inMemory: true
-          }
-        }
-      }
-    };
-
     // create agent - here Aries Askar
     agent = new Agent({
-      config,
+      config: {},
       dependencies: agentDependencies,
       modules: {
         // Register the Askar module on the agent
         askar: new AskarModule({
-          ariesAskar
+          askar,
+          store: {
+            id: 'wallet-test',
+            key: 'testkey0000000000000000000000000',
+            database: {
+              type: 'sqlite',
+              config: {
+                inMemory: true
+              }
+            }
+          }
         })
       }
     });
@@ -45,30 +44,34 @@ describe('DIDKeyFactory', () => {
   });
 
   afterEach(async function () {
-    await agent.wallet.close();
-    await agent.wallet.delete();
     await agent.shutdown();
   });
 
   it('should create did', async () => {
-    const publicKeyJWK = {
-      kty: 'OKP',
-      crv: 'Ed25519',
-      x: 'l5weWO83oqUve6Q5SJncYvRqnONyJWaRi3eKUMhUU38'
-    };
-    const didDocument = await DIDKeyFactory.generate(agent, publicKeyJWK);
-    expect(didDocument.id).toEqual('did:key:z6Mkpf5gPMANfqmgCfzDye4kCnLRwC7mtqrtjZ3J87AjKddx');
+    const { keyId, publicJwk } = await agent.kms.createKey({
+      type: { kty: 'OKP', crv: 'Ed25519' }
+    });
+
+    const didDocument = await DIDKeyFactory.generate(agent, keyId);
+
+    const publicKeyBase58 = TypedArrayEncoder.toBase58(TypedArrayEncoder.fromBase64Url(publicJwk.x));
+    expect(didDocument.id).toMatch(/^did:key:z/);
     expect(didDocument.verificationMethod?.length).toEqual(1);
     const verificationMethod = didDocument.verificationMethod![0];
-    expect(verificationMethod.publicKeyBase58).toEqual(
-      TypedArrayEncoder.toBase58(TypedArrayEncoder.fromBase64(publicKeyJWK.x))
-    );
+    expect(verificationMethod.publicKeyBase58).toEqual(publicKeyBase58);
+  });
 
-    /**
-     * From https://www.w3.org/TR/did-core/#verification-material :
-     * "It is RECOMMENDED that verification methods that use JWKs [RFC7517] to represent their public keys use the value of kid as their fragment identifier."
-     * Spruce doesn't do this for there did:key verification method but try to use as much OOTB DIDKit as possible
-     */
-    // expect(verificationMethod.id.split('#')[1]).toEqual(verificationMethod.publicKeyJwk?.kid);
+  it('should return the existing did document when called twice for the same key', async () => {
+    const { keyId } = await agent.kms.createKey({
+      type: { kty: 'OKP', crv: 'Ed25519' }
+    });
+
+    const first = await DIDKeyFactory.generate(agent, keyId);
+    const second = await DIDKeyFactory.generate(agent, keyId);
+
+    expect(second.id).toEqual(first.id);
+    expect(second.verificationMethod?.[0]?.publicKeyBase58).toEqual(
+      first.verificationMethod?.[0]?.publicKeyBase58
+    );
   });
 });
