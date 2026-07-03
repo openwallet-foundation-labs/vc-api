@@ -51,7 +51,7 @@ import { BadRequestErrorResponseDto } from '../dtos/bad-request-error-response.d
 import { ConflictErrorResponseDto } from '../dtos/conflict-error-response.dto';
 import { NotFoundErrorResponseDto } from '../dtos/not-found-error-response.dto';
 import { InternalServerErrorResponseDto } from '../dtos/internal-server-error-response.dto';
-import { IPresentationDefinition } from '@sphereon/pex';
+import { IPresentationDefinition } from '@animo-id/pex';
 import { AuthenticateDto } from './credentials/dtos/authenticate.dto';
 import { CreateWorkflowRequestDto } from './workflows/dtos/create-workflow-request.dto';
 import { WorkflowService } from './workflows/workflow.service';

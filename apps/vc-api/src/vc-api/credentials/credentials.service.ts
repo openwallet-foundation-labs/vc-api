@@ -12,7 +12,8 @@ import { VerificationResultDto } from './dtos/verification-result.dto';
 import { ProvePresentationDto } from './dtos/prove-presentation.dto';
 import { CredentialVerifier } from './types/credential-verifier';
 import { PresentationDto } from './dtos/presentation.dto';
-import { IPresentationDefinition, IVerifiableCredential, PEX, ProofPurpose, Status } from '@sphereon/pex';
+import { IPresentationDefinition, PEX, PresentationSubmissionLocation, Status } from '@animo-id/pex';
+import { IProofPurpose as ProofPurpose, IVerifiableCredential } from '@sphereon/ssi-types';
 import { VerificationMethod } from 'did-resolver';
 import { CredoService } from '../../credo/credo.service';
 import {
@@ -89,9 +90,13 @@ export class CredentialsService implements CredentialVerifier {
     if (areRequiredCredentialsPresent !== Status.INFO) {
       throw new InternalServerErrorException('Credentials do not satisfy defintion');
     }
-    const presentation = pex.presentationFrom(presentationDefinition, verifiableCredential);
+    // keep the presentation submission embedded in the presentation, as
+    // returned by pex 1.x
+    const { presentations } = pex.presentationFrom(presentationDefinition, verifiableCredential, {
+      presentationSubmissionLocation: PresentationSubmissionLocation.PRESENTATION
+    });
 
-    return presentation as PresentationDto;
+    return presentations[0] as PresentationDto;
   }
 
   async provePresentation(provePresentationDto: ProvePresentationDto): Promise<VerifiablePresentationDto> {

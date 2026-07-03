@@ -86,52 +86,31 @@ export class ConsentAndResidentCardPresentation {
                             const: 'urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e'
                           }
                         },
+                        // pex 6 validates filters against the DIF PE filter schema, which
+                        // does not allow free-form json-schema keywords such as "properties"
+                        // or "$ref"; reach into the context and subject with json paths instead
                         {
-                          path: ['$.@context'],
+                          path: ["$['@context'][0]"],
                           filter: {
-                            $schema: 'http://json-schema.org/draft-07/schema#',
-                            type: 'array',
-                            items: [
-                              {
-                                const: 'https://www.w3.org/2018/credentials/v1'
-                              },
-                              {
-                                $ref: '#/definitions/eliaGroupContext'
-                              }
-                            ],
-                            additionalItems: false,
-                            minItems: 2,
-                            maxItems: 2,
-                            definitions: {
-                              eliaGroupContext: {
-                                type: 'object',
-                                properties: {
-                                  elia: {
-                                    const: 'https://www.eliagroup.eu/ld-context-2022#'
-                                  },
-                                  consent: {
-                                    const: 'elia:consent'
-                                  },
-                                  ConsentCredential: {
-                                    const: 'elia:ConsentCredential'
-                                  }
-                                },
-                                additionalProperties: false,
-                                required: ['elia', 'consent']
-                              }
-                            }
+                            const: 'https://www.w3.org/2018/credentials/v1'
                           }
                         },
                         {
-                          path: ['$.credentialSubject'],
+                          path: ["$['@context'][1].elia"],
                           filter: {
-                            type: 'object',
-                            properties: {
-                              consent: {
-                                const: 'I consent to such and such'
-                              }
-                            },
-                            additionalProperties: true
+                            const: 'https://www.eliagroup.eu/ld-context-2022#'
+                          }
+                        },
+                        {
+                          path: ["$['@context'][1].consent"],
+                          filter: {
+                            const: 'elia:consent'
+                          }
+                        },
+                        {
+                          path: ['$.credentialSubject.consent'],
+                          filter: {
+                            const: 'I consent to such and such'
                           }
                         },
                         {
@@ -223,52 +202,31 @@ export class ConsentAndResidentCardPresentation {
                             const: 'urn:uuid:49f69fb8-f256-4b2e-b15d-c7ebec3a507e'
                           }
                         },
+                        // pex 6 validates filters against the DIF PE filter schema, which
+                        // does not allow free-form json-schema keywords such as "properties"
+                        // or "$ref"; reach into the context and subject with json paths instead
                         {
-                          path: ['$.@context'],
+                          path: ["$['@context'][0]"],
                           filter: {
-                            $schema: 'http://json-schema.org/draft-07/schema#',
-                            type: 'array',
-                            items: [
-                              {
-                                const: 'https://www.w3.org/2018/credentials/v1'
-                              },
-                              {
-                                $ref: '#/definitions/eliaGroupContext'
-                              }
-                            ],
-                            additionalItems: false,
-                            minItems: 2,
-                            maxItems: 2,
-                            definitions: {
-                              eliaGroupContext: {
-                                type: 'object',
-                                properties: {
-                                  elia: {
-                                    const: 'https://www.eliagroup.eu/ld-context-2022#'
-                                  },
-                                  consent: {
-                                    const: 'elia:consent'
-                                  },
-                                  ConsentCredential: {
-                                    const: 'elia:ConsentCredential'
-                                  }
-                                },
-                                additionalProperties: false,
-                                required: ['elia', 'consent']
-                              }
-                            }
+                            const: 'https://www.w3.org/2018/credentials/v1'
                           }
                         },
                         {
-                          path: ['$.credentialSubject'],
+                          path: ["$['@context'][1].elia"],
                           filter: {
-                            type: 'object',
-                            properties: {
-                              consent: {
-                                const: 'I consent to such and such'
-                              }
-                            },
-                            additionalProperties: true
+                            const: 'https://www.eliagroup.eu/ld-context-2022#'
+                          }
+                        },
+                        {
+                          path: ["$['@context'][1].consent"],
+                          filter: {
+                            const: 'elia:consent'
+                          }
+                        },
+                        {
+                          path: ['$.credentialSubject.consent'],
+                          filter: {
+                            const: 'I consent to such and such'
                           }
                         },
                         {

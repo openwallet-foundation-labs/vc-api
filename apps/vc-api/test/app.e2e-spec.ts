@@ -58,6 +58,12 @@ describe('App (e2e)', () => {
     await workflowRepository.clear();
   });
 
+  // Drop any interceptors a failed test left behind; otherwise they absorb
+  // the next test's callback requests and its scope assertions fail too
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('DID (e2e)', didSuite);
   describe('Key (e2e)', keySuite);
   describe('VC-API (e2e)', vcApiSuite);

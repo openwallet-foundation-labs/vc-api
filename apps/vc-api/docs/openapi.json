@@ -1139,6 +1139,7 @@
       "ProofPurpose": {
         "type": "string",
         "enum": [
+          "verificationMethod",
           "assertionMethod",
           "authentication",
           "keyAgreement",
