@@ -1,54 +1,48 @@
-import { AskarModule, AskarWallet } from '@credo-ts/askar';
-import { Agent, InitConfig, SigningProviderRegistry, ConsoleLogger, WalletConfig } from '@credo-ts/core';
+// IMPORTANT: '@openwallet-foundation/askar-nodejs' must be imported before any
+// '@credo-ts/*' package. Importing it registers the native askar binding on
+// the (CommonJS) '@openwallet-foundation/askar-shared' package; the ESM-only
+// Credo packages snapshot that binding when they load, so loading Credo first
+// leaves them with an unregistered (undefined) binding.
+import { askar } from '@openwallet-foundation/askar-nodejs';
+import { AskarModule, AskarStoreManager } from '@credo-ts/askar';
+import { Agent } from '@credo-ts/core';
 import { agentDependencies } from '@credo-ts/node';
-import { ariesAskar } from '@hyperledger/aries-askar-nodejs';
+import { Session } from '@openwallet-foundation/askar-shared';
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CredoService implements OnModuleInit, OnModuleDestroy {
-  private readonly walletConfig: WalletConfig;
   private readonly askarAgent: Agent<{ askar: AskarModule }>;
-  private readonly askarWallet: AskarWallet;
   private initialized = false;
 
   constructor(private configService: ConfigService) {
-    this.walletConfig = {
-      id: this.configService.get<string>('CREDO_WALLET_ID'),
-      key: this.configService.get<string>('CREDO_WALLET_KEY'),
-      storage: {
-        type: this.configService.get<string>('CREDO_WALLET_DB_TYPE'),
-        config: {
-          path: `${this.configService.get<string>('DB_BASE_PATH')}/${this.configService.get<string>(
-            'CREDO_WALLET_ID'
-          )}/sqlite.db`
-        }
-      }
-    };
-
-    // Initialize agent and wallet synchronously
-    const config: InitConfig = {
-      label: this.configService.get<string>('CREDO_LABEL'),
-      walletConfig: this.walletConfig
-    };
-
-    // Create the agent
+    // Create the agent. Since Credo 0.6 the store configuration lives on the
+    // Askar module rather than the agent config ("walletConfig").
     this.askarAgent = new Agent({
-      config,
+      config: {
+        // Migrates records of pre-0.6 stores on first startup
+        autoUpdateStorageOnStartup: true
+      },
       dependencies: agentDependencies,
       modules: {
         askar: new AskarModule({
-          ariesAskar
+          askar,
+          store: {
+            id: this.configService.get<string>('CREDO_WALLET_ID'),
+            key: this.configService.get<string>('CREDO_WALLET_KEY'),
+            database: {
+              type: 'sqlite',
+              config: {
+                path: `${this.configService.get<string>('DB_BASE_PATH')}/${this.configService.get<string>(
+                  'CREDO_WALLET_ID'
+                )}/sqlite.db`
+              }
+            }
+          }
         })
       }
     });
-
-    // Create the wallet
-    this.askarWallet = new AskarWallet(
-      new ConsoleLogger(),
-      new agentDependencies.FileSystem(),
-      new SigningProviderRegistry([])
-    );
   }
 
   async onModuleInit() {
@@ -56,12 +50,11 @@ export class CredoService implements OnModuleInit, OnModuleDestroy {
     await this.initialize();
   }
 
-  // initializes the askar agent and wallet for operations
+  // initializes the askar agent for operations
   private async initialize() {
     if (!this.askarAgent.isInitialized) {
       await this.askarAgent.initialize();
     }
-    await this.askarWallet.open(this.walletConfig);
     this.initialized = true;
   }
 
@@ -73,12 +66,17 @@ export class CredoService implements OnModuleInit, OnModuleDestroy {
     return this.askarAgent;
   }
 
-  // Accessor for the wallet
-  public get wallet(): AskarWallet {
-    if (!this.initialized) {
-      throw new Error('Credo wallet is not initialized yet.');
-    }
-    return this.askarWallet;
+  /**
+   * Run a callback with a raw Askar session.
+   *
+   * The Credo 0.6+ KMS API intentionally has no private-key export, but this
+   * API exposes key export (see the key module). Going through the Askar
+   * store directly keeps that behaviour; it also couples the key module to
+   * the Askar backend.
+   */
+  public async withAskarSession<Return>(callback: (session: Session) => Return): Promise<Awaited<Return>> {
+    const storeManager = this.agent.dependencyManager.resolve(AskarStoreManager);
+    return await storeManager.withSession(this.askarAgent.context, callback);
   }
 
   async onModuleDestroy() {
@@ -87,10 +85,9 @@ export class CredoService implements OnModuleInit, OnModuleDestroy {
   }
 
   private async cleanup() {
-    if (this.agent.isInitialized) {
-      // close askar agent connection
-      await this.wallet.close();
-      await this.agent.shutdown();
+    if (this.askarAgent.isInitialized) {
+      // the agent owns the store lifecycle since Credo 0.6
+      await this.askarAgent.shutdown();
     }
   }
 }

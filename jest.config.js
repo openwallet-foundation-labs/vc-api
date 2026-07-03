@@ -6,6 +6,14 @@ module.exports = {
   },
   transformIgnorePatterns: ['node_modules/.+\\.!mjs$'],
   testEnvironment: 'node',
+  // Pin dual (CJS+ESM) packages to their CJS build so a package is never
+  // loaded in both module formats at once (which jest rejects when a
+  // require() and a concurrent import() hit the same file).
+  moduleNameMapper: {
+    '^@openwallet-foundation/askar-nodejs$': '<rootDir>/jest-setup/askar-nodejs.cjs',
+    '^@openwallet-foundation/askar-shared$': '<rootDir>/jest-setup/askar-shared.cjs',
+    '^webcrypto-core$': '<rootDir>/node_modules/.pnpm/node_modules/webcrypto-core/build/webcrypto-core.js'
+  },
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
   coveragePathIgnorePatterns: ['/node_modules/', '/test/'],

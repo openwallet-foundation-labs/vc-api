@@ -16,6 +16,7 @@ export default tseslint.config(
       '**/.prettierrc.js',
       '**/jest.config.js',
       'patches/**',
+      'jest-setup/**',
       'site/**'
     ]
   },

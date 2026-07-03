@@ -13,15 +13,16 @@ import { DIDService } from './did.service';
 import { DIDDocumentEntity } from './entities/did-document.entity';
 import { VerificationMethodEntity } from './entities/verification-method.entity';
 import { CredoModule } from '../credo/credo.module';
-import { didDocument, generatedKey, keyEntryObject, keyPair } from '../../test/did/did.service.spec.data';
+import { didDocument, generatedKey, publicKeyJwk, keyPair } from '../../test/did/did.service.spec.data';
 import { CredoService } from '../credo/credo.service';
-import { mockCredoService } from '../credo/__mocks__/credo.service';
+import { mockCredoService, resetMockKms } from '../credo/__mocks__/credo.service';
 
 describe('DIDService', () => {
   let service: DIDService;
   let keyService: KeyService;
 
   beforeEach(async () => {
+    resetMockKms();
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         KeyModule,
@@ -42,7 +43,7 @@ describe('DIDService', () => {
     service = module.get<DIDService>(DIDService);
 
     jest.spyOn(keyService, 'generateKey').mockResolvedValue(generatedKey);
-    jest.spyOn(keyService, 'fetchKey').mockResolvedValue(keyEntryObject);
+    jest.spyOn(keyService, 'getPublicKeyFromKeyId').mockResolvedValue(publicKeyJwk);
     jest.spyOn(DIDKeyFactory, 'generate').mockResolvedValue(didDocument);
   });
 

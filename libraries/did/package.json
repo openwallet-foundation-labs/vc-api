@@ -13,7 +13,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist && tsc",
-    "test": "jest"
+    "test": "cross-env \"NODE_OPTIONS=--experimental-vm-modules --require ../../jest-setup/preload.cjs\" jest"
   },
   "author": "Energy Web",
   "license": "Apache-2.0",
@@ -26,7 +26,7 @@
     "@credo-ts/askar": "catalog:",
     "@credo-ts/core": "catalog:",
     "@credo-ts/node": "catalog:",
-    "@hyperledger/aries-askar-nodejs": "catalog:"
+    "@openwallet-foundation/askar-nodejs": "catalog:"
   },
   "devDependencies": {
     "@types/jest": "catalog:",
@@ -36,7 +36,8 @@
     "ts-jest": "catalog:",
     "typescript": "catalog:",
     "prettier": "catalog:",
-    "@types/node": "catalog:"
+    "@types/node": "catalog:",
+    "cross-env": "catalog:"
   },
   "publishConfig": {
     "access": "public",

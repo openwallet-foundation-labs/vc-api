@@ -14,12 +14,12 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "test": "jest && jest --config ./test/jest-e2e.json",
-    "test:unit": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test": "cross-env \"NODE_OPTIONS=--experimental-vm-modules --require ../../jest-setup/preload.cjs\" jest && cross-env \"NODE_OPTIONS=--experimental-vm-modules --require ../../jest-setup/preload.cjs\" jest --config ./test/jest-e2e.json",
+    "test:unit": "cross-env \"NODE_OPTIONS=--experimental-vm-modules --require ../../jest-setup/preload.cjs\" jest",
+    "test:watch": "cross-env \"NODE_OPTIONS=--experimental-vm-modules --require ../../jest-setup/preload.cjs\" jest --watch",
+    "test:cov": "cross-env \"NODE_OPTIONS=--experimental-vm-modules --require ../../jest-setup/preload.cjs\" jest --coverage",
+    "test:debug": "node --experimental-vm-modules --require ../../jest-setup/preload.cjs --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "cross-env \"NODE_OPTIONS=--experimental-vm-modules --require ../../jest-setup/preload.cjs\" jest --config ./test/jest-e2e.json",
     "write-openapi": "ts-node ./scripts/write-open-api-json.ts && prettier -w docs/openapi.json",
     "update-openapi": "npm run write-openapi; git add docs/openapi.json"
   },
@@ -37,7 +37,7 @@
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.17",
     "did-resolver": "catalog:",
-    "class-validator": "0.14.1",
+    "class-validator": "~0.14.3",
     "class-transformer": "~0.5.1",
     "@nestjs/swagger": "^11.4.0",
     "swagger-ui-express": "~5.0.1",
@@ -50,9 +50,10 @@
     "@credo-ts/askar": "catalog:",
     "@credo-ts/core": "catalog:",
     "@credo-ts/node": "catalog:",
-    "@hyperledger/aries-askar-nodejs": "catalog:",
-    "@hyperledger/aries-askar-shared": "^0.2.3",
-    "sqlite3": "~5.1.7"
+    "sqlite3": "~5.1.7",
+    "@openwallet-foundation/askar-nodejs": "catalog:",
+    "@openwallet-foundation/askar-shared": "catalog:",
+    "@digitalcredentials/jsonld-signatures": "^12.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",
@@ -71,7 +72,8 @@
     "tsconfig-paths": "catalog:",
     "typescript": "catalog:",
     "nock": "^14.0.0",
-    "@sphereon/pex-models": "~2.0.2"
+    "@sphereon/pex-models": "~2.0.2",
+    "cross-env": "catalog:"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -88,6 +90,11 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@openwallet-foundation/askar-nodejs$": "<rootDir>/../../../jest-setup/askar-nodejs.cjs",
+      "^@openwallet-foundation/askar-shared$": "<rootDir>/../../../jest-setup/askar-shared.cjs",
+      "^webcrypto-core$": "<rootDir>/../../../node_modules/.pnpm/node_modules/webcrypto-core/build/webcrypto-core.js"
+    }
   }
 }

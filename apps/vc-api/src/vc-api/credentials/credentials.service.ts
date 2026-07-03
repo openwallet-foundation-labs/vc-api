@@ -30,6 +30,8 @@ import {
 } from '@credo-ts/core';
 import { AuthenticateDto } from './dtos/authenticate.dto';
 import { transformVerificationResult } from './utils/verification-result-transformer';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import { purposes } from '@digitalcredentials/jsonld-signatures';
 
 /**
  * This service provide the VC-API operations
@@ -103,7 +105,11 @@ export class CredentialsService implements CredentialVerifier {
       verificationMethod: verificationMethodId,
       format: ClaimFormat.LdpVp,
       proofType: 'Ed25519Signature2018',
-      proofPurpose: provePresentationDto.options.proofPurpose
+      proofPurpose: this.toProofPurposeInstance(
+        provePresentationDto.options.proofPurpose,
+        provePresentationDto.options.challenge,
+        provePresentationDto.options.domain
+      )
     };
     const w3cVerifiablePresentation =
       await this.credoService.agent.w3cCredentials.signPresentation<ClaimFormat.LdpVp>(
@@ -147,6 +153,24 @@ export class CredentialsService implements CredentialVerifier {
       w3cVerifyPresentationOptions
     );
     return transformVerificationResult(verifyPresentation);
+  }
+
+  /**
+   * Since Credo 0.6 the proofPurpose option must be a jsonld-signatures
+   * purpose instance rather than a purpose string.
+   */
+  private toProofPurposeInstance(proofPurpose?: ProofPurpose, challenge?: string, domain?: string) {
+    if (!proofPurpose) {
+      return undefined;
+    }
+    switch (proofPurpose) {
+      case ProofPurpose.authentication:
+        return new purposes.AuthenticationProofPurpose({ challenge, domain });
+      case ProofPurpose.assertionMethod:
+        return new purposes.AssertionProofPurpose();
+      default:
+        throw new BadRequestException(`unsupported proof purpose: ${proofPurpose}`);
+    }
   }
 
   private async getVerificationMethodForDid(did: string): Promise<VerificationMethod> {
