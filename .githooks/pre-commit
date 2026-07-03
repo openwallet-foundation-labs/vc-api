@@ -1,0 +1,8 @@
+#!/bin/sh
+# Called by "git commit" with no arguments. The hook exits with non-zero
+# status if it wants to stop the commit.
+
+# Regenerate the OpenAPI document so it stays in sync with the code, then
+# reformat staged changes with Prettier.
+pnpm --filter @energyweb/ssi-vc-api run update-openapi || exit $?
+pnpm exec pretty-quick --staged || exit $?

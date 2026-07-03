@@ -31,39 +31,34 @@ The Architecture Decisions Records can be found [here](apps/vc-api/docs/architec
 The [ADR Tools command line tool](https://github.com/npryce/adr-tools) can be used to add new ADRs.
 
 ## App Development
-This repository is a monorepo that uses [Rush](https://rushjs.io/) with the PNPM package manager.
+This repository is a monorepo that uses [pnpm workspaces](https://pnpm.io/workspaces).
 
-PNPM is used for its speed and solution to NPM doppelgangers (as well as being the default option for rush).
-See comparison of [NPM vs PNPM vs Yarn for Rush](https://rushjs.io/pages/maintainer/package_managers/).
+PNPM is used for its speed and solution to NPM doppelgangers.
 
 ### Requirements
 
-PNPM is required. See installation instructions here: https://pnpm.js.org/installation/
+Node.js >= 22 is required (see `.nvmrc`).
 
-Rush is required. See installation instructions here: https://rushjs.io/pages/intro/get_started/
+pnpm is required. With Node.js installed, the easiest way to get it is `corepack enable`
+(the version is pinned by the `packageManager` field in `package.json`).
+See other installation options here: https://pnpm.io/installation
 
 ### Install
 
-Use rush to install dependencies (not the package manager directly).
-In other words, do not run `npm install` or `pnpm install`.
-This is because [Rush optimizes](https://rushjs.io/pages/developer/new_developer/) by installing all of the dependency packages in a central folder, and then uses symlinks to create the “node_modules” folder for each of the projects.
-
 ```sh
-$ rush install
+$ pnpm install
 ```
 
 ### Build
 
-Use rush to build.
-
 ```sh
-$ rush build
+$ pnpm run build
 ```
 
 ## Testing
-To run tests across all apps and libraries in one command, a rush script has been added to `./common/config/rush/command-line.json` 
+To run tests across all apps and libraries in one command:
 ``` sh
-$ rush test
+$ pnpm run test
 ```
 
 ## Release Process

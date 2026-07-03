@@ -1,6 +1,6 @@
 // Documentation for this file: https://prettier.io/docs/en/configuration.html
 module.exports = {
-  ...require('./common/temp/node_modules/@energyweb/prettier-config'),
+  ...require('@energyweb/prettier-config'),
   // We use a larger print width because Prettier's word-wrapping seems to be tuned
   // for plain JavaScript without type annotations
   printWidth: 110,

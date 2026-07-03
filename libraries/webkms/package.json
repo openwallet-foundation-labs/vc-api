@@ -17,19 +17,19 @@
   "author": "Energy Web",
   "license": "Apache-2.0",
   "dependencies": {
-    "ethers": "6.6.2",
-    "jose": "^4.14.4"
+    "ethers": "catalog:",
+    "jose": "catalog:"
   },
   "devDependencies": {
-    "eslint": "^8.22.0",
-    "typescript": "^4.8.0",
-    "@energyweb/eslint-config": "~0.1.0",
-    "@energyweb/prettier-config": "~0.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.60.1",
-    "@typescript-eslint/parser": "^5.60.1",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-no-only-tests": "~3.1.0",
-    "prettier": "^2.8.8"
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "@energyweb/eslint-config": "catalog:",
+    "@energyweb/prettier-config": "catalog:",
+    "@typescript-eslint/eslint-plugin": "catalog:",
+    "@typescript-eslint/parser": "catalog:",
+    "eslint-config-prettier": "catalog:",
+    "eslint-plugin-no-only-tests": "catalog:",
+    "prettier": "catalog:"
   },
   "publishConfig": {
     "access": "public",

@@ -44,7 +44,7 @@ For more information about this, see the [context documentation](./docs/contexts
 
 ## Installation
 
-Install using the [rush commands](../../README.md#installation) described in the root README.
+Install using the [pnpm commands](../../README.md#install) described in the root README.
 
 ## Running the app
 
