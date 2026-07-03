@@ -61,7 +61,7 @@ export const residentCardLegacyExchangeSuite = () => {
     for (let i = 0; i < numHolderQueriesPriorToIssuance; i++) {
       await walletClient.continueExchange(issuanceExchangeContinuationEndpoint, didAuthVp, true, true);
     }
-    issuanceCallbackScope.done();
+    await waitForScope(issuanceCallbackScope);
 
     // As the issuer, get the transaction
     // TODO TODO TODO!!! How does the issuer know the transactionId? -> Maybe can rely on notification
@@ -129,6 +129,19 @@ export const residentCardLegacyExchangeSuite = () => {
 
     // Holder submits presentation
     await walletClient.continueExchange(presentationExchangeContinuationEndpoint, vp, false);
-    presentationCallbackScope.done();
+    await waitForScope(presentationCallbackScope);
   });
 };
+
+/**
+ * The server submits exchange callbacks without awaiting them, so give the
+ * fire-and-forget request a moment to reach the nock interceptor before
+ * asserting on the scope.
+ */
+async function waitForScope(scope: nock.Scope, timeoutMs = 5000): Promise<void> {
+  const start = Date.now();
+  while (!scope.isDone() && Date.now() - start < timeoutMs) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  scope.done();
+}

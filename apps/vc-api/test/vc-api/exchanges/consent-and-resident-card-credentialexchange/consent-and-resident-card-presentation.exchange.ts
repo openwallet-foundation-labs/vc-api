@@ -111,6 +111,9 @@ export class ConsentAndResidentCardPresentation {
                                   },
                                   consent: {
                                     const: 'elia:consent'
+                                  },
+                                  ConsentCredential: {
+                                    const: 'elia:ConsentCredential'
                                   }
                                 },
                                 additionalProperties: false,
@@ -245,6 +248,9 @@ export class ConsentAndResidentCardPresentation {
                                   },
                                   consent: {
                                     const: 'elia:consent'
+                                  },
+                                  ConsentCredential: {
+                                    const: 'elia:ConsentCredential'
                                   }
                                 },
                                 additionalProperties: false,
