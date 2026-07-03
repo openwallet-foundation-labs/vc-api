@@ -163,7 +163,7 @@ The table below shows which key types are available for each operation.
 #### Key Import/Export
 
 The key module allows for the import and export of key pairs.
-A tutorial demonstrating this available here: [Key Export/Import Tutorial](./docs/tutorials/key-export-import-tutorial.md)
+A tutorial demonstrating this available here: [Key Export/Import Tutorial](./docs/key-export-import-tutorial.md)
 
 ## Database
 SQLite is used as the database engine.

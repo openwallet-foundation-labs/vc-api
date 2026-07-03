@@ -66,12 +66,7 @@ Response body should be similar to the one below but with a different `did`.
       "id": "did:key:z6MkuzZiNGDxg7vfrwpwC5LCfznA2NaJr5SNvwmN6dKv6Pom#z6MkuzZiNGDxg7vfrwpwC5LCfznA2NaJr5SNvwmN6dKv6Pom",
       "type": "Ed25519VerificationKey2018",
       "controller": "did:key:z6MkuzZiNGDxg7vfrwpwC5LCfznA2NaJr5SNvwmN6dKv6Pom",
-      "publicKeyJwk": {
-        "crv": "Ed25519",
-        "x": "5uRJcJ67oMzfaB3XXQeLNj_Bv3ew1mmV8lItQ1k52og",
-        "kty": "OKP",
-        "kid": "KizsQVRSz6l73kFnrAHJ1V6c5YQS6I0SS9zyZMNNdRs"
-      }
+      "publicKeyBase58": "GYJfn1yXLaSCkSzEWWNMpuEACoJTSCC2EvrSGMMuBB2P"
     }
   ]
 }
@@ -83,7 +78,7 @@ Response body should be similar to the one below but with a different `did`.
 
 ### 1.2 Export Key
 
-The key can be exported by using the key id located at `verificationMethod.publicKeyJwk.kid` in the DID document from the previous step.
+The key can be exported by using the key id located at `verificationMethod.publicKeyBase58` in the DID document from the previous step.
 
 Send the request as described below.
 
@@ -103,18 +98,17 @@ Send the request as described below.
 
 ```json
 {
-  "publicKeyThumbprint": "KizsQVRSz6l73kFnrAHJ1V6c5YQS6I0SS9zyZMNNdRs",
+  "publicKey": {
+    "crv": "Ed25519",
+    "x": "5uRJcJ67oMzfaB3XXQeLNj_Bv3ew1mmV8lItQ1k52og",
+    "kty": "OKP",
+    "kid": "GYJfn1yXLaSCkSzEWWNMpuEACoJTSCC2EvrSGMMuBB2P"
+  },
   "privateKey": {
     "crv": "Ed25519",
     "d": "31DlEXUMXAvcAuTpBl5cPlPavrzo4I9s63WiT0ni8zg",
     "x": "5uRJcJ67oMzfaB3XXQeLNj_Bv3ew1mmV8lItQ1k52og",
     "kty": "OKP"
-  },
-  "publicKey": {
-    "crv": "Ed25519",
-    "x": "5uRJcJ67oMzfaB3XXQeLNj_Bv3ew1mmV8lItQ1k52og",
-    "kty": "OKP",
-    "kid": "KizsQVRSz6l73kFnrAHJ1V6c5YQS6I0SS9zyZMNNdRs"
   }
 }
 ```
@@ -151,7 +145,7 @@ Send the request as described below.
     "crv": "Ed25519",
     "x": "E5ljjWvsZZ2NYpDr7QDbit-WWKMxbzn3YgMjRa1dShQ",
     "kty": "OKP",
-    "kid": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
+    "kid": "2KWQSazdFzSmkSZJx7YW77nvPLzyrf4SDcTYWY9sApjm"
   }
 }
 ```
@@ -160,7 +154,7 @@ Send the request as described below.
 
 ```json
 {
-  "keyId": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
+  "keyId": "2KWQSazdFzSmkSZJx7YW77nvPLzyrf4SDcTYWY9sApjm"
 }
 ```
 
@@ -187,7 +181,7 @@ Send the request as described below.
 ```json
 {
   "method": "key",
-  "keyId": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
+  "keyId": "2KWQSazdFzSmkSZJx7YW77nvPLzyrf4SDcTYWY9sApjm"
 }
 ```
 
@@ -203,12 +197,7 @@ The DID Document of the registered DID.
       "id": "did:key:z6MkfmmT2qF4bXwErwQ1dgWLxDLvCvGqGYJnudNULp7t63X9#z6MkfmmT2qF4bXwErwQ1dgWLxDLvCvGqGYJnudNULp7t63X9",
       "type": "Ed25519VerificationKey2018",
       "controller": "did:key:z6MkfmmT2qF4bXwErwQ1dgWLxDLvCvGqGYJnudNULp7t63X9",
-      "publicKeyJwk": {
-        "crv": "Ed25519",
-        "x": "E5ljjWvsZZ2NYpDr7QDbit-WWKMxbzn3YgMjRa1dShQ",
-        "kty": "OKP",
-        "kid": "MW-TUkCospd6AC16JkoD1-Iun1GxGLGSv6Z-48CfSj4"
-      }
+      "publicKeyBase58": "2KWQSazdFzSmkSZJx7YW77nvPLzyrf4SDcTYWY9sApjm"
     }
   ]
 }
