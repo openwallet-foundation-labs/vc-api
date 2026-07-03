@@ -37,7 +37,10 @@ import { transformVerificationResult } from './utils/verification-result-transfo
  */
 @Injectable()
 export class CredentialsService implements CredentialVerifier {
-  constructor(private didService: DIDService, private credoService: CredoService) {}
+  constructor(
+    private didService: DIDService,
+    private credoService: CredoService
+  ) {}
 
   async issueCredential(issueDto: IssueCredentialDto): Promise<VerifiableCredentialDto> {
     const verificationMethod = await this.getVerificationMethodForDid(

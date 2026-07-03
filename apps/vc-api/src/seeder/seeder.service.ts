@@ -12,7 +12,10 @@ import { KeyService } from '../key/key.service';
 export class SeederService {
   private readonly logger = new Logger(SeederService.name, { timestamp: true });
 
-  constructor(private readonly keyService: KeyService, private readonly didService: DIDService) {}
+  constructor(
+    private readonly keyService: KeyService,
+    private readonly didService: DIDService
+  ) {}
 
   async seed() {
     this.logger.debug('seeding database');

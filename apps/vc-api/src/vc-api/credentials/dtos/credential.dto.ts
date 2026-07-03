@@ -3,14 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  ArrayNotEmpty,
-  IsArray,
-  IsDateString,
-  IsObject,
-  IsOptional,
-  IsString
-} from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsDateString, IsObject, IsOptional, IsString } from 'class-validator';
 import { ApiExtraModels, ApiProperty, ApiPropertyOptional, getSchemaPath } from '@nestjs/swagger';
 import { IsIssuer } from '../../exchanges/dtos/custom-validators';
 import { IssuerDto } from './issuer.dto';
