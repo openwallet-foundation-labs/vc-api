@@ -1,0 +1,23 @@
+{
+  "name": "vc-api-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Workspace root for the VC API monorepo",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prepare": "git rev-parse --git-dir > /dev/null 2>&1 && git config core.hooksPath .githooks || true",
+    "build": "pnpm --recursive run build",
+    "test": "pnpm --recursive --workspace-concurrency=1 run test",
+    "lint": "pnpm --recursive run lint",
+    "update-openapi": "pnpm --filter @energyweb/ssi-vc-api run update-openapi"
+  },
+  "devDependencies": {
+    "@energyweb/prettier-config": "catalog:",
+    "prettier": "catalog:",
+    "pretty-quick": "^3.1.3"
+  }
+}

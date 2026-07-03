@@ -9,10 +9,4 @@ npm-debug.log
 .git
 .env
 **/dist
-# Rush temporary files
-common/deploy/
-common/temp/
-common/autoinstallers/*/.npmrc
-**/.rush/temp/
-
 **/*.log

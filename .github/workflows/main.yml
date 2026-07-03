@@ -7,34 +7,22 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
         with:
-          node-version: '18.12'
+          node-version-file: .nvmrc
+          cache: pnpm
 
-      - name: Cache Rush
-        uses: actions/cache@v2
-        with:
-          path: |
-            common/temp/install-run
-            ~/.rush
-          key: ${{ runner.os }}-${{ hashFiles('rush.json') }}
+      - name: Install
+        run: pnpm install --frozen-lockfile
 
-      - name: Cache pnpm
-        uses: actions/cache@v2
-        with:
-          path: |
-            common/temp/pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('common/config/rush/pnpm-lock.yaml') }}
+      - name: Build
+        run: pnpm run build
 
-      - name: Rush install
-        run: node common/scripts/install-run-rush.js install
-
-      - name: Rush build
-        run: node common/scripts/install-run-rush.js build --verbose
-
-      - name: Run test
-        run: node common/scripts/install-run-rush.js test --verbose
+      - name: Test
+        run: pnpm run test
