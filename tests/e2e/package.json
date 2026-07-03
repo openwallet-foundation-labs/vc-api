@@ -31,7 +31,8 @@
     "ts-loader": "catalog:",
     "ts-node": "catalog:",
     "tsconfig-paths": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@types/node": "catalog:"
   },
   "jest": {
     "moduleFileExtensions": [

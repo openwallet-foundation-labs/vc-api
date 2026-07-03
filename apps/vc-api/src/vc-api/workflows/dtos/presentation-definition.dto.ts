@@ -12,7 +12,7 @@ export class PresentationDefinitionDto {
   id: string;
 
   @IsArray()
-  @ApiProperty({ type: 'object', isArray: true })
+  @ApiProperty({ type: 'object', isArray: true, additionalProperties: true })
   // TODO: consider defining DTO and validations
   input_descriptors: Record<any, unknown>[];
 }
