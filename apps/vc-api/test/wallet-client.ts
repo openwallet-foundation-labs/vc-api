@@ -16,7 +16,7 @@ import { ExchangeResponseDto as WfExchangeResponseDto } from '../src/vc-api/work
 import { VpRequestQueryType } from '../src/vc-api/exchanges/types/vp-request-query-type';
 import { TransactionDto } from '../src/vc-api/exchanges/dtos/transaction.dto';
 import { SubmissionReviewDto } from '../src/vc-api/exchanges/dtos/submission-review.dto';
-import { IPresentationDefinition } from '@sphereon/pex';
+import { IPresentationDefinition } from '@animo-id/pex';
 import { PresentationDto } from '../src/vc-api/credentials/dtos/presentation.dto';
 import { KeyPairDto } from '../src/key/dtos/key-pair.dto';
 import { KeyDescriptionDto } from 'src/key/dtos/key-description.dto';

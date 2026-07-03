@@ -5,7 +5,7 @@
 
 import * as request from 'supertest';
 import * as nock from 'nock';
-import { ProofPurpose } from '@sphereon/pex';
+import { IProofPurpose as ProofPurpose } from '@sphereon/ssi-types';
 import { RebeamCpoNode } from './rebeam-cpo-node';
 import { app, getContinuationEndpoint, vcApiBaseUrl, walletClient } from '../../../app.e2e-spec';
 import { RebeamSupplier } from './rebeam-supplier';

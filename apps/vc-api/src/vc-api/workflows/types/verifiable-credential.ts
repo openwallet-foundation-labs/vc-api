@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { IProof } from '@sphereon/pex';
+import { IProof } from '@sphereon/ssi-types';
 import { Credential } from './credential';
 
 /**

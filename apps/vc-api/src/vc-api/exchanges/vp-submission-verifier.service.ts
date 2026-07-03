@@ -4,7 +4,8 @@
  */
 
 import { Injectable, Logger } from '@nestjs/common';
-import { ProofPurpose, IPresentationDefinition, PEX, IPresentation } from '@sphereon/pex';
+import { IPresentationDefinition, PEX } from '@animo-id/pex';
+import { IPresentation, IProofPurpose as ProofPurpose } from '@sphereon/ssi-types';
 import { CredentialsService } from '../credentials/credentials.service';
 import { VpRequestEntity } from './entities/vp-request.entity';
 import { SubmissionVerifier } from './types/submission-verifier';
@@ -111,7 +112,12 @@ export class VpSubmissionVerifierService implements SubmissionVerifier {
       let partialErrors;
 
       try {
-        const { errors } = pex.evaluatePresentation(presentationDefinition, presentation as IPresentation);
+        const { errors } = pex.evaluatePresentation(presentationDefinition, presentation as IPresentation, {
+          // pex 1.x evaluated presentations without an embedded submission;
+          // pex 6.x requires one unless asked to generate it
+          generatePresentationSubmission:
+            (presentation as IPresentation).presentation_submission === undefined
+        });
         partialErrors = errors;
       } catch (err) {
         if (typeof err === 'string') {

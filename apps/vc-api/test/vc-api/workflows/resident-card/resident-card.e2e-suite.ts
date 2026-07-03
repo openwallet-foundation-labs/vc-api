@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ProofPurpose } from '@sphereon/pex';
+import { IProofPurpose as ProofPurpose } from '@sphereon/ssi-types';
 import * as request from 'supertest';
 import * as nock from 'nock';
 import { PresentationDto } from '../../../../src/vc-api/credentials/dtos/presentation.dto';

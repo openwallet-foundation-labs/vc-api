@@ -9,7 +9,8 @@ import { IssueOptionsDto } from './dtos/issue-options.dto';
 import { VerifyOptionsDto } from './dtos/verify-options.dto';
 import { DIDService } from '../../did/did.service';
 import { KeyService } from '../../key/key.service';
-import { IPresentationDefinition, ProofPurpose } from '@sphereon/pex';
+import { IPresentationDefinition } from '@animo-id/pex';
+import { IProofPurpose as ProofPurpose } from '@sphereon/ssi-types';
 import { VerifiableCredential } from '../exchanges/types/verifiable-credential';
 import { CredentialDto } from './dtos/credential.dto';
 import {

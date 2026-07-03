@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ProofPurpose } from '@sphereon/pex';
+import { IProofPurpose as ProofPurpose } from '@sphereon/ssi-types';
 import { IsEnum, IsObject, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
