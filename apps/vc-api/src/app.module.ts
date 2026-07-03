@@ -16,7 +16,7 @@ import { envVarsValidationSchema } from './config/env-vars-validation-schema';
 import { HttpLoggerMiddleware } from './middlewares';
 import { CredoModule } from './credo/credo.module';
 
-let config: DynamicModule;
+let config: DynamicModule | Promise<DynamicModule>;
 
 try {
   config = ConfigModule.forRoot({
@@ -56,6 +56,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(HttpLoggerMiddleware) //, HttpsRedirectMiddleware) - Disabling for now, doesn't work as expected
-      .forRoutes('*');
+      .forRoutes('{*splat}');
   }
 }

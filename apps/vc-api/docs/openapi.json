@@ -3,9 +3,8 @@
   "paths": {
     "/v1/key": {
       "post": {
-        "operationId": "KeyController_import",
-        "summary": "",
         "description": "Import a key",
+        "operationId": "KeyController_import_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -33,12 +32,13 @@
             }
           }
         },
+        "summary": "",
         "tags": ["key"]
       }
     },
     "/v1/key/{keyId}": {
       "get": {
-        "operationId": "KeyController_export",
+        "operationId": "KeyController_export_v1",
         "parameters": [{ "name": "keyId", "required": true, "in": "path", "schema": { "type": "string" } }],
         "responses": {
           "200": {
@@ -65,9 +65,8 @@
     },
     "/v1/did": {
       "post": {
-        "operationId": "DIDController_create",
-        "summary": "",
         "description": "Generate a new DID",
+        "operationId": "DIDController_create_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -97,14 +96,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["did"]
       }
     },
     "/v1/did/{did}": {
       "get": {
-        "operationId": "DIDController_getByDID",
-        "summary": "",
         "description": "Retrieve exisiting DID",
+        "operationId": "DIDController_getByDID_v1",
         "parameters": [{ "name": "did", "required": true, "in": "path", "schema": { "type": "string" } }],
         "responses": {
           "200": {
@@ -128,14 +127,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["did"]
       }
     },
     "/v1/vc-api/credentials/issue": {
       "post": {
-        "operationId": "VcApiController_issueCredential",
-        "summary": "",
         "description": "Issues a credential and returns it in the response body. Conforms to https://w3c-ccg.github.io/vc-api/issuer.html",
+        "operationId": "VcApiController_issueCredential_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -165,14 +164,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/credentials/verify": {
       "post": {
-        "operationId": "VcApiController_verifyCredential",
-        "summary": "",
         "description": "Verify a credential. Conforms to https://w3c-ccg.github.io/vc-api/#verify-credential",
+        "operationId": "VcApiController_verifyCredential_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -209,14 +208,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/presentations/prove/authentication": {
       "post": {
-        "operationId": "VcApiController_proveAuthenticationPresentation",
-        "summary": "",
         "description": "Issue a DIDAuth presentation that authenticates a DID.\nNot a part of VC-API? Maybe there is a DID Auth spec though?\nA NON-STANDARD endpoint currently.",
+        "operationId": "VcApiController_proveAuthenticationPresentation_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -244,14 +243,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/presentations/from": {
       "post": {
-        "operationId": "VcApiController_presentationFrom",
-        "summary": "",
         "description": "Creates a Presentation without Proof by passing in the Presentation Definition, selected Verifiable Credentials (TODO: and an optional holder (DID)).\nThe presentation contains the [presentation submission](https://identity.foundation/presentation-exchange/#presentation-submission) data that the verifier can use.",
+        "operationId": "VcApiController_presentationFrom_v1",
         "parameters": [],
         "responses": {
           "201": {
@@ -275,12 +274,13 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/presentations/prove": {
       "post": {
-        "operationId": "VcApiController_provePresentation",
+        "operationId": "VcApiController_provePresentation_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -315,9 +315,8 @@
     },
     "/v1/vc-api/presentations/verify": {
       "post": {
-        "operationId": "VcApiController_verifyPresentation",
-        "summary": "",
         "description": "Verify a presentation. Conforms to https://w3c-ccg.github.io/vc-api/#verify-presentation",
+        "operationId": "VcApiController_verifyPresentation_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -342,15 +341,15 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/exchanges": {
       "post": {
-        "operationId": "VcApiController_createExchange",
-        "summary": "",
-        "description": "Allows the creation of a new exchange by providing the credential query and interaction endpoints\nA NON-STANDARD endpoint currently.\n\nSimilar to https://gataca-io.github.io/vui-core/#/Presentations/post_api_v2_presentations",
         "deprecated": true,
+        "description": "Allows the creation of a new exchange by providing the credential query and interaction endpoints\nA NON-STANDARD endpoint currently.\n\nSimilar to https://gataca-io.github.io/vui-core/#/Presentations/post_api_v2_presentations",
+        "operationId": "VcApiController_createExchange_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -381,15 +380,15 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/exchanges/{exchangeId}": {
       "post": {
-        "operationId": "VcApiController_initiateExchange",
-        "summary": "",
-        "description": "Initiates an exchange of information.\nhttps://w3c-ccg.github.io/vc-api/#initiate-exchange",
         "deprecated": true,
+        "description": "Initiates an exchange of information.\nhttps://w3c-ccg.github.io/vc-api/#initiate-exchange",
+        "operationId": "VcApiController_initiateExchange_v1",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
@@ -421,15 +420,15 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/exchanges/{exchangeId}/{transactionId}": {
       "put": {
-        "operationId": "VcApiController_continueExchangePut",
-        "summary": "",
-        "description": "Receives information related to an existing exchange.\nhttps://w3c-ccg.github.io/vc-api/#continue-exchange",
         "deprecated": true,
+        "description": "Receives information related to an existing exchange.\nhttps://w3c-ccg.github.io/vc-api/#continue-exchange",
+        "operationId": "VcApiController_continueExchangePut_v1",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
@@ -471,13 +470,13 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       },
       "post": {
-        "operationId": "VcApiController_continueExchangePost",
-        "summary": "",
-        "description": "Receives information related to an existing exchange.\nhttps://w3c-ccg.github.io/vc-api/#continue-exchange",
         "deprecated": true,
+        "description": "Receives information related to an existing exchange.\nhttps://w3c-ccg.github.io/vc-api/#continue-exchange",
+        "operationId": "VcApiController_continueExchangePost_v1",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
@@ -519,13 +518,13 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       },
       "get": {
-        "operationId": "VcApiController_getTransaction",
-        "summary": "",
-        "description": "Get exchange transaction by id\nA NON-STANDARD endpoint currently.\nSimilar to https://identitycache.energyweb.org/api/#/Claims/ClaimController_getByIssuerDid",
         "deprecated": true,
+        "description": "Get exchange transaction by id\nA NON-STANDARD endpoint currently.\nSimilar to https://identitycache.energyweb.org/api/#/Claims/ClaimController_getByIssuerDid",
+        "operationId": "VcApiController_getTransaction_v1",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
@@ -556,15 +555,15 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/exchanges/{exchangeId}/{transactionId}/review": {
       "post": {
-        "operationId": "VcApiController_addSubmissionReview",
-        "summary": "",
-        "description": "Update a transaction review\nA NON-STANDARD endpoint currently.\nSimilar to https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.controller.ts#L80",
         "deprecated": true,
+        "description": "Update a transaction review\nA NON-STANDARD endpoint currently.\nSimilar to https://github.com/energywebfoundation/ssi-hub/blob/8b860e7cdae4e1b1aa75afeab8b9df7ab26befbb/src/modules/claim/claim.controller.ts#L80",
+        "operationId": "VcApiController_addSubmissionReview_v1",
         "parameters": [
           { "name": "exchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "transactionId", "required": true, "in": "path", "schema": { "type": "string" } }
@@ -598,14 +597,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/workflows": {
       "post": {
-        "operationId": "VcApiController_createWorkflow",
-        "summary": "",
         "description": "Creates a new workflow and returns its information in the response body.\nSee https://w3c-ccg.github.io/vc-api/#create-workflow",
+        "operationId": "VcApiController_createWorkflow_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -641,14 +640,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/workflows/{localWorkflowId}": {
       "get": {
-        "operationId": "VcApiController_getWorkflow",
-        "summary": "",
         "description": "Gets the configuration of an existing workflow and returns it in the response body.\nSee https://w3c-ccg.github.io/vc-api/#get-workflow-configuration",
+        "operationId": "VcApiController_getWorkflow_v1",
         "parameters": [
           { "name": "localWorkflowId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
@@ -680,14 +679,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/workflows/{localWorkflowId}/exchanges": {
       "post": {
-        "operationId": "VcApiController_createExchangeFromWorkflow",
-        "summary": "",
         "description": "Creates a new exchange and returns exchangeId in the response body.\nSee https://w3c-ccg.github.io/vc-api/#create-exchange",
+        "operationId": "VcApiController_createExchangeFromWorkflow_v1",
         "parameters": [
           { "name": "localWorkflowId", "required": true, "in": "path", "schema": { "type": "string" } }
         ],
@@ -725,14 +724,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/workflows/{localWorkflowId}/exchanges/{localExchangeId}": {
       "post": {
-        "operationId": "VcApiController_participateInWorkflowExchange",
-        "summary": "",
         "description": "Participate in an exchange.\nPosting an empty body will start the exchange or return what the exchange is expecting to complete the next step.\nSee https://w3c-ccg.github.io/vc-api/#participate-in-an-exchange",
+        "operationId": "VcApiController_participateInWorkflowExchange_v1",
         "parameters": [
           { "name": "localWorkflowId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "localExchangeId", "required": true, "in": "path", "schema": { "type": "string" } }
@@ -765,12 +764,12 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       },
       "get": {
-        "operationId": "VcApiController_getExchangeState",
-        "summary": "",
         "description": "Gets the state of an existing exchange and returns it in the response body..\nSee https://w3c-ccg.github.io/vc-api/#get-exchange-state",
+        "operationId": "VcApiController_getExchangeState_v1",
         "parameters": [
           { "name": "localWorkflowId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "localExchangeId", "required": true, "in": "path", "schema": { "type": "string" } }
@@ -803,14 +802,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/workflows/{localWorkflowId}/exchanges/{localExchangeId}/steps/{localStepId}": {
       "get": {
-        "operationId": "VcApiController_getExchangeStep",
-        "summary": "",
         "description": "Gets the state of an existing exchange and returns it in the response body..\nSee https://w3c-ccg.github.io/vc-api/#get-exchange-state",
+        "operationId": "VcApiController_getExchangeStep_v1",
         "parameters": [
           { "name": "localWorkflowId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "localExchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
@@ -844,14 +843,14 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     },
     "/v1/vc-api/workflows/{localWorkflowId}/exchanges/{localExchangeId}/steps/{localStepId}/review": {
       "post": {
-        "operationId": "VcApiController_addWorkflowStepReview",
-        "summary": "",
         "description": "Update an exchange step review\nA NON-STANDARD endpoint currently.\n",
+        "operationId": "VcApiController_addWorkflowStepReview_v1",
         "parameters": [
           { "name": "localWorkflowId", "required": true, "in": "path", "schema": { "type": "string" } },
           { "name": "localExchangeId", "required": true, "in": "path", "schema": { "type": "string" } },
@@ -886,6 +885,7 @@
             }
           }
         },
+        "summary": "",
         "tags": ["vc-api"]
       }
     }
@@ -949,13 +949,16 @@
       },
       "DidMethod": {
         "type": "string",
-        "description": "DID Method to create.\nMust be one of \"key\" or \"ethr\"",
-        "enum": ["key", "ethr"]
+        "enum": ["key", "ethr"],
+        "description": "DID Method to create.\nMust be one of \"key\" or \"ethr\""
       },
       "CreateDidOptionsDto": {
         "type": "object",
         "properties": {
-          "method": { "$ref": "#/components/schemas/DidMethod" },
+          "method": {
+            "description": "DID Method to create.\nMust be one of \"key\" or \"ethr\"",
+            "allOf": [{ "$ref": "#/components/schemas/DidMethod" }]
+          },
           "keyId": {
             "type": "string",
             "description": "id of key (for example, JWK thumbprint).\nThis key must be known to the server already.\nIf provided, DID will be created using this key.\nCurrently only supported for did:key."
@@ -1135,7 +1138,6 @@
       },
       "ProofPurpose": {
         "type": "string",
-        "description": "The purpose of the proof. Default 'assertionMethod'.",
         "enum": [
           "assertionMethod",
           "authentication",
@@ -1143,7 +1145,8 @@
           "contactAgreement",
           "capabilityInvocation",
           "capabilityDelegation"
-        ]
+        ],
+        "description": "The purpose of the proof. Default 'assertionMethod'."
       },
       "ProvePresentationOptionsDto": {
         "type": "object",
@@ -1156,7 +1159,10 @@
             "type": "string",
             "description": "The URI of the verificationMethod used for the proof. Default assertionMethod URI."
           },
-          "proofPurpose": { "$ref": "#/components/schemas/ProofPurpose" },
+          "proofPurpose": {
+            "description": "The purpose of the proof. Default 'assertionMethod'.",
+            "allOf": [{ "$ref": "#/components/schemas/ProofPurpose" }]
+          },
           "created": {
             "type": "string",
             "description": "The date and time of the proof (with a maximum accuracy in seconds). Default current system time."
@@ -1258,7 +1264,10 @@
             "type": "string",
             "description": "The URI of the verificationMethod used for the proof. Default assertionMethod URI."
           },
-          "proofPurpose": { "$ref": "#/components/schemas/ProofPurpose" },
+          "proofPurpose": {
+            "description": "The purpose of the proof. Default 'assertionMethod'.",
+            "allOf": [{ "$ref": "#/components/schemas/ProofPurpose" }]
+          },
           "created": {
             "type": "string",
             "description": "The date and time of the proof (with a maximum accuracy in seconds). Default current system time."
@@ -1289,18 +1298,28 @@
       },
       "VpRequestInteractServiceType": {
         "type": "string",
-        "enum": ["UnmediatedHttpPresentationService2021", "MediatedHttpPresentationService2021"]
+        "enum": ["UnmediatedHttpPresentationService2021", "MediatedHttpPresentationService2021"],
+        "description": "The \"type\" of the interact service.\nSee Verifiable Presentation Request [Interaction Types](https://w3c-ccg.github.io/vp-request-spec/#interaction-types) for background."
       },
       "ExchangeInteractServiceDefinitionDto": {
         "type": "object",
-        "properties": { "type": { "$ref": "#/components/schemas/VpRequestInteractServiceType" } },
+        "properties": {
+          "type": {
+            "description": "The \"type\" of the interact service.\nSee Verifiable Presentation Request [Interaction Types](https://w3c-ccg.github.io/vp-request-spec/#interaction-types) for background.",
+            "allOf": [{ "$ref": "#/components/schemas/VpRequestInteractServiceType" }]
+          }
+        },
         "required": ["type"]
       },
       "PresentationDefinitionDto": {
         "type": "object",
         "properties": {
           "id": { "type": "string" },
-          "input_descriptors": { "type": "array", "items": { "type": "object" } }
+          "input_descriptors": {
+            "additionalProperties": true,
+            "type": "array",
+            "items": { "type": "object" }
+          }
         },
         "required": ["id", "input_descriptors"]
       },
@@ -1317,13 +1336,16 @@
       "VpRequestDidAuthQueryDto": { "type": "object", "properties": {} },
       "VpRequestQueryType": {
         "type": "string",
-        "description": "Query types as listed in the VP Request spec.\nhttps://w3c-ccg.github.io/vp-request-spec/#query-and-response-types\n\nThe \"PresentationDefinition\" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7",
-        "enum": ["DIDAuth", "PresentationDefinition"]
+        "enum": ["DIDAuth", "PresentationDefinition"],
+        "description": "Query types as listed in the VP Request spec.\nhttps://w3c-ccg.github.io/vp-request-spec/#query-and-response-types\n\nThe \"PresentationDefinition\" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7"
       },
       "VpRequestQueryDto": {
         "type": "object",
         "properties": {
-          "type": { "$ref": "#/components/schemas/VpRequestQueryType" },
+          "type": {
+            "description": "Query types as listed in the VP Request spec.\nhttps://w3c-ccg.github.io/vp-request-spec/#query-and-response-types\n\nThe \"PresentationDefinition\" type is proposed here: https://github.com/w3c-ccg/vp-request-spec/issues/7",
+            "allOf": [{ "$ref": "#/components/schemas/VpRequestQueryType" }]
+          },
           "credentialQuery": {
             "type": "array",
             "description": "The credential query.\nIt should correspond to the query type.",
@@ -1397,7 +1419,7 @@
       "VpRequestInteractServiceDto": {
         "type": "object",
         "properties": {
-          "type": { "$ref": "#/components/schemas/VpRequestInteractServiceType" },
+          "type": { "allOf": [{ "$ref": "#/components/schemas/VpRequestInteractServiceType" }] },
           "serviceEndpoint": {
             "type": "string",
             "description": "URL at which the credential exchange can be continued"
@@ -1471,13 +1493,16 @@
       },
       "ReviewResult": {
         "type": "string",
-        "description": "The judgement made by the reviewer",
-        "enum": ["approved", "rejected"]
+        "enum": ["approved", "rejected"],
+        "description": "The judgement made by the reviewer"
       },
       "SubmissionReviewDto": {
         "type": "object",
         "properties": {
-          "result": { "$ref": "#/components/schemas/ReviewResult" },
+          "result": {
+            "description": "The judgement made by the reviewer",
+            "allOf": [{ "$ref": "#/components/schemas/ReviewResult" }]
+          },
           "vp": {
             "description": "A reviewer may want to include credentials (wrapped in a VP) to the holder",
             "allOf": [{ "$ref": "#/components/schemas/VerifiablePresentationDto" }]

@@ -29,7 +29,8 @@
     "@typescript-eslint/parser": "catalog:",
     "eslint-config-prettier": "catalog:",
     "eslint-plugin-no-only-tests": "catalog:",
-    "prettier": "catalog:"
+    "prettier": "catalog:",
+    "@types/node": "catalog:"
   },
   "publishConfig": {
     "access": "public",
