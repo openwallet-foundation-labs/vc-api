@@ -13,7 +13,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SeederModule } from './seeder/seeder.module';
 import { envVarsValidationSchema } from './config/env-vars-validation-schema';
-import { HttpLoggerMiddleware } from './middlewares';
+import { BodyDefaultMiddleware, HttpLoggerMiddleware } from './middlewares';
 import { CredoModule } from './credo/credo.module';
 
 let config: DynamicModule | Promise<DynamicModule>;
@@ -55,7 +55,7 @@ try {
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(HttpLoggerMiddleware) //, HttpsRedirectMiddleware) - Disabling for now, doesn't work as expected
+      .apply(BodyDefaultMiddleware, HttpLoggerMiddleware) //, HttpsRedirectMiddleware) - Disabling for now, doesn't work as expected
       .forRoutes('{*splat}');
   }
 }

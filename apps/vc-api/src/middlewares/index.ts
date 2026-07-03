@@ -3,4 +3,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export * from './body-default.middleware';
 export * from './http-logger.middleware';
