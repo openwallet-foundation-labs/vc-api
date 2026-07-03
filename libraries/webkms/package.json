@@ -21,14 +21,7 @@
     "jose": "catalog:"
   },
   "devDependencies": {
-    "eslint": "catalog:",
     "typescript": "catalog:",
-    "@energyweb/eslint-config": "catalog:",
-    "@energyweb/prettier-config": "catalog:",
-    "@typescript-eslint/eslint-plugin": "catalog:",
-    "@typescript-eslint/parser": "catalog:",
-    "eslint-config-prettier": "catalog:",
-    "eslint-plugin-no-only-tests": "catalog:",
     "prettier": "catalog:",
     "@types/node": "catalog:"
   },

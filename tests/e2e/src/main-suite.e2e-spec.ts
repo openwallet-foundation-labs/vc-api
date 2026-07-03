@@ -72,13 +72,3 @@ describe('E2E Suite', function () {
   });
 });
 
-async function getDid(app: INestApplication) {
-  const response: request.Response = await request(app.getHttpServer()).post('/did').send({ method: 'key' });
-
-  expect(response.status).toBe(201);
-  expect(response.body).toHaveProperty('id');
-  expect(response.body).toHaveProperty('verificationMethod');
-  expect(response.body['verificationMethod']).toHaveLength(1);
-
-  return response.body;
-}

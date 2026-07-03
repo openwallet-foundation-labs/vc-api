@@ -68,7 +68,7 @@ export class WorkflowService {
 
   public async createExchange(
     localWorkflowId: string,
-    createExchangeDto?: CreateExchangeDto
+    _createExchangeDto?: CreateExchangeDto
   ): Promise<CreateExchangeSuccessDto> {
     const workflow = await this.workflowRepository.findOneBy({ workflowId: localWorkflowId });
     if (workflow == null) {

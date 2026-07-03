@@ -5,7 +5,7 @@
 
 import { writeFileSync } from 'fs';
 import * as path from 'path';
-import { API_DEFAULT_VERSION, setupApp, setupSwaggerDocument } from '../src/setup';
+import { API_DEFAULT_VERSION, setupSwaggerDocument } from '../src/setup';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../src';
 import { VersioningType } from '@nestjs/common';
@@ -13,7 +13,7 @@ import { VersioningType } from '@nestjs/common';
 /**
  * https://stackoverflow.com/questions/64927411/how-to-generate-openapi-specification-with-nestjs-without-running-the-applicatio
  */
-(async () => {
+void (async () => {
   const module = await Test.createTestingModule({
     imports: [AppModule]
   }).compile();
