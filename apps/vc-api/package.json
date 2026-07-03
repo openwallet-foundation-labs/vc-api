@@ -94,7 +94,7 @@
     "moduleNameMapper": {
       "^@openwallet-foundation/askar-nodejs$": "<rootDir>/../../../jest-setup/askar-nodejs.cjs",
       "^@openwallet-foundation/askar-shared$": "<rootDir>/../../../jest-setup/askar-shared.cjs",
-      "^webcrypto-core$": "<rootDir>/../../../node_modules/.pnpm/node_modules/webcrypto-core/build/webcrypto-core.js"
+      "^webcrypto-core$": "<rootDir>/../../../jest-setup/webcrypto-core.cjs"
     }
   }
 }
